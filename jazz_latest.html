@@ -1,0 +1,1379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>JAZZ AI — v5.2</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Syne:wght@700;800&display=swap');
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#080808;--surface:#0f0f0f;--surface2:#161616;--surface3:#1c1c1c;--border:#1e1e1e;--border2:#2a2a2a;
+    --green:#00ff88;--green-dim:#003322;--green-glow:rgba(0,255,136,.12);
+    --cyan:#00e5ff;--cyan-dim:#001a22;
+    --red:#ff4455;--red-dim:#220011;
+    --yellow:#ffcc00;--yellow-dim:#221a00;
+    --purple:#bf77f6;--purple-dim:#1a0a2e;
+    --orange:#ff8c42;
+    --text:#d8d8d8;--muted:#444;--muted2:#666;
+  }
+  html,body{height:100%;overflow:hidden}
+  body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:12px;display:flex;flex-direction:column}
+
+  /* ── Scanline overlay ── */
+  body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.03) 2px,rgba(0,0,0,.03) 4px);pointer-events:none;z-index:9999}
+
+  /* ── Header ── */
+  header{
+    background:var(--surface);border-bottom:1px solid var(--border2);
+    padding:0 16px;height:44px;display:flex;align-items:center;gap:12px;flex-shrink:0;
+    position:relative;
+  }
+  header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--green),transparent);opacity:.4}
+  .logo{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--green);letter-spacing:3px;text-shadow:0 0 20px rgba(0,255,136,.5)}
+  .badge{padding:2px 7px;border-radius:2px;font-size:10px;font-weight:700;letter-spacing:.5px}
+  .badge-green {background:var(--green-dim);color:var(--green); border:1px solid #004433}
+  .badge-cyan  {background:var(--cyan-dim); color:var(--cyan);  border:1px solid #003344}
+  .badge-orange{background:#1a0d00;         color:var(--orange);border:1px solid #331a00}
+  #status-dot{width:7px;height:7px;border-radius:50%;background:var(--muted);flex-shrink:0;transition:.3s}
+  #status-dot.ok {background:var(--green);box-shadow:0 0 8px var(--green)}
+  #status-dot.err{background:var(--red);  box-shadow:0 0 8px var(--red)}
+  .header-right{display:flex;align-items:center;gap:8px;margin-left:auto}
+  #base-url{background:#0a0a0a;border:1px solid var(--border2);color:var(--cyan);padding:4px 8px;border-radius:3px;font-family:inherit;font-size:11px;width:230px;outline:none}
+  #base-url:focus{border-color:var(--cyan)}
+  .header-right label{color:var(--muted2);font-size:10px}
+
+  /* ── Layout ── */
+  .layout{display:grid;grid-template-columns:200px 1fr;flex:1;overflow:hidden;min-height:0}
+
+  /* ── Sidebar ── */
+  .sidebar{background:var(--surface);border-right:1px solid var(--border2);display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden}
+  .sidebar::-webkit-scrollbar{width:3px}
+  .sidebar::-webkit-scrollbar-track{background:transparent}
+  .sidebar::-webkit-scrollbar-thumb{background:var(--border2)}
+  .sb-section{padding:10px 8px;border-bottom:1px solid var(--border)}
+  .sb-section h3{color:var(--muted2);font-size:9px;letter-spacing:2px;text-transform:uppercase;padding:0 6px;margin-bottom:6px}
+  .nav-btn{
+    display:flex;align-items:center;gap:7px;width:100%;text-align:left;
+    background:none;border:none;color:var(--muted2);padding:6px 8px;
+    border-radius:3px;cursor:pointer;font-family:inherit;font-size:11px;
+    transition:.12s;border-left:2px solid transparent;
+  }
+  .nav-btn:hover{color:var(--text);background:var(--surface2)}
+  .nav-btn.active{color:var(--green);background:var(--green-glow);border-left-color:var(--green)}
+  .sb-token{
+    background:#0a0a0a;border:1px solid var(--border);border-radius:3px;
+    padding:5px 7px;font-size:9px;color:var(--muted);
+    word-break:break-all;max-height:44px;overflow:hidden;
+    cursor:pointer;margin-top:6px;transition:.15s;
+  }
+  .sb-token:hover{border-color:var(--green-dim)}
+  .sb-token.set{color:var(--green)}
+  .sb-info{font-size:9px;color:var(--muted);margin-top:3px;padding:0 2px}
+  .sb-info span{color:var(--cyan)}
+
+  /* ── Main ── */
+  .main{display:flex;flex-direction:column;overflow:hidden;min-width:0;background:var(--bg)}
+  .panel{display:none;flex:1;overflow:hidden;flex-direction:column}
+  .panel.active{display:flex}
+  .panel-hdr{
+    padding:10px 16px;border-bottom:1px solid var(--border);
+    display:flex;align-items:center;gap:10px;flex-shrink:0;
+    background:var(--surface);
+  }
+  .panel-hdr h2{color:var(--green);font-family:'Syne',sans-serif;font-size:14px;font-weight:700;letter-spacing:1px}
+  .panel-body{flex:1;overflow-y:auto;padding:14px 16px}
+  .panel-body::-webkit-scrollbar{width:4px}
+  .panel-body::-webkit-scrollbar-track{background:transparent}
+  .panel-body::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+
+  /* ── Forms ── */
+  .fg{margin-bottom:10px}
+  .fg label,.form-group label{display:block;color:var(--muted2);font-size:9px;margin-bottom:3px;text-transform:uppercase;letter-spacing:.8px}
+  input,textarea,select{
+    width:100%;background:#0a0a0a;border:1px solid var(--border2);color:var(--text);
+    padding:6px 9px;border-radius:3px;font-family:inherit;font-size:11px;outline:none;transition:.12s;
+  }
+  input:focus,textarea:focus,select:focus{border-color:var(--cyan);box-shadow:0 0 0 1px rgba(0,229,255,.08)}
+  textarea{resize:vertical;min-height:70px;line-height:1.6}
+  select option{background:var(--surface2)}
+  .row{display:flex;gap:10px}
+  .row .fg,.row .form-group{flex:1}
+
+  /* ── Buttons ── */
+  .btn{
+    padding:6px 13px;border-radius:3px;border:none;cursor:pointer;
+    font-family:inherit;font-size:11px;font-weight:600;letter-spacing:.4px;
+    transition:.12s;white-space:nowrap;
+  }
+  .btn-primary {background:var(--green);color:#000}
+  .btn-primary:hover{background:#00dd77;box-shadow:0 0 12px rgba(0,255,136,.3)}
+  .btn-secondary{background:transparent;border:1px solid var(--border2);color:var(--muted2)}
+  .btn-secondary:hover{border-color:var(--cyan);color:var(--cyan)}
+  .btn-danger   {background:transparent;border:1px solid rgba(255,68,85,.4);color:var(--red)}
+  .btn-danger:hover{background:var(--red-dim);border-color:var(--red)}
+  .btn-purple   {background:transparent;border:1px solid rgba(191,119,246,.4);color:var(--purple)}
+  .btn-purple:hover{background:var(--purple-dim);border-color:var(--purple)}
+  .btn-orange   {background:transparent;border:1px solid rgba(255,140,66,.4);color:var(--orange)}
+  .btn-orange:hover{background:#1a0d00;border-color:var(--orange)}
+  .btn-sm{padding:3px 9px;font-size:10px}
+  .btn:disabled{opacity:.35;cursor:not-allowed}
+
+  /* ── Response boxes ── */
+  .rbox{
+    background:#0a0a0a;border:1px solid var(--border2);border-radius:4px;
+    padding:10px 12px;margin-top:8px;font-size:11px;line-height:1.7;
+    white-space:pre-wrap;word-break:break-word;max-height:400px;overflow-y:auto;
+  }
+  .rbox::-webkit-scrollbar{width:3px}
+  .rbox::-webkit-scrollbar-thumb{background:var(--border2)}
+  .rbox.ok    {border-color:var(--green-dim);color:var(--green)}
+  .rbox.error {border-color:var(--red-dim);color:var(--red)}
+  .rbox.info  {border-color:var(--border2);color:var(--text)}
+  .rbox.stream{border-color:var(--cyan-dim);color:var(--cyan)}
+
+  /* ── Chat ── */
+  .chat-msgs{flex:1;overflow-y:auto;padding:12px 16px;display:flex;flex-direction:column;gap:8px}
+  .chat-msgs::-webkit-scrollbar{width:4px}
+  .chat-msgs::-webkit-scrollbar-thumb{background:var(--border2)}
+  .msg{max-width:80%;padding:9px 13px;border-radius:4px;font-size:12px;line-height:1.6;white-space:pre-wrap;word-break:break-word}
+  .msg.user  {align-self:flex-end;background:var(--green-dim);border:1px solid #004433;color:var(--green)}
+  .msg.ai    {align-self:flex-start;background:var(--surface2);border:1px solid var(--border2);color:var(--text)}
+  .msg.system{align-self:center;background:transparent;border:1px solid var(--border);color:var(--muted);font-size:10px;padding:3px 10px}
+  .msg-meta  {font-size:9px;color:var(--muted);margin-top:4px}
+  .chat-foot {padding:10px 16px;border-top:1px solid var(--border);flex-shrink:0;display:flex;flex-direction:column;gap:7px;background:var(--surface)}
+  .chat-toolbar{display:flex;align-items:center;gap:10px}
+  .chat-row  {display:flex;gap:7px}
+  .chat-row textarea{flex:1;min-height:38px;max-height:100px}
+  .toggle-label{display:flex;align-items:center;gap:5px;cursor:pointer;white-space:nowrap;font-size:11px;color:var(--muted2);user-select:none}
+  .toggle-label:hover{color:var(--text)}
+
+  /* ── Grid cards ── */
+  .card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;margin-bottom:12px}
+  .card{background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:10px 12px}
+  .card .cl{font-size:9px;color:var(--muted2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px}
+  .card .cv{font-size:13px;font-weight:700;color:var(--cyan)}
+  .card .cv.ok {color:var(--green)}
+  .card .cv.err{color:var(--red)}
+  .card .cv.warn{color:var(--yellow)}
+
+  /* ── Tables ── */
+  table{width:100%;border-collapse:collapse;font-size:11px}
+  th{background:var(--surface2);color:var(--cyan);text-align:left;padding:6px 9px;border-bottom:1px solid var(--border2);font-size:9px;letter-spacing:.8px;text-transform:uppercase}
+  td{padding:6px 9px;border-bottom:1px solid var(--border);color:var(--text);vertical-align:middle}
+  tr:hover td{background:rgba(255,255,255,.015)}
+
+  /* ── Pills ── */
+  .pill{display:inline-block;padding:1px 6px;border-radius:10px;font-size:9px;white-space:nowrap;font-weight:600}
+  .pill-green {background:var(--green-dim);color:var(--green); border:1px solid #003322}
+  .pill-yellow{background:var(--yellow-dim);color:var(--yellow);border:1px solid #443200}
+  .pill-red   {background:var(--red-dim);  color:var(--red);   border:1px solid #440011}
+  .pill-cyan  {background:var(--cyan-dim); color:var(--cyan);  border:1px solid #002233}
+  .pill-purple{background:var(--purple-dim);color:var(--purple);border:1px solid #2e1050}
+  .pill-orange{background:#1a0d00;color:var(--orange);border:1px solid #332000}
+  .pill-muted {background:#141414;color:var(--muted2);border:1px solid #2a2a2a}
+
+  /* ── Job cards ── */
+  .job-card{background:var(--surface2);border:1px solid var(--border2);border-radius:4px;padding:12px;margin-bottom:10px;transition:.15s}
+  .job-card:hover{border-color:var(--border2);box-shadow:0 2px 16px rgba(0,0,0,.3)}
+  .job-card-hdr{display:flex;align-items:center;gap:7px;margin-bottom:7px;flex-wrap:wrap}
+  .job-card-hdr h4{color:var(--cyan);font-size:12px;font-weight:600;flex:1;min-width:100px}
+  .job-card-meta{display:flex;gap:14px;flex-wrap:wrap;font-size:10px;color:var(--muted2);margin-bottom:8px;line-height:1.8}
+  .job-card-meta span{display:flex;gap:3px;align-items:center}
+  .job-card-meta b{color:var(--text)}
+  .job-card-actions{display:flex;gap:6px;flex-wrap:wrap}
+
+  /* ── Log output ── */
+  .log-out{
+    background:#050505;border:1px solid var(--border);border-radius:3px;
+    padding:10px;font-size:10px;line-height:1.9;color:var(--muted2);
+    max-height:320px;overflow-y:auto;white-space:pre-wrap;word-break:break-all;margin-top:8px;
+  }
+  .log-out::-webkit-scrollbar{width:3px}
+  .log-out::-webkit-scrollbar-thumb{background:var(--border2)}
+  .log-out .l-ok {color:var(--green)}
+  .log-out .l-err{color:var(--red)}
+  .log-out .l-warn{color:var(--yellow)}
+
+  /* ── Debug panel ── */
+  .debug-box{
+    background:#050505;border:1px solid rgba(255,140,66,.2);border-radius:4px;
+    padding:10px;margin-top:8px;font-size:10px;line-height:1.8;color:var(--orange);
+    max-height:350px;overflow-y:auto;white-space:pre-wrap;word-break:break-all;
+  }
+
+  /* ── Misc ── */
+  hr.div{border:none;border-top:1px solid var(--border);margin:12px 0}
+  .sec-title{color:var(--cyan);font-size:10px;margin-bottom:8px;font-weight:600;letter-spacing:.5px;text-transform:uppercase}
+  .note{background:#0a0a0a;border:1px solid var(--border);border-radius:3px;padding:7px 10px;font-size:10px;color:var(--muted2);margin-bottom:10px;line-height:1.7}
+  .note.warn{border-color:rgba(255,204,0,.2);color:var(--yellow)}
+  .note.safe{border-color:rgba(0,255,136,.15);color:#557755}
+  .inline-flex{display:flex;align-items:center;gap:8px}
+
+  /* ── Scrollbar global ── */
+  ::-webkit-scrollbar{width:4px;height:4px}
+  ::-webkit-scrollbar-track{background:transparent}
+  ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+  ::-webkit-scrollbar-thumb:hover{background:#333}
+
+  /* ── Image attach ── */
+  .img-attach-bar{display:none;align-items:center;gap:8px;padding:6px 10px;background:#0a0a0a;border:1px solid var(--border2);border-radius:3px;margin-bottom:4px}
+  .img-attach-bar.visible{display:flex}
+  .img-preview{width:48px;height:48px;object-fit:cover;border-radius:3px;border:1px solid var(--border2)}
+  .img-attach-name{font-size:10px;color:var(--cyan);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .img-attach-status{font-size:10px;color:var(--muted2)}
+  #chat-img-input{display:none}
+  .img-clip-btn{background:transparent;border:1px solid var(--border2);color:var(--muted2);border-radius:3px;padding:5px 8px;cursor:pointer;font-size:14px;line-height:1;transition:.12s;flex-shrink:0}
+  .img-clip-btn:hover{border-color:var(--cyan);color:var(--cyan)}
+  .img-clip-btn.active{border-color:var(--green);color:var(--green);background:var(--green-glow)}
+  .msg.ai img.msg-img{max-width:180px;max-height:140px;border-radius:3px;border:1px solid var(--border2);margin-bottom:6px;display:block}
+
+  /* ── Animations ── */
+  @keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:.4}}
+  .running-dot{animation:pulse-dot 1.2s ease-in-out infinite}
+  @keyframes fade-in{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+  .fade-in{animation:fade-in .2s ease-out}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">⚡ JAZZ</div>
+  <span class="badge badge-green">v5.2</span>
+  <span class="badge badge-cyan">FIXED</span>
+  <span class="badge badge-orange">AGENT JOBS</span>
+  <div class="header-right">
+    <label>BASE URL</label>
+    <input id="base-url" value="http://80.225.251.107:8000"/>
+    <div id="status-dot" title="Server status"></div>
+  </div>
+</header>
+
+<div class="layout">
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sb-section">
+      <h3>Auth</h3>
+      <button class="nav-btn active" onclick="showPanel('login')">🔐 Login</button>
+      <button class="nav-btn" onclick="showPanel('signup')">✍️ Signup</button>
+      <div class="sb-info">Token: <span id="token-status">—</span></div>
+      <div class="sb-info">User: <span id="user-email-display">—</span></div>
+      <div class="sb-info">Role: <span id="user-role-display">—</span></div>
+      <div class="sb-token" id="token-preview" onclick="copyToken()" title="Click to copy">No token</div>
+      <button class="btn btn-danger btn-sm" style="margin-top:7px;width:100%" onclick="logout()">Logout</button>
+    </div>
+    <div class="sb-section">
+      <h3>Core</h3>
+      <button class="nav-btn" onclick="showPanel('health')">💚 Health</button>
+      <button class="nav-btn" onclick="showPanel('chat')">💬 Chat (stream)</button>
+      <button class="nav-btn" onclick="showPanel('chat-basic')">📤 Chat (basic)</button>
+      <button class="nav-btn" onclick="showPanel('documents')">📄 Documents</button>
+      <button class="nav-btn" onclick="showPanel('memory')">🧠 Memory</button>
+      <button class="nav-btn" onclick="showPanel('stats')">📊 User Stats</button>
+    </div>
+    <div class="sb-section">
+      <h3>Agent Jobs ⚡</h3>
+      <button class="nav-btn" onclick="showPanel('jobs')">🤖 My Jobs</button>
+      <button class="nav-btn" onclick="showPanel('jobs-create')">➕ Create Job</button>
+      <button class="nav-btn" onclick="showPanel('jobs-logs')">📋 Job Logs</button>
+      <button class="nav-btn" onclick="showPanel('jobs-debug')">🔬 Debug Run</button>
+    </div>
+    <div class="sb-section">
+      <h3>Admin</h3>
+      <button class="nav-btn" onclick="showPanel('admin')">🛡️ Admin Panel</button>
+      <button class="nav-btn" onclick="showPanel('raw')">🔧 Raw Request</button>
+    </div>
+  </div>
+
+  <!-- Main -->
+  <div class="main">
+
+    <!-- ══ LOGIN ══ -->
+    <div class="panel active" id="panel-login">
+      <div class="panel-hdr"><h2>🔐 Login</h2></div>
+      <div class="panel-body">
+        <div class="fg"><label>Email</label><input id="login-email" type="email" placeholder="you@example.com" value="jasmeet.15069@gmail.com"/></div>
+        <div class="fg"><label>Password</label><input id="login-pass" type="password" placeholder="••••••••"/></div>
+        <div class="inline-flex">
+          <button class="btn btn-primary" onclick="doLogin()">Login</button>
+          <button class="btn btn-secondary" onclick="doAdminLogin()">Admin Login</button>
+        </div>
+        <div id="login-out" class="rbox info" style="display:none"></div>
+      </div>
+    </div>
+
+    <!-- ══ SIGNUP ══ -->
+    <div class="panel" id="panel-signup">
+      <div class="panel-hdr"><h2>✍️ Signup</h2></div>
+      <div class="panel-body">
+        <div class="fg"><label>Full Name</label><input id="signup-name" placeholder="Jane Doe"/></div>
+        <div class="fg"><label>Email</label><input id="signup-email" type="email" placeholder="you@example.com"/></div>
+        <div class="fg"><label>Password (min 8 chars)</label><input id="signup-pass" type="password" placeholder="••••••••"/></div>
+        <button class="btn btn-primary" onclick="doSignup()">Create Account</button>
+        <div id="signup-out" class="rbox info" style="display:none"></div>
+      </div>
+    </div>
+
+    <!-- ══ HEALTH ══ -->
+    <div class="panel" id="panel-health">
+      <div class="panel-hdr">
+        <h2>💚 Health</h2>
+        <button class="btn btn-secondary btn-sm" onclick="doHealth()">Refresh</button>
+      </div>
+      <div class="panel-body">
+        <div id="health-grid" class="card-grid"></div>
+        <div id="health-out" class="rbox info" style="display:none"></div>
+      </div>
+    </div>
+
+    <!-- ══ CHAT STREAM ══ -->
+    <div class="panel" id="panel-chat" style="flex-direction:column">
+      <div class="panel-hdr">
+        <h2>💬 Chat — Streaming</h2>
+        <button class="btn btn-danger btn-sm" onclick="clearChat()">Clear</button>
+      </div>
+      <div class="chat-msgs" id="chat-messages">
+        <div class="msg system">Send a message to start ▸</div>
+      </div>
+      <div class="chat-foot">
+        <div class="chat-toolbar">
+          <div class="fg" style="margin:0;flex:1">
+            <select id="chat-model">
+              <option value="uncensored">🔓 Uncensored (Dolphin Mistral 24B)</option>
+              <option value="censored">🔒 Censored (Groq Llama 3.3 70B)</option>
+            </select>
+          </div>
+          <label class="toggle-label"><input type="checkbox" id="chat-rag" checked/> RAG</label>
+        </div>
+        <!-- Image attach preview bar -->
+        <div class="img-attach-bar" id="img-attach-bar">
+          <img class="img-preview" id="img-preview-thumb" src="" alt="preview"/>
+          <div style="flex:1;min-width:0">
+            <div class="img-attach-name" id="img-attach-name">image.jpg</div>
+            <div class="img-attach-status" id="img-attach-status">Ready to send</div>
+          </div>
+          <button class="btn btn-danger btn-sm" onclick="clearChatImage()" title="Remove image">✕</button>
+        </div>
+        <div class="chat-row">
+          <input type="file" id="chat-img-input" accept="image/jpeg,image/png,image/gif,image/webp" onchange="onChatImageSelected(event)"/>
+          <button class="img-clip-btn" id="img-clip-btn" onclick="document.getElementById('chat-img-input').click()" title="Attach image">📎</button>
+          <textarea id="chat-input" placeholder="Type your message… (Enter to send, Shift+Enter newline)" onkeydown="chatKeydown(event)"></textarea>
+          <button class="btn btn-primary" id="chat-send-btn" onclick="doStreamChat()">Send</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ CHAT BASIC ══ -->
+    <div class="panel" id="panel-chat-basic">
+      <div class="panel-hdr"><h2>📤 Chat — Basic</h2></div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="fg">
+            <label>Model</label>
+            <select id="basic-model">
+              <option value="uncensored">Uncensored (Dolphin)</option>
+              <option value="censored">Censored (Groq)</option>
+            </select>
+          </div>
+          <div class="fg" style="display:flex;align-items:flex-end">
+            <label class="toggle-label" style="padding-bottom:7px"><input type="checkbox" id="basic-rag" checked/> Use RAG</label>
+          </div>
+        </div>
+        <div class="fg"><label>Message</label><textarea id="basic-msg" placeholder="Ask something…"></textarea></div>
+        <div class="fg"><label>Image URL (optional)</label><input id="basic-image" placeholder="data:image/… or leave blank"/></div>
+        <button class="btn btn-primary" onclick="doBasicChat()">Send</button>
+        <div id="basic-out" class="rbox info" style="display:none"></div>
+      </div>
+    </div>
+
+    <!-- ══ DOCUMENTS ══ -->
+    <div class="panel" id="panel-documents">
+      <div class="panel-hdr"><h2>📄 Documents</h2></div>
+      <div class="panel-body">
+        <p class="sec-title">Upload Document</p>
+        <div class="fg"><label>File (PDF, DOCX, XLSX, CSV, TXT…)</label><input type="file" id="doc-file" accept=".pdf,.docx,.xlsx,.csv,.txt,.md,.json,.xml,.py,.js,.ts,.html,.sql"/></div>
+        <button class="btn btn-primary" onclick="doUploadDoc()">Upload & Index</button>
+        <div id="doc-upload-out" class="rbox info" style="display:none"></div>
+        <hr class="div"/>
+        <div class="inline-flex" style="margin-bottom:8px">
+          <p class="sec-title" style="margin:0">My Documents</p>
+          <button class="btn btn-secondary btn-sm" onclick="loadDocuments()">Refresh</button>
+        </div>
+        <div id="docs-table"></div>
+      </div>
+    </div>
+
+    <!-- ══ MEMORY ══ -->
+    <div class="panel" id="panel-memory">
+      <div class="panel-hdr"><h2>🧠 Memory</h2></div>
+      <div class="panel-body">
+        <div class="inline-flex" style="margin-bottom:12px">
+          <button class="btn btn-secondary btn-sm" onclick="loadMemory()">Refresh</button>
+          <button class="btn btn-danger btn-sm" onclick="clearAllMemory()">Clear All</button>
+        </div>
+        <p class="sec-title">Add Memory</p>
+        <div class="row">
+          <div class="fg"><label>Content</label><input id="mem-content" placeholder="Remember that I prefer dark mode…"/></div>
+          <div class="fg" style="max-width:140px"><label>Category</label>
+            <select id="mem-cat">
+              <option>general</option><option>preference</option><option>profession</option>
+              <option>goal</option><option>personal</option><option>technical</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="addMemory()">Add</button>
+        <hr class="div"/>
+        <div id="memory-status" style="font-size:10px;color:var(--muted2);margin-bottom:6px"></div>
+        <div id="memory-table"></div>
+      </div>
+    </div>
+
+    <!-- ══ STATS ══ -->
+    <div class="panel" id="panel-stats">
+      <div class="panel-hdr">
+        <h2>📊 User Stats</h2>
+        <button class="btn btn-secondary btn-sm" onclick="loadStats()">Refresh</button>
+      </div>
+      <div class="panel-body">
+        <div id="stats-grid" class="card-grid"></div>
+        <div id="stats-out" class="rbox info" style="display:none"></div>
+      </div>
+    </div>
+
+    <!-- ══ MY JOBS ══ -->
+    <div class="panel" id="panel-jobs">
+      <div class="panel-hdr">
+        <h2>🤖 Agent Jobs</h2>
+        <button class="btn btn-secondary btn-sm" onclick="loadJobs()">Refresh</button>
+        <button class="btn btn-purple btn-sm" onclick="showPanel('jobs-create')">+ New Job</button>
+      </div>
+      <div class="panel-body">
+        <div id="jobs-list"><p style="color:var(--muted2);font-size:11px">Loading…</p></div>
+      </div>
+    </div>
+
+    <!-- ══ CREATE JOB ══ -->
+    <div class="panel" id="panel-jobs-create">
+      <div class="panel-hdr"><h2>➕ Create Agent Job</h2></div>
+      <div class="panel-body">
+        <p class="sec-title">Job Settings</p>
+        <div class="row">
+          <div class="fg"><label>Job Name</label><input id="jc-name" placeholder="Naukri Daily Apply"/></div>
+          <div class="fg" style="max-width:190px">
+            <label>Job Type</label>
+            <select id="jc-type" onchange="updateJobTypeHint()">
+              <option value="naukri_apply">🟠 Naukri.com Apply</option>
+              <option value="linkedin_apply">🔵 LinkedIn Easy Apply</option>
+              <option value="custom">⚙️ Custom</option>
+            </select>
+          </div>
+        </div>
+        <div class="fg"><label>Description (optional)</label><input id="jc-desc" placeholder="Auto-apply to Data Analyst roles every morning"/></div>
+
+        <p class="sec-title">Schedule</p>
+        <div class="row">
+          <div class="fg">
+            <label>Cron Schedule</label>
+            <input id="jc-cron" value="0 11 * * *" placeholder="0 11 * * *"/>
+            <div style="font-size:9px;color:var(--muted2);margin-top:3px">min hr day month weekday — "0 11 * * *" = 11:00 AM daily</div>
+          </div>
+          <div class="fg" style="max-width:110px"><label>Window Start</label><input id="jc-win-start" value="11:00"/></div>
+          <div class="fg" style="max-width:110px"><label>Window End</label><input id="jc-win-end" value="12:00"/></div>
+        </div>
+
+        <p class="sec-title">Credentials</p>
+        <div class="note safe">🔒 Credentials are Fernet-encrypted before storage. Never stored in plaintext.</div>
+        <div class="row">
+          <div class="fg"><label>Login Email</label><input id="jc-cred-email" type="email" placeholder="your@naukri.com"/></div>
+          <div class="fg"><label>Password</label><input id="jc-cred-pass" type="password" placeholder="••••••••"/></div>
+        </div>
+
+        <p class="sec-title">Search Parameters</p>
+        <div id="job-type-hint" class="note"></div>
+        <div class="fg"><label>Roles (comma separated)</label><input id="jc-roles" placeholder="Data Analyst, Power BI Developer, Business Analyst"/></div>
+        <div class="row">
+          <div class="fg"><label>Location</label><input id="jc-location" placeholder="Gurugram"/></div>
+          <div class="fg" style="max-width:90px"><label>Exp Min</label><input id="jc-exp-min" type="number" value="2" min="0" max="30"/></div>
+          <div class="fg" style="max-width:90px"><label>Exp Max</label><input id="jc-exp-max" type="number" value="6" min="0" max="30"/></div>
+          <div class="fg" style="max-width:90px"><label>Max Apply</label><input id="jc-max-apply" type="number" value="15" min="1" max="50"/></div>
+        </div>
+        <div class="row">
+          <div class="fg"><label>Exclude Keywords (comma separated)</label><input id="jc-exclude" placeholder="intern, contract, unpaid"/></div>
+          <div class="fg" style="max-width:160px;display:flex;align-items:flex-end">
+            <label class="toggle-label" style="padding-bottom:8px"><input type="checkbox" id="jc-easy-only" checked/> Easy Apply Only</label>
+          </div>
+        </div>
+
+        <div class="inline-flex" style="margin-top:6px">
+          <button class="btn btn-primary" onclick="createJob()">Create & Schedule Job</button>
+          <button class="btn btn-secondary" onclick="showPanel('jobs')">Cancel</button>
+        </div>
+        <div id="job-create-out" class="rbox info" style="display:none"></div>
+      </div>
+    </div>
+
+    <!-- ══ JOB LOGS ══ -->
+    <div class="panel" id="panel-jobs-logs">
+      <div class="panel-hdr">
+        <h2>📋 Job Logs</h2>
+        <button class="btn btn-secondary btn-sm" onclick="refreshJobLogs()">Refresh</button>
+      </div>
+      <div class="panel-body">
+        <div class="fg"><label>Select Job</label>
+          <select id="log-job-select" onchange="loadJobLogs()">
+            <option value="">— select a job —</option>
+          </select>
+        </div>
+        <div id="job-logs-out"></div>
+      </div>
+    </div>
+
+    <!-- ══ DEBUG RUN ══ (NEW — shows full error output synchronously) -->
+    <div class="panel" id="panel-jobs-debug">
+      <div class="panel-hdr"><h2>🔬 Debug Run</h2></div>
+      <div class="panel-body">
+        <div class="note warn">
+          ⚠ Debug Run executes the job <b>synchronously</b> and returns the full output + any errors directly in this panel.
+          Use this to diagnose why a job produces no logs. The request will hang until the job finishes.
+        </div>
+        <div class="fg"><label>Select Job</label>
+          <select id="debug-job-select">
+            <option value="">— select a job —</option>
+          </select>
+        </div>
+        <div class="inline-flex">
+          <button class="btn btn-orange" onclick="doDebugRun()">🔬 Debug Run Now</button>
+          <button class="btn btn-secondary btn-sm" onclick="refreshDebugJobs()">Refresh Jobs</button>
+        </div>
+        <div id="debug-status" style="margin-top:8px;font-size:10px;color:var(--muted2)"></div>
+        <div id="debug-out" style="display:none"></div>
+      </div>
+    </div>
+
+    <!-- ══ ADMIN ══ -->
+    <div class="panel" id="panel-admin">
+      <div class="panel-hdr"><h2>🛡️ Admin</h2></div>
+      <div class="panel-body">
+        <div class="inline-flex" style="flex-wrap:wrap;margin-bottom:12px;gap:6px">
+          <button class="btn btn-secondary btn-sm" onclick="adminStats()">System Stats</button>
+          <button class="btn btn-secondary btn-sm" onclick="adminUsers()">Users</button>
+          <button class="btn btn-secondary btn-sm" onclick="adminAllJobs()">All Agent Jobs</button>
+          <button class="btn btn-secondary btn-sm" onclick="adminLogs()">Server Logs</button>
+        </div>
+        <div id="admin-out" class="rbox info" style="display:none"></div>
+        <div id="admin-table"></div>
+      </div>
+    </div>
+
+    <!-- ══ RAW REQUEST ══ -->
+    <div class="panel" id="panel-raw">
+      <div class="panel-hdr"><h2>🔧 Raw Request</h2></div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="fg" style="max-width:100px">
+            <label>Method</label>
+            <select id="raw-method"><option>GET</option><option>POST</option><option>PUT</option><option>DELETE</option></select>
+          </div>
+          <div class="fg"><label>Path</label><input id="raw-path" placeholder="/health"/></div>
+        </div>
+        <div class="fg"><label>Body (JSON)</label><textarea id="raw-body" style="min-height:110px" placeholder='{"key": "value"}'></textarea></div>
+        <div class="inline-flex">
+          <button class="btn btn-primary" onclick="doRaw()">Send</button>
+          <label class="toggle-label"><input type="checkbox" id="raw-auth" checked/> Include Auth Token</label>
+        </div>
+        <div id="raw-out" class="rbox info" style="display:none"></div>
+      </div>
+    </div>
+
+  </div><!-- /main -->
+</div><!-- /layout -->
+
+<script>
+'use strict';
+
+let TOKEN = localStorage.getItem('jazz_token') || '';
+let CURRENT_USER = JSON.parse(localStorage.getItem('jazz_user') || 'null');
+let _jobsCache = [];
+
+// ── Utils ──────────────────────────────────────────────────────────────────────
+const base = () => document.getElementById('base-url').value.replace(/\/+$/, '');
+const authH = () => TOKEN ? {'Authorization': 'Bearer ' + TOKEN} : {};
+
+async function api(method, path, body) {
+  try {
+    const opts = { method, headers: {'Content-Type': 'application/json', ...authH()} };
+    if (body && method !== 'GET') opts.body = JSON.stringify(body);
+    const r = await fetch(base() + path, opts);
+    const data = await r.json().catch(() => ({raw: `HTTP ${r.status}`}));
+    return {ok: r.ok, data, status: r.status};
+  } catch(e) {
+    return {ok: false, data: {error: e.message}, status: 0};
+  }
+}
+
+function showR(id, data, ok) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.style.display = 'block';
+  el.className = 'rbox ' + (ok ? 'ok' : 'error');
+  el.textContent = JSON.stringify(data, null, 2);
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function showPanel(id) {
+  document.querySelectorAll('.panel').forEach(p => { p.classList.remove('active'); p.style.display = ''; });
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  const panel = document.getElementById('panel-' + id);
+  if (panel) { panel.style.display = 'flex'; panel.classList.add('active'); }
+  document.querySelectorAll('.nav-btn').forEach(b => {
+    if (b.getAttribute('onclick')?.includes(`'${id}'`)) b.classList.add('active');
+  });
+  if (id === 'health') doHealth();
+  if (id === 'documents') loadDocuments();
+  if (id === 'memory') loadMemory();
+  if (id === 'stats') loadStats();
+  if (id === 'jobs') loadJobs();
+  if (id === 'jobs-create') updateJobTypeHint();
+  if (id === 'jobs-logs') refreshJobLogs();
+  if (id === 'jobs-debug') refreshDebugJobs();
+}
+
+function setToken(token, user) {
+  TOKEN = token; CURRENT_USER = user;
+  localStorage.setItem('jazz_token', token);
+  localStorage.setItem('jazz_user', JSON.stringify(user));
+  updateTokenUI();
+}
+
+function updateTokenUI() {
+  const status = document.getElementById('token-status');
+  const preview = document.getElementById('token-preview');
+  const emailEl = document.getElementById('user-email-display');
+  const roleEl  = document.getElementById('user-role-display');
+  if (TOKEN) {
+    status.textContent = '✅'; status.style.color = 'var(--green)';
+    preview.textContent = TOKEN.slice(0,38) + '…'; preview.className = 'sb-token set';
+    if (CURRENT_USER) {
+      emailEl.textContent = CURRENT_USER.email || '—';
+      roleEl.textContent  = CURRENT_USER.role  || '—';
+    }
+  } else {
+    status.textContent = '—'; status.style.color = 'var(--muted)';
+    preview.textContent = 'No token'; preview.className = 'sb-token';
+    emailEl.textContent = '—'; roleEl.textContent = '—';
+  }
+}
+
+function copyToken() {
+  if (TOKEN) { navigator.clipboard.writeText(TOKEN).catch(()=>{}); }
+}
+
+function logout() {
+  TOKEN = ''; CURRENT_USER = null;
+  localStorage.removeItem('jazz_token'); localStorage.removeItem('jazz_user');
+  updateTokenUI();
+}
+
+// ── Health ─────────────────────────────────────────────────────────────────────
+async function doHealth() {
+  const dot = document.getElementById('status-dot');
+  try {
+    const {ok, data} = await api('GET', '/health');
+    dot.className = ok ? 'ok' : 'err';
+    if (ok) renderHealthGrid(data);
+    else showR('health-out', data, false);
+  } catch(e) {
+    dot.className = 'err'; showR('health-out', {error: e.message}, false);
+  }
+}
+
+function renderHealthGrid(d) {
+  const g = document.getElementById('health-grid');
+  const s = d.services || {};
+  const cards = [
+    {l:'Status',    v: d.status,                    ok: d.status==='healthy'},
+    {l:'Version',   v: d.version,                   ok: true},
+    {l:'Uptime',    v: fmtUptime(d.uptime_seconds), ok: true},
+    {l:'SQLite',    v: s.sqlite   ? '✅' : '❌',    ok: s.sqlite},
+    {l:'ChromaDB',  v: s.chromadb ? '✅' : '❌',    ok: s.chromadb},
+    {l:'MySQL',     v: s.mysql    ? '✅' : '❌',     ok: !!s.mysql},
+    {l:'Playwright',v: s.playwright ? '✅' : '❌',  ok: !!s.playwright},
+    {l:'Agents',    v: (d.agents||[]).length,        ok: true},
+  ];
+  g.innerHTML = cards.map(c => `
+    <div class="card fade-in">
+      <div class="cl">${c.l}</div>
+      <div class="cv ${c.ok ? 'ok' : 'err'}">${c.v ?? '—'}</div>
+    </div>`).join('');
+  document.getElementById('health-out').style.display = 'none';
+}
+
+function fmtUptime(s) {
+  if (!s) return '0s';
+  const h = Math.floor(s/3600), m = Math.floor((s%3600)/60), ss = s%60;
+  return h ? `${h}h ${m}m` : m ? `${m}m ${ss}s` : `${ss}s`;
+}
+
+// ── Auth ───────────────────────────────────────────────────────────────────────
+async function doLogin() {
+  const {ok, data} = await api('POST', '/auth/login', {
+    email: document.getElementById('login-email').value,
+    password: document.getElementById('login-pass').value
+  });
+  if (ok && data.access_token) { setToken(data.access_token, data.user); showR('login-out', {success:true, user:data.user}, true); }
+  else showR('login-out', data, false);
+}
+
+async function doAdminLogin() {
+  const {ok, data} = await api('POST', '/auth/admin-login', {
+    email: document.getElementById('login-email').value,
+    password: document.getElementById('login-pass').value
+  });
+  if (ok && data.access_token) { setToken(data.access_token, data.user); showR('login-out', {success:true, user:data.user}, true); }
+  else showR('login-out', data, false);
+}
+
+async function doSignup() {
+  const {ok, data} = await api('POST', '/auth/signup', {
+    email: document.getElementById('signup-email').value,
+    password: document.getElementById('signup-pass').value,
+    full_name: document.getElementById('signup-name').value || undefined
+  });
+  if (ok && data.access_token) { setToken(data.access_token, data.user); showR('signup-out', {success:true, user:data.user}, true); }
+  else showR('signup-out', data, false);
+}
+
+// ── Chat Image State ──────────────────────────────────────────────────────────
+let _chatImageDataUrl = null;   // base64 data URL ready to send
+let _chatImageUploading = false;
+
+function onChatImageSelected(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const allowed = ['image/jpeg','image/png','image/gif','image/webp'];
+  if (!allowed.includes(file.type)) {
+    appendMsg('⚠ Unsupported image type. Use JPG, PNG, GIF or WEBP.', 'system');
+    event.target.value = '';
+    return;
+  }
+  if (file.size > 20 * 1024 * 1024) {
+    appendMsg('⚠ Image too large (max 20 MB).', 'system');
+    event.target.value = '';
+    return;
+  }
+
+  // Show preview immediately from local file
+  const localUrl = URL.createObjectURL(file);
+  const bar = document.getElementById('img-attach-bar');
+  const thumb = document.getElementById('img-preview-thumb');
+  const nameEl = document.getElementById('img-attach-name');
+  const statusEl = document.getElementById('img-attach-status');
+  const clipBtn = document.getElementById('img-clip-btn');
+
+  thumb.src = localUrl;
+  nameEl.textContent = file.name;
+  statusEl.textContent = '⏳ Uploading…';
+  bar.classList.add('visible');
+  clipBtn.classList.add('active');
+  _chatImageDataUrl = null;
+  _chatImageUploading = true;
+
+  // Upload to server to get data URL (server needs base64 for vision pipeline)
+  const fd = new FormData();
+  fd.append('file', file);
+  fetch(base() + '/images/upload', { method: 'POST', headers: authH(), body: fd })
+    .then(r => r.json())
+    .then(data => {
+      if (data.data_url) {
+        _chatImageDataUrl = data.data_url;
+        statusEl.textContent = '✅ Ready — ' + (file.size / 1024).toFixed(0) + ' KB';
+        statusEl.style.color = 'var(--green)';
+      } else {
+        statusEl.textContent = '❌ Upload failed: ' + (data.detail || JSON.stringify(data));
+        statusEl.style.color = 'var(--red)';
+        _chatImageDataUrl = null;
+      }
+      _chatImageUploading = false;
+    })
+    .catch(err => {
+      statusEl.textContent = '❌ ' + err.message;
+      statusEl.style.color = 'var(--red)';
+      _chatImageUploading = false;
+    });
+}
+
+function clearChatImage() {
+  _chatImageDataUrl = null;
+  _chatImageUploading = false;
+  document.getElementById('chat-img-input').value = '';
+  document.getElementById('img-attach-bar').classList.remove('visible');
+  document.getElementById('img-preview-thumb').src = '';
+  document.getElementById('img-attach-status').style.color = 'var(--muted2)';
+  document.getElementById('img-clip-btn').classList.remove('active');
+}
+
+// ── Chat Stream ────────────────────────────────────────────────────────────────
+function appendMsg(text, role, meta='') {
+  const wrap = document.getElementById('chat-messages');
+  const div = document.createElement('div');
+  div.className = 'msg ' + role;
+  div.appendChild(document.createTextNode(text));
+  if (meta) { const m = document.createElement('div'); m.className='msg-meta'; m.textContent=meta; div.appendChild(m); }
+  wrap.appendChild(div);
+  wrap.scrollTop = wrap.scrollHeight;
+  return div;
+}
+
+function appendMsgWithImage(text, imgSrc, role) {
+  const wrap = document.getElementById('chat-messages');
+  const div = document.createElement('div');
+  div.className = 'msg ' + role;
+  const img = document.createElement('img');
+  img.src = imgSrc; img.className = 'msg-img'; img.alt = 'attached image';
+  div.appendChild(img);
+  div.appendChild(document.createTextNode(text));
+  wrap.appendChild(div);
+  wrap.scrollTop = wrap.scrollHeight;
+  return div;
+}
+
+function chatKeydown(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); doStreamChat(); }
+}
+
+function clearChat() {
+  document.getElementById('chat-messages').innerHTML = '<div class="msg system">Chat cleared ▸</div>';
+  clearChatImage();
+}
+
+function doStreamChat() {
+  if (!TOKEN) { appendMsg('⚠ Please login first', 'system'); return; }
+  const input = document.getElementById('chat-input');
+  const message = input.value.trim();
+  if (!message && !_chatImageDataUrl) return;
+
+  if (_chatImageUploading) {
+    appendMsg('⏳ Image still uploading, please wait a moment…', 'system');
+    return;
+  }
+
+  const imageUrl = _chatImageDataUrl || null;
+  const displayText = message || '🖼 Analyze this image';
+
+  // Show user bubble — with image thumbnail if attached
+  if (imageUrl) {
+    const thumb = document.getElementById('img-preview-thumb').src;
+    appendMsgWithImage(displayText, thumb, 'user');
+  } else {
+    appendMsg(displayText, 'user');
+  }
+
+  input.value = '';
+  clearChatImage();
+
+  const aiDiv = appendMsg('▍', 'ai');
+  let fullText = '', agent = '';
+  const btn = document.getElementById('chat-send-btn');
+  btn.disabled = true;
+
+  const payload = {
+    message: displayText,
+    model_type: document.getElementById('chat-model').value,
+    use_rag: document.getElementById('chat-rag').checked,
+  };
+  if (imageUrl) payload.image_url = imageUrl;
+
+  fetch(base() + '/chat-stream', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json', ...authH()},
+    body: JSON.stringify(payload)
+  }).then(res => {
+    if (!res.ok) return res.json().then(d => { aiDiv.childNodes[0].textContent = '❌ ' + JSON.stringify(d); btn.disabled = false; });
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let buf = '';
+    function read() {
+      reader.read().then(({done, value}) => {
+        if (done) {
+          if (agent) { const m = document.createElement('div'); m.className='msg-meta'; m.textContent=`agent: ${agent}`; aiDiv.appendChild(m); }
+          btn.disabled = false; return;
+        }
+        buf += decoder.decode(value, {stream: true});
+        const lines = buf.split('\n'); buf = lines.pop();
+        for (const line of lines) {
+          if (!line.startsWith('data: ')) continue;
+          try {
+            const evt = JSON.parse(line.slice(6));
+            if (evt.type === 'chunk') { fullText += evt.content; aiDiv.childNodes[0].textContent = fullText; }
+            else if (evt.type === 'agent') agent = evt.agent;
+            else if (evt.type === 'status') { aiDiv.childNodes[0].textContent = evt.message || '▍'; }
+            else if (evt.type === 'error') { fullText += '\n❌ ' + evt.message; aiDiv.childNodes[0].textContent = fullText; }
+          } catch(e) {}
+        }
+        document.getElementById('chat-messages').scrollTop = 99999;
+        read();
+      });
+    }
+    read();
+  }).catch(e => { aiDiv.childNodes[0].textContent = '❌ ' + e.message; btn.disabled = false; });
+}
+
+// ── Chat Basic ─────────────────────────────────────────────────────────────────
+async function doBasicChat() {
+  const {ok, data} = await api('POST', '/chat', {
+    message: document.getElementById('basic-msg').value,
+    model_type: document.getElementById('basic-model').value,
+    use_rag: document.getElementById('basic-rag').checked,
+    image_url: document.getElementById('basic-image').value || undefined
+  });
+  showR('basic-out', data, ok);
+}
+
+// ── Documents ─────────────────────────────────────────────────────────────────
+async function loadDocuments() {
+  if (!TOKEN) { document.getElementById('docs-table').innerHTML = '<p style="color:var(--muted2);font-size:11px">Login first</p>'; return; }
+  const {ok, data} = await api('GET', '/documents');
+  const docs = data.documents || [];
+  if (!ok || !docs.length) { document.getElementById('docs-table').innerHTML = '<p style="color:var(--muted2);font-size:11px">No documents yet</p>'; return; }
+  document.getElementById('docs-table').innerHTML = `
+    <table>
+      <tr><th>Name</th><th>Type</th><th>Size</th><th>Chunks</th><th>Uploaded</th></tr>
+      ${docs.map(d => `<tr>
+        <td>${escHtml(d.filename || d.original_name)}</td>
+        <td><span class="pill pill-cyan">${(d.file_type||'').split('/')[1] || '?'}</span></td>
+        <td>${(d.file_size/1024).toFixed(1)} KB</td>
+        <td>${d.chunk_count}</td>
+        <td style="color:var(--muted2)">${(d.uploaded_at||'').slice(0,19)}</td>
+      </tr>`).join('')}
+    </table>`;
+}
+
+async function doUploadDoc() {
+  const file = document.getElementById('doc-file').files[0];
+  if (!file) { showR('doc-upload-out', {error:'No file selected'}, false); return; }
+  const fd = new FormData(); fd.append('file', file);
+  const r = await fetch(base() + '/documents/upload', {method:'POST', headers: authH(), body: fd});
+  const data = await r.json().catch(() => ({}));
+  showR('doc-upload-out', data, r.ok);
+  if (r.ok) loadDocuments();
+}
+
+// ── Memory ────────────────────────────────────────────────────────────────────
+async function loadMemory() {
+  if (!TOKEN) return;
+  const {ok, data} = await api('GET', '/memory');
+  if (!ok) { document.getElementById('memory-status').textContent = JSON.stringify(data); return; }
+  document.getElementById('memory-status').textContent =
+    `${data.count} / ${data.max_memories} memories · enabled: ${data.memory_enabled}`;
+  const memories = data.memories || [];
+  if (!memories.length) { document.getElementById('memory-table').innerHTML = '<p style="color:var(--muted2);font-size:11px">No memories yet</p>'; return; }
+  document.getElementById('memory-table').innerHTML = `
+    <table>
+      <tr><th>Content</th><th>Category</th><th>Source</th><th></th></tr>
+      ${memories.map(m => `<tr>
+        <td>${escHtml(m.content)}</td>
+        <td><span class="pill pill-cyan">${m.category||'general'}</span></td>
+        <td><span class="pill ${m.source==='auto'?'pill-yellow':'pill-green'}">${m.source||'manual'}</span></td>
+        <td><button class="btn btn-danger btn-sm" onclick="deleteMemory('${m.id}')">Del</button></td>
+      </tr>`).join('')}
+    </table>`;
+}
+
+async function addMemory() {
+  const content = document.getElementById('mem-content').value.trim();
+  const category = document.getElementById('mem-cat').value;
+  if (!content) return;
+  const {ok, data} = await api('POST', '/memory', {content, category});
+  if (ok) { document.getElementById('mem-content').value = ''; loadMemory(); }
+  else document.getElementById('memory-status').textContent = JSON.stringify(data);
+}
+
+async function deleteMemory(id) {
+  const {ok} = await api('DELETE', `/memory/${id}`);
+  if (ok) loadMemory();
+}
+
+async function clearAllMemory() {
+  if (!confirm('Clear ALL memories?')) return;
+  const {ok, data} = await api('DELETE', '/memory');
+  document.getElementById('memory-status').textContent = ok ? '✅ Cleared' : JSON.stringify(data);
+  loadMemory();
+}
+
+// ── Stats ─────────────────────────────────────────────────────────────────────
+async function loadStats() {
+  if (!TOKEN) return;
+  const {ok, data} = await api('GET', '/user/stats');
+  if (!ok) { showR('stats-out', data, false); return; }
+  const pw = data.playwright_available;
+  const cards = [
+    {l:'Subscription',    v: data.subscription,   ok: data.subscription !== 'free'},
+    {l:'Messages Today',  v: `${data.messages_used_today} / ${data.messages_limit===-1?'∞':data.messages_limit}`, ok: true},
+    {l:'Documents',       v: `${data.documents} / ${data.document_limit===-1?'∞':data.document_limit}`,          ok: true},
+    {l:'Memories',        v: data.memory_count,    ok: true},
+    {l:'Agent Jobs',      v: `${data.agent_jobs} / ${data.agent_jobs_limit===-1?'∞':data.agent_jobs_limit}`,     ok: true},
+    {l:'MySQL Access',    v: data.mysql_access    ? '✅' : '❌', ok: data.mysql_access},
+    {l:'Image Analysis',  v: data.image_analysis  ? '✅' : '❌', ok: data.image_analysis},
+    {l:'Playwright',      v: pw ? '✅ Ready' : '❌ Not Installed', ok: pw, warn: !pw},
+  ];
+  document.getElementById('stats-grid').innerHTML = cards.map(c => `
+    <div class="card fade-in">
+      <div class="cl">${c.l}</div>
+      <div class="cv ${c.warn ? 'err' : c.ok ? 'ok' : 'err'}">${c.v}</div>
+    </div>`).join('');
+  document.getElementById('stats-out').style.display = 'none';
+}
+
+// ── Job Type Hint ─────────────────────────────────────────────────────────────
+function updateJobTypeHint() {
+  const type = document.getElementById('jc-type').value;
+  const hint = document.getElementById('job-type-hint');
+  if (type === 'naukri_apply') {
+    hint.innerHTML = `<b style="color:var(--cyan)">Naukri.com Auto-Apply</b><br>
+    Logs in to Naukri.com, searches each role, clicks Apply/Easy Apply on matching jobs within the time window.`;
+  } else if (type === 'linkedin_apply') {
+    hint.innerHTML = `<b style="color:var(--cyan)">LinkedIn Easy Apply</b><br>
+    Logs in to LinkedIn, searches with Easy Apply filter, submits applications automatically.<br>
+    <span style="color:var(--yellow)">⚠ LinkedIn may require 2FA — disable it first.</span>`;
+  } else {
+    hint.innerHTML = `<b style="color:var(--cyan)">Custom Job</b><br>Reserved for future custom automation scripts.`;
+  }
+}
+
+// ── Load Jobs ─────────────────────────────────────────────────────────────────
+async function loadJobs() {
+  if (!TOKEN) { document.getElementById('jobs-list').innerHTML = '<p style="color:var(--muted2);font-size:11px">Login first</p>'; return; }
+  const {ok, data} = await api('GET', '/agent-jobs');
+  if (!ok) { document.getElementById('jobs-list').innerHTML = `<p style="color:var(--red);font-size:11px">${JSON.stringify(data)}</p>`; return; }
+  const jobs = data.jobs || [];
+  _jobsCache = jobs;
+  if (!jobs.length) {
+    document.getElementById('jobs-list').innerHTML = `
+      <p style="color:var(--muted2);font-size:11px">No agent jobs yet.</p>
+      <button class="btn btn-purple btn-sm" style="margin-top:10px" onclick="showPanel('jobs-create')">+ Create Your First Job</button>`;
+    return;
+  }
+  document.getElementById('jobs-list').innerHTML = jobs.map(j => renderJobCard(j)).join('');
+}
+
+function renderJobCard(j) {
+  const params = (() => { try { return JSON.parse(j.parameters || '{}'); } catch(e) { return {}; } })();
+  const sP = {idle:'pill-muted',running:'pill-yellow running-dot',completed:'pill-green',failed:'pill-red'}[j.status] || 'pill-muted';
+  const eP = j.enabled ? 'pill-green' : 'pill-red';
+  const tP = j.job_type === 'naukri_apply' ? 'pill-orange' : j.job_type === 'linkedin_apply' ? 'pill-cyan' : 'pill-muted';
+  const roles = (params.roles || []).join(', ') || '—';
+  const lsP = {completed:'pill-green',failed:'pill-red'}[j.last_run_status] || 'pill-muted';
+  return `
+    <div class="job-card fade-in" id="jcard-${j.id}">
+      <div class="job-card-hdr">
+        <h4>${escHtml(j.name)}</h4>
+        <span class="pill ${tP}">${j.job_type}</span>
+        <span class="pill ${sP}">${j.status}</span>
+        <span class="pill ${eP}">${j.enabled ? 'enabled' : 'disabled'}</span>
+      </div>
+      <div class="job-card-meta">
+        <span>⏰ <b>${escHtml(j.cron_schedule)}</b></span>
+        <span>🕐 <b>${j.time_window_start}–${j.time_window_end}</b></span>
+        <span>🔍 <b>${escHtml(roles)}</b></span>
+        <span>📍 <b>${escHtml(params.location || '—')}</b></span>
+        <span>✅ Applied: <b>${j.total_applied || 0}</b></span>
+        <span>▶ Runs: <b>${j.total_runs || 0}</b></span>
+        <span>🕒 Last: <b>${j.last_run_at ? j.last_run_at.slice(0,16) : 'never'}</b></span>
+        <span>Status: <span class="pill ${lsP}">${j.last_run_status || '—'}</span></span>
+      </div>
+      <div class="job-card-actions">
+        <button class="btn btn-primary btn-sm" onclick="runJobNow('${j.id}','${escHtml(j.name)}')">▶ Run Now</button>
+        <button class="btn btn-secondary btn-sm" onclick="toggleJob('${j.id}')">${j.enabled ? '⏸ Disable' : '▶ Enable'}</button>
+        <button class="btn btn-purple btn-sm" onclick="viewJobLogs('${j.id}','${escHtml(j.name)}')">📋 Logs</button>
+        <button class="btn btn-orange btn-sm" onclick="goDebug('${j.id}')">🔬 Debug</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteJob('${j.id}','${escHtml(j.name)}')">🗑 Delete</button>
+      </div>
+      <div id="jcard-out-${j.id}" style="display:none" class="rbox info"></div>
+    </div>`;
+}
+
+async function runJobNow(jobId, name) {
+  if (!confirm(`Run "${name}" immediately?\n(Bypasses time window)`)) return;
+  const el = document.getElementById(`jcard-out-${jobId}`);
+  if (el) { el.style.display='block'; el.className='rbox info'; el.textContent='⚡ Triggering job…'; }
+  const {ok, data} = await api('POST', `/agent-jobs/${jobId}/run`);
+  if (el) {
+    el.className = 'rbox ' + (ok ? 'ok' : 'error');
+    el.textContent = ok ? '⚡ Job triggered! Refresh logs in a few seconds…' : JSON.stringify(data);
+  }
+  if (ok) setTimeout(() => loadJobs(), 3000);
+}
+
+async function toggleJob(jobId) {
+  const {ok, data} = await api('POST', `/agent-jobs/${jobId}/toggle`);
+  if (ok) loadJobs();
+  else {
+    const el = document.getElementById(`jcard-out-${jobId}`);
+    if (el) { el.style.display='block'; el.className='rbox error'; el.textContent=JSON.stringify(data); }
+  }
+}
+
+async function deleteJob(jobId, name) {
+  if (!confirm(`Delete job "${name}"?\nThis will also remove all logs.`)) return;
+  const {ok, data} = await api('DELETE', `/agent-jobs/${jobId}`);
+  if (ok) loadJobs();
+  else {
+    const el = document.getElementById(`jcard-out-${jobId}`);
+    if (el) { el.style.display='block'; el.className='rbox error'; el.textContent=JSON.stringify(data); }
+  }
+}
+
+async function viewJobLogs(jobId, name) {
+  showPanel('jobs-logs');
+  await refreshJobLogs();
+  const sel = document.getElementById('log-job-select');
+  sel.value = jobId;
+  loadJobLogs();
+}
+
+function goDebug(jobId) {
+  showPanel('jobs-debug');
+  refreshDebugJobs().then(() => {
+    document.getElementById('debug-job-select').value = jobId;
+  });
+}
+
+// ── Create Job ────────────────────────────────────────────────────────────────
+async function createJob() {
+  const name      = document.getElementById('jc-name').value.trim();
+  const job_type  = document.getElementById('jc-type').value;
+  const cron      = document.getElementById('jc-cron').value.trim();
+  const winStart  = document.getElementById('jc-win-start').value.trim();
+  const winEnd    = document.getElementById('jc-win-end').value.trim();
+  const credEmail = document.getElementById('jc-cred-email').value.trim();
+  const credPass  = document.getElementById('jc-cred-pass').value;
+  const rolesRaw  = document.getElementById('jc-roles').value.trim();
+  const location  = document.getElementById('jc-location').value.trim();
+  const expMin    = parseInt(document.getElementById('jc-exp-min').value) || 0;
+  const expMax    = parseInt(document.getElementById('jc-exp-max').value) || 10;
+  const maxApply  = parseInt(document.getElementById('jc-max-apply').value) || 10;
+  const easyOnly  = document.getElementById('jc-easy-only').checked;
+  const excludeRaw = document.getElementById('jc-exclude').value.trim();
+
+  if (!name)            { showR('job-create-out', {error:'Job name is required'}, false); return; }
+  if (!credEmail || !credPass) { showR('job-create-out', {error:'Credentials (email + password) are required'}, false); return; }
+  if (!rolesRaw)        { showR('job-create-out', {error:'At least one role is required'}, false); return; }
+
+  const roles   = rolesRaw.split(',').map(r => r.trim()).filter(Boolean);
+  const exclude = excludeRaw ? excludeRaw.split(',').map(r => r.trim()).filter(Boolean) : [];
+
+  const payload = {
+    name, description: document.getElementById('jc-desc').value.trim(),
+    job_type, cron_schedule: cron,
+    time_window_start: winStart || '11:00',
+    time_window_end:   winEnd   || '12:00',
+    credentials: { email: credEmail, password: credPass },
+    parameters: { roles, location, experience_min: expMin, experience_max: expMax, max_apply: maxApply, easy_apply_only: easyOnly, keywords_exclude: exclude }
+  };
+
+  const {ok, data} = await api('POST', '/agent-jobs', payload);
+  showR('job-create-out', ok ? {success: true, job_id: data.job?.id, message: `Job "${name}" created and scheduled!`} : data, ok);
+  if (ok) setTimeout(() => showPanel('jobs'), 1200);
+}
+
+// ── Job Logs ──────────────────────────────────────────────────────────────────
+async function refreshJobLogs() {
+  if (!TOKEN) return;
+  const {ok, data} = await api('GET', '/agent-jobs');
+  const jobs = data.jobs || [];
+  _jobsCache = jobs;
+  const sel = document.getElementById('log-job-select');
+  const cur = sel.value;
+  sel.innerHTML = '<option value="">— select a job —</option>' +
+    jobs.map(j => `<option value="${j.id}">${escHtml(j.name)} (${j.job_type})</option>`).join('');
+  if (cur) sel.value = cur;
+}
+
+async function loadJobLogs() {
+  const jobId = document.getElementById('log-job-select').value;
+  if (!jobId) { document.getElementById('job-logs-out').innerHTML = ''; return; }
+  const {ok, data} = await api('GET', `/agent-jobs/${jobId}/logs?limit=10`);
+  if (!ok) { document.getElementById('job-logs-out').innerHTML = `<div class="rbox error">${JSON.stringify(data)}</div>`; return; }
+  const logs = data.logs || [];
+  if (!logs.length) {
+    document.getElementById('job-logs-out').innerHTML = '<p style="color:var(--muted2);font-size:11px;margin-top:10px">No runs yet. Use "Run Now" to trigger immediately.</p>';
+    return;
+  }
+  document.getElementById('job-logs-out').innerHTML = logs.map(log => renderLogEntry(log)).join('');
+}
+
+function renderLogEntry(log) {
+  const sP = {completed:'pill-green',failed:'pill-red',running:'pill-yellow'}[log.status] || 'pill-muted';
+  const applied = Array.isArray(log.applied_jobs) ? log.applied_jobs : [];
+  const dur = log.duration_sec ? `${log.duration_sec}s` : '—';
+  const outputLines = (log.output || '').split('\n').map(line => {
+    if (line.includes('✅') || line.includes('Applied') || line.includes('Logged in')) return `<span class="l-ok">${escHtml(line)}</span>`;
+    if (line.includes('❌') || line.includes('Error') || line.includes('failed') || line.includes('CRITICAL')) return `<span class="l-err">${escHtml(line)}</span>`;
+    if (line.includes('⚠') || line.includes('Skipped')) return `<span class="l-warn">${escHtml(line)}</span>`;
+    return escHtml(line);
+  }).join('\n');
+
+  return `
+    <div style="background:var(--surface2);border:1px solid var(--border2);border-radius:4px;padding:12px;margin-bottom:10px" class="fade-in">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <span class="pill ${sP}">${log.status}</span>
+        <span style="font-size:10px;color:var(--muted2)">${(log.started_at||'').slice(0,19)}</span>
+        <span style="font-size:10px;color:var(--muted2)">· ${dur}</span>
+        <span style="font-size:10px;color:var(--green);margin-left:auto">✅ ${applied.length} applied</span>
+      </div>
+      ${applied.length ? `
+        <div style="margin-bottom:8px">
+          <div style="font-size:9px;color:var(--cyan);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">Applied Positions</div>
+          <table>
+            <tr><th>Title</th><th>Company</th><th>Time</th></tr>
+            ${applied.map(a => `<tr>
+              <td>${escHtml(a.title||'—')}</td>
+              <td>${escHtml(a.company||'—')}</td>
+              <td style="color:var(--muted2)">${(a.applied_at||'').slice(11,16)}</td>
+            </tr>`).join('')}
+          </table>
+        </div>` : ''}
+      ${log.error ? `<div style="color:var(--red);font-size:10px;margin-bottom:6px;background:var(--red-dim);border:1px solid rgba(255,68,85,.2);border-radius:3px;padding:6px 8px;white-space:pre-wrap;word-break:break-all">❌ ${escHtml(log.error)}</div>` : ''}
+      <details>
+        <summary style="cursor:pointer;font-size:10px;color:var(--muted2);user-select:none;list-style:none">▸ Full Log Output</summary>
+        <div class="log-out">${outputLines || '(empty)'}</div>
+      </details>
+    </div>`;
+}
+
+// ── Debug Run ─────────────────────────────────────────────────────────────────
+async function refreshDebugJobs() {
+  if (!TOKEN) return;
+  const {ok, data} = await api('GET', '/agent-jobs');
+  const jobs = data.jobs || [];
+  _jobsCache = jobs;
+  const sel = document.getElementById('debug-job-select');
+  const cur = sel.value;
+  sel.innerHTML = '<option value="">— select a job —</option>' +
+    jobs.map(j => `<option value="${j.id}">${escHtml(j.name)} (${j.job_type})</option>`).join('');
+  if (cur) sel.value = cur;
+}
+
+async function doDebugRun() {
+  const jobId = document.getElementById('debug-job-select').value;
+  if (!jobId) { document.getElementById('debug-status').textContent = '⚠ Select a job first'; return; }
+  const statusEl = document.getElementById('debug-status');
+  const outEl = document.getElementById('debug-out');
+  statusEl.textContent = '⏳ Running synchronously… this may take 1–3 minutes. Do not close tab.';
+  statusEl.style.color = 'var(--yellow)';
+  outEl.style.display = 'none';
+
+  const {ok, data} = await api('POST', `/agent-jobs/${jobId}/run-debug`);
+
+  statusEl.textContent = ok ? '✅ Debug run complete' : '❌ Debug run failed';
+  statusEl.style.color = ok ? 'var(--green)' : 'var(--red)';
+  outEl.style.display = 'block';
+
+  const log = data.latest_log;
+  let html = `<div class="debug-box">`;
+  html += `<b style="color:var(--cyan)">Playwright Available:</b> ${data.playwright_available ? '✅ Yes' : '❌ No — run: pip install playwright && playwright install chromium'}\n\n`;
+
+  if (data.error) {
+    html += `<b style="color:var(--red)">TOP-LEVEL ERROR:</b>\n${escHtml(data.error)}\n\n`;
+    if (data.traceback) html += `<b style="color:var(--red)">TRACEBACK:</b>\n${escHtml(data.traceback)}\n\n`;
+  }
+
+  if (log) {
+    html += `<b style="color:var(--cyan)">Status:</b> ${escHtml(log.status)}\n`;
+    html += `<b style="color:var(--cyan)">Duration:</b> ${log.duration_sec || 0}s\n`;
+    html += `<b style="color:var(--cyan)">Applied:</b> ${(log.applied_jobs||[]).length} positions\n\n`;
+    if (log.error) html += `<b style="color:var(--red)">JOB ERROR:</b>\n${escHtml(log.error)}\n\n`;
+    if (log.output) html += `<b style="color:var(--cyan)">OUTPUT:</b>\n${escHtml(log.output)}`;
+  } else if (!data.error) {
+    html += `<span style="color:var(--yellow)">No log entry found. The job may have failed before writing to DB.\nCheck the server terminal / jazz.log for errors.</span>`;
+  }
+
+  html += `</div>`;
+  outEl.innerHTML = html;
+}
+
+// ── Admin ─────────────────────────────────────────────────────────────────────
+async function adminStats() {
+  const {ok, data} = await api('GET', '/admin/stats');
+  document.getElementById('admin-table').innerHTML = '';
+  showR('admin-out', data, ok);
+}
+
+async function adminUsers() {
+  const {ok, data} = await api('GET', '/admin/users');
+  if (!ok) { showR('admin-out', data, false); return; }
+  document.getElementById('admin-out').style.display = 'none';
+  const users = data.users || [];
+  document.getElementById('admin-table').innerHTML = `
+    <table>
+      <tr><th>Email</th><th>Role</th><th>Plan</th><th>Memory</th><th>Created</th></tr>
+      ${users.map(u => `<tr>
+        <td>${escHtml(u.email||'—')}</td>
+        <td><span class="pill ${u.role==='admin'?'pill-red':'pill-cyan'}">${u.role}</span></td>
+        <td><span class="pill ${u.subscription==='enterprise'?'pill-yellow':u.subscription==='pro'?'pill-green':'pill-muted'}">${u.subscription}</span></td>
+        <td>${u.memory_enabled ? '✅' : '❌'}</td>
+        <td style="color:var(--muted2)">${(u.created_at||'').slice(0,10)}</td>
+      </tr>`).join('')}
+    </table>`;
+}
+
+async function adminAllJobs() {
+  const {ok, data} = await api('GET', '/admin/agent-jobs');
+  if (!ok) { showR('admin-out', data, false); return; }
+  document.getElementById('admin-out').style.display = 'none';
+  const jobs = data.jobs || [];
+  document.getElementById('admin-table').innerHTML = jobs.length ? `
+    <table>
+      <tr><th>Name</th><th>Type</th><th>User</th><th>Schedule</th><th>Runs</th><th>Applied</th><th>Last Status</th><th>On</th></tr>
+      ${jobs.map(j => `<tr>
+        <td>${escHtml(j.name)}</td>
+        <td><span class="pill pill-cyan">${j.job_type}</span></td>
+        <td style="color:var(--muted2)">${escHtml(j.email||'—')}</td>
+        <td style="color:var(--yellow)">${escHtml(j.cron_schedule)}</td>
+        <td>${j.total_runs||0}</td>
+        <td style="color:var(--green)">${j.total_applied||0}</td>
+        <td><span class="pill ${j.last_run_status==='completed'?'pill-green':j.last_run_status==='failed'?'pill-red':'pill-muted'}">${j.last_run_status||'—'}</span></td>
+        <td>${j.enabled?'✅':'❌'}</td>
+      </tr>`).join('')}
+    </table>` : '<p style="color:var(--muted2);font-size:11px">No agent jobs found.</p>';
+}
+
+async function adminLogs() {
+  const {ok, data} = await api('GET', '/logs');
+  document.getElementById('admin-table').innerHTML = '';
+  const el = document.getElementById('admin-out');
+  el.style.display = 'block'; el.className = 'rbox stream';
+  el.textContent = (data.logs || []).slice(-150).join('\n');
+  el.scrollTop = el.scrollHeight;
+}
+
+// ── Raw ───────────────────────────────────────────────────────────────────────
+async function doRaw() {
+  const method   = document.getElementById('raw-method').value;
+  const path     = document.getElementById('raw-path').value;
+  const bodyStr  = document.getElementById('raw-body').value.trim();
+  const withAuth = document.getElementById('raw-auth').checked;
+  const headers  = {'Content-Type': 'application/json', ...(withAuth ? authH() : {})};
+  let body;
+  if (bodyStr) { try { body = JSON.parse(bodyStr); } catch(e) { showR('raw-out', {error:'Invalid JSON body'}, false); return; } }
+  try {
+    const opts = {method, headers};
+    if (body && method !== 'GET') opts.body = JSON.stringify(body);
+    const r = await fetch(base() + path, opts);
+    const data = await r.json().catch(() => ({raw: `HTTP ${r.status}`}));
+    showR('raw-out', data, r.ok);
+  } catch(e) { showR('raw-out', {error: e.message}, false); }
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+updateTokenUI();
+updateJobTypeHint();
+setTimeout(doHealth, 300);
+</script>
+</body>
+</html>
