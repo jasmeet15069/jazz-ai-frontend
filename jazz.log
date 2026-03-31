@@ -371,3 +371,112 @@
 2026-03-29 09:56:28,660 [INFO] jazz —   DB:    /home/ubuntu/jazz-ai/jazz-ai-frontend/jazz.db
 2026-03-29 09:56:28,660 [INFO] jazz —   ADMIN: jasmeet.15069@gmail.com
 2026-03-29 09:56:28,660 [INFO] jazz — ============================================================
+2026-03-31 12:47:10,477 [INFO] jazz — [PLAYWRIGHT] Available ✅
+2026-03-31 12:47:16,122 [INFO] sentence_transformers.SentenceTransformer — Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-31 12:47:16,474 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/modules.json "HTTP/1.1 307 Temporary Redirect"
+2026-03-31 12:47:16,481 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/modules.json "HTTP/1.1 200 OK"
+2026-03-31 12:47:16,742 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config_sentence_transformers.json "HTTP/1.1 307 Temporary Redirect"
+2026-03-31 12:47:16,748 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/config_sentence_transformers.json "HTTP/1.1 200 OK"
+2026-03-31 12:47:16,985 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config_sentence_transformers.json "HTTP/1.1 307 Temporary Redirect"
+2026-03-31 12:47:16,992 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/config_sentence_transformers.json "HTTP/1.1 200 OK"
+2026-03-31 12:47:17,228 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+2026-03-31 12:47:17,236 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/README.md "HTTP/1.1 200 OK"
+2026-03-31 12:47:17,477 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/modules.json "HTTP/1.1 307 Temporary Redirect"
+2026-03-31 12:47:17,484 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/modules.json "HTTP/1.1 200 OK"
+2026-03-31 12:47:17,729 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/sentence_bert_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-03-31 12:47:17,736 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/sentence_bert_config.json "HTTP/1.1 200 OK"
+2026-03-31 12:47:17,974 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/adapter_config.json "HTTP/1.1 404 Not Found"
+2026-03-31 12:47:18,218 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-03-31 12:47:18,226 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/config.json "HTTP/1.1 200 OK"
+2026-03-31 12:47:18,752 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-03-31 12:47:18,758 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/config.json "HTTP/1.1 200 OK"
+2026-03-31 12:47:18,995 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-03-31 12:47:19,001 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/tokenizer_config.json "HTTP/1.1 200 OK"
+2026-03-31 12:47:19,242 [INFO] httpx — HTTP Request: GET https://huggingface.co/api/models/sentence-transformers/all-MiniLM-L6-v2/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+2026-03-31 12:47:19,479 [INFO] httpx — HTTP Request: GET https://huggingface.co/api/models/sentence-transformers/all-MiniLM-L6-v2/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+2026-03-31 12:47:19,809 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/1_Pooling/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-03-31 12:47:19,815 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/1_Pooling%2Fconfig.json "HTTP/1.1 200 OK"
+2026-03-31 12:47:20,059 [INFO] httpx — HTTP Request: GET https://huggingface.co/api/models/sentence-transformers/all-MiniLM-L6-v2 "HTTP/1.1 200 OK"
+2026-03-31 12:47:20,162 [INFO] jazz — [CHROMADB] Initialized ✅
+2026-03-31 12:47:20,541 [INFO] jazz — [PLAYWRIGHT] Available ✅
+2026-03-31 12:47:20,551 [INFO] jazz — [CHROMADB] Initialized ✅
+2026-03-31 12:47:20,654 [INFO] jazz — ============================================================
+2026-03-31 12:47:20,654 [INFO] jazz — [STARTUP] JAZZ AI v6.0 (Obsidian Terminal Edition)
+2026-03-31 12:47:20,654 [INFO] jazz —   DB:         /home/ubuntu/jazz-ai/jazz-ai-frontend/jazz.db
+2026-03-31 12:47:20,654 [INFO] jazz —   ADMIN:      jasmeet.15069@gmail.com
+2026-03-31 12:47:20,654 [INFO] jazz —   CHROMADB:   ✅
+2026-03-31 12:47:20,654 [INFO] jazz —   GROQ:       ✅
+2026-03-31 12:47:20,654 [INFO] jazz —   HF_TOKEN:   ✅
+2026-03-31 12:47:20,654 [INFO] jazz —   PLAYWRIGHT: ✅
+2026-03-31 12:47:20,654 [INFO] jazz —   SITES_DIR:  /home/ubuntu/jazz-ai/jazz-ai-frontend/workspace/sites
+2026-03-31 12:47:20,655 [INFO] jazz — ============================================================
+2026-03-31 12:47:20,660 [INFO] jazz — [SQLITE] Initialized ✅  path=/home/ubuntu/jazz-ai/jazz-ai-frontend/jazz.db
+2026-03-31 12:47:22,362 [INFO] jazz — [SQLITE] Schema indexed — 20 tables ✅
+2026-03-31 12:47:22,440 [ERROR] jazz — [MYSQL] Pool failed: 2003: Can't connect to MySQL server on 'mysql-5533402-jasmeetsayss-9ad5.f.aivencloud.com:10991' (Errno -2: Name or service not known) ❌
+2026-03-31 12:47:22,442 [ERROR] jazz — [MYSQL] Pool failed: 2003: Can't connect to MySQL server on 'mysql-5533402-jasmeetsayss-9ad5.f.aivencloud.com:10991' (Errno -2: Name or service not known) ❌
+2026-03-31 12:47:22,442 [INFO] apscheduler.scheduler — Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-03-31 12:47:22,442 [INFO] apscheduler.scheduler — Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-03-31 12:47:22,443 [INFO] apscheduler.scheduler — Added job "index_sqlite_schema" to job store "default"
+2026-03-31 12:47:22,443 [INFO] apscheduler.scheduler — Added job "index_mysql_schema" to job store "default"
+2026-03-31 12:47:22,443 [INFO] apscheduler.scheduler — Scheduler started
+2026-03-31 12:47:22,444 [INFO] jazz — [SCHEDULER] Loaded 0 agent jobs ✅
+2026-03-31 12:47:22,445 [INFO] jazz — [STARTUP] All services ready ✅
+2026-03-31 13:32:32,878 [INFO] jazz — [PLAYWRIGHT] Available ✅
+2026-03-31 13:32:38,535 [INFO] sentence_transformers.SentenceTransformer — Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-31 13:32:39,087 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/modules.json "HTTP/1.1 307 Temporary Redirect"
+2026-03-31 13:32:39,095 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/modules.json "HTTP/1.1 200 OK"
+2026-03-31 13:32:39,331 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config_sentence_transformers.json "HTTP/1.1 307 Temporary Redirect"
+2026-03-31 13:32:39,337 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/config_sentence_transformers.json "HTTP/1.1 200 OK"
+2026-03-31 13:32:39,590 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config_sentence_transformers.json "HTTP/1.1 307 Temporary Redirect"
+2026-03-31 13:32:39,602 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/config_sentence_transformers.json "HTTP/1.1 200 OK"
+2026-03-31 13:32:39,882 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+2026-03-31 13:32:39,893 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/README.md "HTTP/1.1 200 OK"
+2026-03-31 13:32:40,140 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/modules.json "HTTP/1.1 307 Temporary Redirect"
+2026-03-31 13:32:40,147 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/modules.json "HTTP/1.1 200 OK"
+2026-03-31 13:32:40,382 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/sentence_bert_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-03-31 13:32:40,389 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/sentence_bert_config.json "HTTP/1.1 200 OK"
+2026-03-31 13:32:40,624 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/adapter_config.json "HTTP/1.1 404 Not Found"
+2026-03-31 13:32:40,863 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-03-31 13:32:40,870 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/config.json "HTTP/1.1 200 OK"
+2026-03-31 13:32:41,318 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-03-31 13:32:41,325 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/config.json "HTTP/1.1 200 OK"
+2026-03-31 13:32:41,567 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-03-31 13:32:41,574 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/tokenizer_config.json "HTTP/1.1 200 OK"
+2026-03-31 13:32:41,848 [INFO] httpx — HTTP Request: GET https://huggingface.co/api/models/sentence-transformers/all-MiniLM-L6-v2/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+2026-03-31 13:32:42,087 [INFO] httpx — HTTP Request: GET https://huggingface.co/api/models/sentence-transformers/all-MiniLM-L6-v2/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+2026-03-31 13:32:42,420 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/1_Pooling/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-03-31 13:32:42,426 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/1_Pooling%2Fconfig.json "HTTP/1.1 200 OK"
+2026-03-31 13:32:42,671 [INFO] httpx — HTTP Request: GET https://huggingface.co/api/models/sentence-transformers/all-MiniLM-L6-v2 "HTTP/1.1 200 OK"
+2026-03-31 13:32:42,776 [INFO] jazz — [CHROMADB] Initialized ✅
+2026-03-31 13:32:43,153 [INFO] jazz — [PLAYWRIGHT] Available ✅
+2026-03-31 13:32:43,163 [INFO] jazz — [CHROMADB] Initialized ✅
+2026-03-31 13:32:43,268 [INFO] jazz — ============================================================
+2026-03-31 13:32:43,268 [INFO] jazz — [STARTUP] JAZZ AI v6.0 (Obsidian Terminal Edition)
+2026-03-31 13:32:43,268 [INFO] jazz —   DB:         /home/ubuntu/jazz-ai/jazz-ai-frontend/jazz.db
+2026-03-31 13:32:43,268 [INFO] jazz —   ADMIN:      jasmeet.15069@gmail.com
+2026-03-31 13:32:43,269 [INFO] jazz —   CHROMADB:   ✅
+2026-03-31 13:32:43,269 [INFO] jazz —   GROQ:       ✅
+2026-03-31 13:32:43,269 [INFO] jazz —   HF_TOKEN:   ✅
+2026-03-31 13:32:43,269 [INFO] jazz —   PLAYWRIGHT: ✅
+2026-03-31 13:32:43,269 [INFO] jazz —   SITES_DIR:  /home/ubuntu/jazz-ai/jazz-ai-frontend/workspace/sites
+2026-03-31 13:32:43,269 [INFO] jazz — ============================================================
+2026-03-31 13:32:43,275 [INFO] jazz — [SQLITE] Initialized ✅  path=/home/ubuntu/jazz-ai/jazz-ai-frontend/jazz.db
+2026-03-31 13:32:45,096 [INFO] jazz — [SQLITE] Schema indexed — 20 tables ✅
+2026-03-31 13:32:45,407 [ERROR] jazz — [MYSQL] Pool failed: 2003: Can't connect to MySQL server on 'mysql-5533402-jasmeetsayss-9ad5.f.aivencloud.com:10991' (Errno -2: Name or service not known) ❌
+2026-03-31 13:32:45,414 [ERROR] jazz — [MYSQL] Pool failed: 2003: Can't connect to MySQL server on 'mysql-5533402-jasmeetsayss-9ad5.f.aivencloud.com:10991' (Errno -2: Name or service not known) ❌
+2026-03-31 13:32:45,414 [INFO] apscheduler.scheduler — Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-03-31 13:32:45,415 [INFO] apscheduler.scheduler — Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-03-31 13:32:45,415 [INFO] apscheduler.scheduler — Added job "index_sqlite_schema" to job store "default"
+2026-03-31 13:32:45,415 [INFO] apscheduler.scheduler — Added job "index_mysql_schema" to job store "default"
+2026-03-31 13:32:45,415 [INFO] apscheduler.scheduler — Scheduler started
+2026-03-31 13:32:45,417 [INFO] jazz — [SCHEDULER] Loaded 0 agent jobs ✅
+2026-03-31 13:32:45,417 [INFO] jazz — [STARTUP] All services ready ✅
+2026-03-31 13:33:58,637 [INFO] httpx — HTTP Request: POST https://router.huggingface.co/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-31 13:33:58,650 [ERROR] jazz — [VISION] Expecting value: line 1 column 1 (char 0)
+2026-03-31 13:34:01,157 [INFO] httpx — HTTP Request: POST https://router.huggingface.co/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-31 13:35:00,308 [INFO] jazz — [VISION] Pipeline 71.99s
+2026-03-31 13:35:01,431 [INFO] httpx — HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-31 13:36:09,875 [INFO] httpx — HTTP Request: POST https://router.huggingface.co/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-31 13:36:19,400 [INFO] httpx — HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-31 13:36:47,055 [INFO] jazz — [SHUTDOWN] Stopping...
+2026-03-31 13:36:47,055 [INFO] apscheduler.scheduler — Scheduler has been shut down
