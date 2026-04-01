@@ -480,3 +480,179 @@
 2026-03-31 13:36:19,400 [INFO] httpx — HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
 2026-03-31 13:36:47,055 [INFO] jazz — [SHUTDOWN] Stopping...
 2026-03-31 13:36:47,055 [INFO] apscheduler.scheduler — Scheduler has been shut down
+2026-03-31 14:18:19,490 [INFO] jazz — [PLAYWRIGHT] Available ✅
+2026-03-31 14:18:25,139 [INFO] sentence_transformers.SentenceTransformer — Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2026-03-31 14:18:25,685 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/modules.json "HTTP/1.1 307 Temporary Redirect"
+2026-03-31 14:18:25,693 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/modules.json "HTTP/1.1 200 OK"
+2026-03-31 14:18:25,927 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config_sentence_transformers.json "HTTP/1.1 307 Temporary Redirect"
+2026-03-31 14:18:25,936 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/config_sentence_transformers.json "HTTP/1.1 200 OK"
+2026-03-31 14:18:26,174 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config_sentence_transformers.json "HTTP/1.1 307 Temporary Redirect"
+2026-03-31 14:18:26,181 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/config_sentence_transformers.json "HTTP/1.1 200 OK"
+2026-03-31 14:18:26,420 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+2026-03-31 14:18:26,428 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/README.md "HTTP/1.1 200 OK"
+2026-03-31 14:18:26,664 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/modules.json "HTTP/1.1 307 Temporary Redirect"
+2026-03-31 14:18:26,673 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/modules.json "HTTP/1.1 200 OK"
+2026-03-31 14:18:26,910 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/sentence_bert_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-03-31 14:18:26,918 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/sentence_bert_config.json "HTTP/1.1 200 OK"
+2026-03-31 14:18:27,154 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/adapter_config.json "HTTP/1.1 404 Not Found"
+2026-03-31 14:18:27,393 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-03-31 14:18:27,399 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/config.json "HTTP/1.1 200 OK"
+2026-03-31 14:18:27,827 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-03-31 14:18:27,835 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/config.json "HTTP/1.1 200 OK"
+2026-03-31 14:18:28,072 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-03-31 14:18:28,079 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/tokenizer_config.json "HTTP/1.1 200 OK"
+2026-03-31 14:18:28,334 [INFO] httpx — HTTP Request: GET https://huggingface.co/api/models/sentence-transformers/all-MiniLM-L6-v2/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+2026-03-31 14:18:28,575 [INFO] httpx — HTTP Request: GET https://huggingface.co/api/models/sentence-transformers/all-MiniLM-L6-v2/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+2026-03-31 14:18:28,905 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/1_Pooling/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-03-31 14:18:28,914 [INFO] httpx — HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/1_Pooling%2Fconfig.json "HTTP/1.1 200 OK"
+2026-03-31 14:18:29,157 [INFO] httpx — HTTP Request: GET https://huggingface.co/api/models/sentence-transformers/all-MiniLM-L6-v2 "HTTP/1.1 200 OK"
+2026-03-31 14:18:29,261 [INFO] jazz — [CHROMADB] Initialized ✅
+2026-03-31 14:18:29,636 [INFO] jazz — [PLAYWRIGHT] Available ✅
+2026-03-31 14:18:29,646 [INFO] jazz — [CHROMADB] Initialized ✅
+2026-03-31 14:18:29,750 [INFO] jazz — ============================================================
+2026-03-31 14:18:29,750 [INFO] jazz — [STARTUP] JAZZ AI v6.0 (Obsidian Terminal Edition)
+2026-03-31 14:18:29,750 [INFO] jazz —   DB:         /home/ubuntu/jazz-ai/jazz-ai-frontend/jazz.db
+2026-03-31 14:18:29,750 [INFO] jazz —   ADMIN:      jasmeet.15069@gmail.com
+2026-03-31 14:18:29,750 [INFO] jazz —   CHROMADB:   ✅
+2026-03-31 14:18:29,750 [INFO] jazz —   GROQ:       ✅
+2026-03-31 14:18:29,750 [INFO] jazz —   HF_TOKEN:   ✅
+2026-03-31 14:18:29,750 [INFO] jazz —   PLAYWRIGHT: ✅
+2026-03-31 14:18:29,750 [INFO] jazz —   SITES_DIR:  /home/ubuntu/jazz-ai/jazz-ai-frontend/workspace/sites
+2026-03-31 14:18:29,751 [INFO] jazz — ============================================================
+2026-03-31 14:18:29,756 [INFO] jazz — [SQLITE] Initialized ✅  path=/home/ubuntu/jazz-ai/jazz-ai-frontend/jazz.db
+2026-03-31 14:18:31,465 [INFO] jazz — [SQLITE] Schema indexed — 20 tables ✅
+2026-03-31 14:18:31,737 [ERROR] jazz — [MYSQL] Pool failed: 2003: Can't connect to MySQL server on 'mysql-5533402-jasmeetsayss-9ad5.f.aivencloud.com:10991' (Errno -2: Name or service not known) ❌
+2026-03-31 14:18:31,740 [ERROR] jazz — [MYSQL] Pool failed: 2003: Can't connect to MySQL server on 'mysql-5533402-jasmeetsayss-9ad5.f.aivencloud.com:10991' (Errno -2: Name or service not known) ❌
+2026-03-31 14:18:31,740 [INFO] apscheduler.scheduler — Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-03-31 14:18:31,740 [INFO] apscheduler.scheduler — Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-03-31 14:18:31,741 [INFO] apscheduler.scheduler — Added job "index_sqlite_schema" to job store "default"
+2026-03-31 14:18:31,741 [INFO] apscheduler.scheduler — Added job "index_mysql_schema" to job store "default"
+2026-03-31 14:18:31,741 [INFO] apscheduler.scheduler — Scheduler started
+2026-03-31 14:18:31,742 [INFO] jazz — [SCHEDULER] Loaded 0 agent jobs ✅
+2026-03-31 14:18:31,743 [INFO] jazz — [STARTUP] All services ready ✅
+2026-03-31 14:48:31,741 [INFO] apscheduler.executors.default — Running job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-03-31 14:48:31 UTC)" (scheduled at 2026-03-31 14:48:31.740898+00:00)
+2026-03-31 14:48:32,011 [ERROR] jazz — [MYSQL] Pool failed: 2003: Can't connect to MySQL server on 'mysql-5533402-jasmeetsayss-9ad5.f.aivencloud.com:10991' (Errno -2: Name or service not known) ❌
+2026-03-31 14:48:32,011 [INFO] apscheduler.executors.default — Job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-03-31 15:18:31 UTC)" executed successfully
+2026-03-31 15:18:31,741 [INFO] apscheduler.executors.default — Running job "index_sqlite_schema (trigger: interval[1:00:00], next run at: 2026-03-31 16:18:31 UTC)" (scheduled at 2026-03-31 15:18:31.740640+00:00)
+2026-03-31 15:18:31,741 [INFO] apscheduler.executors.default — Running job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-03-31 15:48:31 UTC)" (scheduled at 2026-03-31 15:18:31.740898+00:00)
+2026-03-31 15:18:31,774 [ERROR] jazz — [MYSQL] Pool failed: 2003: Can't connect to MySQL server on 'mysql-5533402-jasmeetsayss-9ad5.f.aivencloud.com:10991' (Errno -2: Name or service not known) ❌
+2026-03-31 15:18:31,774 [INFO] apscheduler.executors.default — Job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-03-31 15:48:31 UTC)" executed successfully
+2026-03-31 15:18:33,434 [INFO] jazz — [SQLITE] Schema indexed — 20 tables ✅
+2026-03-31 15:18:33,435 [INFO] apscheduler.executors.default — Job "index_sqlite_schema (trigger: interval[1:00:00], next run at: 2026-03-31 16:18:31 UTC)" executed successfully
+2026-03-31 15:48:31,741 [INFO] apscheduler.executors.default — Running job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-03-31 16:18:31 UTC)" (scheduled at 2026-03-31 15:48:31.740898+00:00)
+2026-03-31 15:48:31,747 [ERROR] jazz — [MYSQL] Pool failed: 2003: Can't connect to MySQL server on 'mysql-5533402-jasmeetsayss-9ad5.f.aivencloud.com:10991' (Errno -2: Name or service not known) ❌
+2026-03-31 15:48:31,747 [INFO] apscheduler.executors.default — Job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-03-31 16:18:31 UTC)" executed successfully
+2026-03-31 16:18:31,741 [INFO] apscheduler.executors.default — Running job "index_sqlite_schema (trigger: interval[1:00:00], next run at: 2026-03-31 17:18:31 UTC)" (scheduled at 2026-03-31 16:18:31.740640+00:00)
+2026-03-31 16:18:31,741 [INFO] apscheduler.executors.default — Running job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-03-31 16:48:31 UTC)" (scheduled at 2026-03-31 16:18:31.740898+00:00)
+2026-03-31 16:18:31,776 [ERROR] jazz — [MYSQL] Pool failed: 2003: Can't connect to MySQL server on 'mysql-5533402-jasmeetsayss-9ad5.f.aivencloud.com:10991' (Errno -2: Name or service not known) ❌
+2026-03-31 16:18:31,776 [INFO] apscheduler.executors.default — Job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-03-31 16:48:31 UTC)" executed successfully
+2026-03-31 16:18:33,380 [INFO] jazz — [SQLITE] Schema indexed — 20 tables ✅
+2026-03-31 16:18:33,381 [INFO] apscheduler.executors.default — Job "index_sqlite_schema (trigger: interval[1:00:00], next run at: 2026-03-31 17:18:31 UTC)" executed successfully
+2026-03-31 16:48:31,741 [INFO] apscheduler.executors.default — Running job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-03-31 17:18:31 UTC)" (scheduled at 2026-03-31 16:48:31.740898+00:00)
+2026-03-31 16:48:31,894 [ERROR] jazz — [MYSQL] Pool failed: 2003: Can't connect to MySQL server on 'mysql-5533402-jasmeetsayss-9ad5.f.aivencloud.com:10991' (Errno -2: Name or service not known) ❌
+2026-03-31 16:48:31,894 [INFO] apscheduler.executors.default — Job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-03-31 17:18:31 UTC)" executed successfully
+2026-03-31 17:18:31,741 [INFO] apscheduler.executors.default — Running job "index_sqlite_schema (trigger: interval[1:00:00], next run at: 2026-03-31 18:18:31 UTC)" (scheduled at 2026-03-31 17:18:31.740640+00:00)
+2026-03-31 17:18:31,741 [INFO] apscheduler.executors.default — Running job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-03-31 17:48:31 UTC)" (scheduled at 2026-03-31 17:18:31.740898+00:00)
+2026-03-31 17:18:31,987 [ERROR] jazz — [MYSQL] Pool failed: 2003: Can't connect to MySQL server on 'mysql-5533402-jasmeetsayss-9ad5.f.aivencloud.com:10991' (Errno -2: Name or service not known) ❌
+2026-03-31 17:18:31,988 [INFO] apscheduler.executors.default — Job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-03-31 17:48:31 UTC)" executed successfully
+2026-03-31 17:18:33,376 [INFO] jazz — [SQLITE] Schema indexed — 20 tables ✅
+2026-03-31 17:18:33,377 [INFO] apscheduler.executors.default — Job "index_sqlite_schema (trigger: interval[1:00:00], next run at: 2026-03-31 18:18:31 UTC)" executed successfully
+2026-03-31 17:48:31,741 [INFO] apscheduler.executors.default — Running job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-03-31 18:18:31 UTC)" (scheduled at 2026-03-31 17:48:31.740898+00:00)
+2026-03-31 17:48:31,748 [ERROR] jazz — [MYSQL] Pool failed: 2003: Can't connect to MySQL server on 'mysql-5533402-jasmeetsayss-9ad5.f.aivencloud.com:10991' (Errno -2: Name or service not known) ❌
+2026-03-31 17:48:31,748 [INFO] apscheduler.executors.default — Job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-03-31 18:18:31 UTC)" executed successfully
+2026-03-31 18:18:31,741 [INFO] apscheduler.executors.default — Running job "index_sqlite_schema (trigger: interval[1:00:00], next run at: 2026-03-31 19:18:31 UTC)" (scheduled at 2026-03-31 18:18:31.740640+00:00)
+2026-03-31 18:18:31,741 [INFO] apscheduler.executors.default — Running job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-03-31 18:48:31 UTC)" (scheduled at 2026-03-31 18:18:31.740898+00:00)
+2026-03-31 18:18:31,775 [ERROR] jazz — [MYSQL] Pool failed: 2003: Can't connect to MySQL server on 'mysql-5533402-jasmeetsayss-9ad5.f.aivencloud.com:10991' (Errno -2: Name or service not known) ❌
+2026-03-31 18:18:31,775 [INFO] apscheduler.executors.default — Job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-03-31 18:48:31 UTC)" executed successfully
+2026-03-31 18:18:33,447 [INFO] jazz — [SQLITE] Schema indexed — 20 tables ✅
+2026-03-31 18:18:33,447 [INFO] apscheduler.executors.default — Job "index_sqlite_schema (trigger: interval[1:00:00], next run at: 2026-03-31 19:18:31 UTC)" executed successfully
+2026-03-31 18:48:31,741 [INFO] apscheduler.executors.default — Running job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-03-31 19:18:31 UTC)" (scheduled at 2026-03-31 18:48:31.740898+00:00)
+2026-03-31 18:48:31,915 [ERROR] jazz — [MYSQL] Pool failed: 2003: Can't connect to MySQL server on 'mysql-5533402-jasmeetsayss-9ad5.f.aivencloud.com:10991' (Errno -2: Name or service not known) ❌
+2026-03-31 18:48:31,915 [INFO] apscheduler.executors.default — Job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-03-31 19:18:31 UTC)" executed successfully
+2026-03-31 19:18:31,741 [INFO] apscheduler.executors.default — Running job "index_sqlite_schema (trigger: interval[1:00:00], next run at: 2026-03-31 20:18:31 UTC)" (scheduled at 2026-03-31 19:18:31.740640+00:00)
+2026-03-31 19:18:31,741 [INFO] apscheduler.executors.default — Running job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-03-31 19:48:31 UTC)" (scheduled at 2026-03-31 19:18:31.740898+00:00)
+2026-03-31 19:18:31,892 [ERROR] jazz — [MYSQL] Pool failed: 2003: Can't connect to MySQL server on 'mysql-5533402-jasmeetsayss-9ad5.f.aivencloud.com:10991' (Errno -2: Name or service not known) ❌
+2026-03-31 19:18:31,892 [INFO] apscheduler.executors.default — Job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-03-31 19:48:31 UTC)" executed successfully
+2026-03-31 19:18:33,373 [INFO] jazz — [SQLITE] Schema indexed — 20 tables ✅
+2026-03-31 19:18:33,374 [INFO] apscheduler.executors.default — Job "index_sqlite_schema (trigger: interval[1:00:00], next run at: 2026-03-31 20:18:31 UTC)" executed successfully
+2026-03-31 19:48:31,741 [INFO] apscheduler.executors.default — Running job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-03-31 20:18:31 UTC)" (scheduled at 2026-03-31 19:48:31.740898+00:00)
+2026-03-31 19:48:32,142 [ERROR] jazz — [MYSQL] Pool failed: 2003: Can't connect to MySQL server on 'mysql-5533402-jasmeetsayss-9ad5.f.aivencloud.com:10991' (Errno -2: Name or service not known) ❌
+2026-03-31 19:48:32,142 [INFO] apscheduler.executors.default — Job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-03-31 20:18:31 UTC)" executed successfully
+2026-03-31 20:18:31,741 [INFO] apscheduler.executors.default — Running job "index_sqlite_schema (trigger: interval[1:00:00], next run at: 2026-03-31 21:18:31 UTC)" (scheduled at 2026-03-31 20:18:31.740640+00:00)
+2026-03-31 20:18:31,741 [INFO] apscheduler.executors.default — Running job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-03-31 20:48:31 UTC)" (scheduled at 2026-03-31 20:18:31.740898+00:00)
+2026-03-31 20:18:31,918 [ERROR] jazz — [MYSQL] Pool failed: 2003: Can't connect to MySQL server on 'mysql-5533402-jasmeetsayss-9ad5.f.aivencloud.com:10991' (Errno -2: Name or service not known) ❌
+2026-03-31 20:18:31,918 [INFO] apscheduler.executors.default — Job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-03-31 20:48:31 UTC)" executed successfully
+2026-03-31 20:18:33,382 [INFO] jazz — [SQLITE] Schema indexed — 20 tables ✅
+2026-03-31 20:18:33,383 [INFO] apscheduler.executors.default — Job "index_sqlite_schema (trigger: interval[1:00:00], next run at: 2026-03-31 21:18:31 UTC)" executed successfully
+2026-03-31 20:48:31,741 [INFO] apscheduler.executors.default — Running job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-03-31 21:18:31 UTC)" (scheduled at 2026-03-31 20:48:31.740898+00:00)
+2026-03-31 20:48:31,772 [ERROR] jazz — [MYSQL] Pool failed: 2003: Can't connect to MySQL server on 'mysql-5533402-jasmeetsayss-9ad5.f.aivencloud.com:10991' (Errno -2: Name or service not known) ❌
+2026-03-31 20:48:31,772 [INFO] apscheduler.executors.default — Job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-03-31 21:18:31 UTC)" executed successfully
+2026-03-31 21:18:31,741 [INFO] apscheduler.executors.default — Running job "index_sqlite_schema (trigger: interval[1:00:00], next run at: 2026-03-31 22:18:31 UTC)" (scheduled at 2026-03-31 21:18:31.740640+00:00)
+2026-03-31 21:18:31,741 [INFO] apscheduler.executors.default — Running job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-03-31 21:48:31 UTC)" (scheduled at 2026-03-31 21:18:31.740898+00:00)
+2026-03-31 21:18:31,782 [ERROR] jazz — [MYSQL] Pool failed: 2003: Can't connect to MySQL server on 'mysql-5533402-jasmeetsayss-9ad5.f.aivencloud.com:10991' (Errno -2: Name or service not known) ❌
+2026-03-31 21:18:31,783 [INFO] apscheduler.executors.default — Job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-03-31 21:48:31 UTC)" executed successfully
+2026-03-31 21:18:33,384 [INFO] jazz — [SQLITE] Schema indexed — 20 tables ✅
+2026-03-31 21:18:33,384 [INFO] apscheduler.executors.default — Job "index_sqlite_schema (trigger: interval[1:00:00], next run at: 2026-03-31 22:18:31 UTC)" executed successfully
+2026-03-31 21:48:31,741 [INFO] apscheduler.executors.default — Running job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-03-31 22:18:31 UTC)" (scheduled at 2026-03-31 21:48:31.740898+00:00)
+2026-03-31 21:48:31,902 [ERROR] jazz — [MYSQL] Pool failed: 2003: Can't connect to MySQL server on 'mysql-5533402-jasmeetsayss-9ad5.f.aivencloud.com:10991' (Errno -2: Name or service not known) ❌
+2026-03-31 21:48:31,903 [INFO] apscheduler.executors.default — Job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-03-31 22:18:31 UTC)" executed successfully
+2026-03-31 22:18:31,741 [INFO] apscheduler.executors.default — Running job "index_sqlite_schema (trigger: interval[1:00:00], next run at: 2026-03-31 23:18:31 UTC)" (scheduled at 2026-03-31 22:18:31.740640+00:00)
+2026-03-31 22:18:31,741 [INFO] apscheduler.executors.default — Running job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-03-31 22:48:31 UTC)" (scheduled at 2026-03-31 22:18:31.740898+00:00)
+2026-03-31 22:18:31,868 [ERROR] jazz — [MYSQL] Pool failed: 2003: Can't connect to MySQL server on 'mysql-5533402-jasmeetsayss-9ad5.f.aivencloud.com:10991' (Errno -2: Name or service not known) ❌
+2026-03-31 22:18:31,868 [INFO] apscheduler.executors.default — Job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-03-31 22:48:31 UTC)" executed successfully
+2026-03-31 22:18:33,398 [INFO] jazz — [SQLITE] Schema indexed — 20 tables ✅
+2026-03-31 22:18:33,399 [INFO] apscheduler.executors.default — Job "index_sqlite_schema (trigger: interval[1:00:00], next run at: 2026-03-31 23:18:31 UTC)" executed successfully
+2026-03-31 22:48:31,741 [INFO] apscheduler.executors.default — Running job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-03-31 23:18:31 UTC)" (scheduled at 2026-03-31 22:48:31.740898+00:00)
+2026-03-31 22:48:31,990 [ERROR] jazz — [MYSQL] Pool failed: 2003: Can't connect to MySQL server on 'mysql-5533402-jasmeetsayss-9ad5.f.aivencloud.com:10991' (Errno -2: Name or service not known) ❌
+2026-03-31 22:48:31,990 [INFO] apscheduler.executors.default — Job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-03-31 23:18:31 UTC)" executed successfully
+2026-03-31 23:18:31,741 [INFO] apscheduler.executors.default — Running job "index_sqlite_schema (trigger: interval[1:00:00], next run at: 2026-04-01 00:18:31 UTC)" (scheduled at 2026-03-31 23:18:31.740640+00:00)
+2026-03-31 23:18:31,741 [INFO] apscheduler.executors.default — Running job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-03-31 23:48:31 UTC)" (scheduled at 2026-03-31 23:18:31.740898+00:00)
+2026-03-31 23:18:31,977 [ERROR] jazz — [MYSQL] Pool failed: 2003: Can't connect to MySQL server on 'mysql-5533402-jasmeetsayss-9ad5.f.aivencloud.com:10991' (Errno -2: Name or service not known) ❌
+2026-03-31 23:18:31,977 [INFO] apscheduler.executors.default — Job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-03-31 23:48:31 UTC)" executed successfully
+2026-03-31 23:18:33,379 [INFO] jazz — [SQLITE] Schema indexed — 20 tables ✅
+2026-03-31 23:18:33,380 [INFO] apscheduler.executors.default — Job "index_sqlite_schema (trigger: interval[1:00:00], next run at: 2026-04-01 00:18:31 UTC)" executed successfully
+2026-03-31 23:48:31,741 [INFO] apscheduler.executors.default — Running job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-04-01 00:18:31 UTC)" (scheduled at 2026-03-31 23:48:31.740898+00:00)
+2026-03-31 23:48:32,007 [ERROR] jazz — [MYSQL] Pool failed: 2003: Can't connect to MySQL server on 'mysql-5533402-jasmeetsayss-9ad5.f.aivencloud.com:10991' (Errno -2: Name or service not known) ❌
+2026-03-31 23:48:32,007 [INFO] apscheduler.executors.default — Job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-04-01 00:18:31 UTC)" executed successfully
+2026-04-01 00:18:31,741 [INFO] apscheduler.executors.default — Running job "index_sqlite_schema (trigger: interval[1:00:00], next run at: 2026-04-01 01:18:31 UTC)" (scheduled at 2026-04-01 00:18:31.740640+00:00)
+2026-04-01 00:18:31,741 [INFO] apscheduler.executors.default — Running job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-04-01 00:48:31 UTC)" (scheduled at 2026-04-01 00:18:31.740898+00:00)
+2026-04-01 00:18:31,982 [ERROR] jazz — [MYSQL] Pool failed: 2003: Can't connect to MySQL server on 'mysql-5533402-jasmeetsayss-9ad5.f.aivencloud.com:10991' (Errno -2: Name or service not known) ❌
+2026-04-01 00:18:31,982 [INFO] apscheduler.executors.default — Job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-04-01 00:48:31 UTC)" executed successfully
+2026-04-01 00:18:33,388 [INFO] jazz — [SQLITE] Schema indexed — 20 tables ✅
+2026-04-01 00:18:33,389 [INFO] apscheduler.executors.default — Job "index_sqlite_schema (trigger: interval[1:00:00], next run at: 2026-04-01 01:18:31 UTC)" executed successfully
+2026-04-01 00:48:31,741 [INFO] apscheduler.executors.default — Running job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-04-01 01:18:31 UTC)" (scheduled at 2026-04-01 00:48:31.740898+00:00)
+2026-04-01 00:48:31,990 [ERROR] jazz — [MYSQL] Pool failed: 2003: Can't connect to MySQL server on 'mysql-5533402-jasmeetsayss-9ad5.f.aivencloud.com:10991' (Errno -2: Name or service not known) ❌
+2026-04-01 00:48:31,990 [INFO] apscheduler.executors.default — Job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-04-01 01:18:31 UTC)" executed successfully
+2026-04-01 01:18:31,741 [INFO] apscheduler.executors.default — Running job "index_sqlite_schema (trigger: interval[1:00:00], next run at: 2026-04-01 02:18:31 UTC)" (scheduled at 2026-04-01 01:18:31.740640+00:00)
+2026-04-01 01:18:31,741 [INFO] apscheduler.executors.default — Running job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-04-01 01:48:31 UTC)" (scheduled at 2026-04-01 01:18:31.740898+00:00)
+2026-04-01 01:18:32,134 [ERROR] jazz — [MYSQL] Pool failed: 2003: Can't connect to MySQL server on 'mysql-5533402-jasmeetsayss-9ad5.f.aivencloud.com:10991' (Errno -2: Name or service not known) ❌
+2026-04-01 01:18:32,135 [INFO] apscheduler.executors.default — Job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-04-01 01:48:31 UTC)" executed successfully
+2026-04-01 01:18:33,383 [INFO] jazz — [SQLITE] Schema indexed — 20 tables ✅
+2026-04-01 01:18:33,384 [INFO] apscheduler.executors.default — Job "index_sqlite_schema (trigger: interval[1:00:00], next run at: 2026-04-01 02:18:31 UTC)" executed successfully
+2026-04-01 01:48:31,741 [INFO] apscheduler.executors.default — Running job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-04-01 02:18:31 UTC)" (scheduled at 2026-04-01 01:48:31.740898+00:00)
+2026-04-01 01:48:31,772 [ERROR] jazz — [MYSQL] Pool failed: 2003: Can't connect to MySQL server on 'mysql-5533402-jasmeetsayss-9ad5.f.aivencloud.com:10991' (Errno -2: Name or service not known) ❌
+2026-04-01 01:48:31,772 [INFO] apscheduler.executors.default — Job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-04-01 02:18:31 UTC)" executed successfully
+2026-04-01 02:18:31,741 [INFO] apscheduler.executors.default — Running job "index_sqlite_schema (trigger: interval[1:00:00], next run at: 2026-04-01 03:18:31 UTC)" (scheduled at 2026-04-01 02:18:31.740640+00:00)
+2026-04-01 02:18:31,741 [INFO] apscheduler.executors.default — Running job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-04-01 02:48:31 UTC)" (scheduled at 2026-04-01 02:18:31.740898+00:00)
+2026-04-01 02:18:31,779 [ERROR] jazz — [MYSQL] Pool failed: 2003: Can't connect to MySQL server on 'mysql-5533402-jasmeetsayss-9ad5.f.aivencloud.com:10991' (Errno -2: Name or service not known) ❌
+2026-04-01 02:18:31,779 [INFO] apscheduler.executors.default — Job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-04-01 02:48:31 UTC)" executed successfully
+2026-04-01 02:18:33,407 [INFO] jazz — [SQLITE] Schema indexed — 20 tables ✅
+2026-04-01 02:18:33,407 [INFO] apscheduler.executors.default — Job "index_sqlite_schema (trigger: interval[1:00:00], next run at: 2026-04-01 03:18:31 UTC)" executed successfully
+2026-04-01 02:48:31,741 [INFO] apscheduler.executors.default — Running job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-04-01 03:18:31 UTC)" (scheduled at 2026-04-01 02:48:31.740898+00:00)
+2026-04-01 02:48:31,748 [ERROR] jazz — [MYSQL] Pool failed: 2003: Can't connect to MySQL server on 'mysql-5533402-jasmeetsayss-9ad5.f.aivencloud.com:10991' (Errno -2: Name or service not known) ❌
+2026-04-01 02:48:31,748 [INFO] apscheduler.executors.default — Job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-04-01 03:18:31 UTC)" executed successfully
+2026-04-01 03:18:31,741 [INFO] apscheduler.executors.default — Running job "index_sqlite_schema (trigger: interval[1:00:00], next run at: 2026-04-01 04:18:31 UTC)" (scheduled at 2026-04-01 03:18:31.740640+00:00)
+2026-04-01 03:18:31,741 [INFO] apscheduler.executors.default — Running job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-04-01 03:48:31 UTC)" (scheduled at 2026-04-01 03:18:31.740898+00:00)
+2026-04-01 03:18:31,780 [ERROR] jazz — [MYSQL] Pool failed: 2003: Can't connect to MySQL server on 'mysql-5533402-jasmeetsayss-9ad5.f.aivencloud.com:10991' (Errno -2: Name or service not known) ❌
+2026-04-01 03:18:31,780 [INFO] apscheduler.executors.default — Job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-04-01 03:48:31 UTC)" executed successfully
+2026-04-01 03:18:33,407 [INFO] jazz — [SQLITE] Schema indexed — 20 tables ✅
+2026-04-01 03:18:33,407 [INFO] apscheduler.executors.default — Job "index_sqlite_schema (trigger: interval[1:00:00], next run at: 2026-04-01 04:18:31 UTC)" executed successfully
+2026-04-01 03:48:31,741 [INFO] apscheduler.executors.default — Running job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-04-01 04:18:31 UTC)" (scheduled at 2026-04-01 03:48:31.740898+00:00)
+2026-04-01 03:48:31,748 [ERROR] jazz — [MYSQL] Pool failed: 2003: Can't connect to MySQL server on 'mysql-5533402-jasmeetsayss-9ad5.f.aivencloud.com:10991' (Errno -2: Name or service not known) ❌
+2026-04-01 03:48:31,748 [INFO] apscheduler.executors.default — Job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-04-01 04:18:31 UTC)" executed successfully
+2026-04-01 04:18:31,741 [INFO] apscheduler.executors.default — Running job "index_sqlite_schema (trigger: interval[1:00:00], next run at: 2026-04-01 05:18:31 UTC)" (scheduled at 2026-04-01 04:18:31.740640+00:00)
+2026-04-01 04:18:31,741 [INFO] apscheduler.executors.default — Running job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-04-01 04:48:31 UTC)" (scheduled at 2026-04-01 04:18:31.740898+00:00)
+2026-04-01 04:18:31,781 [ERROR] jazz — [MYSQL] Pool failed: 2003: Can't connect to MySQL server on 'mysql-5533402-jasmeetsayss-9ad5.f.aivencloud.com:10991' (Errno -2: Name or service not known) ❌
+2026-04-01 04:18:31,782 [INFO] apscheduler.executors.default — Job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-04-01 04:48:31 UTC)" executed successfully
+2026-04-01 04:18:33,382 [INFO] jazz — [SQLITE] Schema indexed — 20 tables ✅
+2026-04-01 04:18:33,382 [INFO] apscheduler.executors.default — Job "index_sqlite_schema (trigger: interval[1:00:00], next run at: 2026-04-01 05:18:31 UTC)" executed successfully

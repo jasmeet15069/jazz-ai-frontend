@@ -44,6 +44,37 @@
   #base-url:focus{border-color:var(--cyan)}
   .header-right label{color:var(--muted2);font-size:10px}
 
+  /* Sidebar Toggle */
+  #menu-toggle{
+    display:none;
+    background:transparent;
+    border:1px solid var(--border2);
+    color:var(--green);
+    padding:4px 8px;
+    border-radius:3px;
+    cursor:pointer;
+    font-family:inherit;
+    font-size:14px;
+    transition:.15s;
+  }
+  #menu-toggle:hover{
+    border-color:var(--green);
+    box-shadow:0 0 10px rgba(0,255,136,.15);
+  }
+
+  /* Sidebar backdrop */
+  #sidebar-backdrop{
+    position:fixed;
+    inset:44px 0 0 0;
+    background:rgba(0,0,0,.45);
+    backdrop-filter:blur(2px);
+    z-index:999;
+    display:none;
+  }
+  #sidebar-backdrop.show{
+    display:block;
+  }
+
   /* ── Layout ── */
   .layout{display:grid;grid-template-columns:200px 1fr;flex:1;overflow:hidden;min-height:0}
 
@@ -234,11 +265,219 @@
   .running-dot{animation:pulse-dot 1.2s ease-in-out infinite}
   @keyframes fade-in{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
   .fade-in{animation:fade-in .2s ease-out}
+
+  /* ── MOBILE RESPONSIVE ── */
+  @media (max-width: 768px){
+    html,body{
+      overflow:auto;
+      height:100%;
+    }
+
+    body{
+      min-height:100vh;
+    }
+
+    header{
+      padding:0 10px;
+      gap:8px;
+      flex-wrap:nowrap;
+    }
+
+    #menu-toggle{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-width:34px;
+      height:30px;
+      padding:0 10px;
+      flex-shrink:0;
+    }
+
+    .logo{
+      font-size:16px;
+      letter-spacing:2px;
+    }
+
+    .badge{
+      display:none;
+    }
+
+    .header-right{
+      gap:6px;
+      min-width:0;
+      flex:1;
+      justify-content:flex-end;
+    }
+
+    .header-right label{
+      display:none;
+    }
+
+    #base-url{
+      width:100%;
+      max-width:160px;
+      min-width:90px;
+      font-size:10px;
+      padding:4px 6px;
+    }
+
+    .layout{
+      grid-template-columns:1fr;
+      overflow:hidden;
+      position:relative;
+    }
+
+    .sidebar{
+      position:fixed;
+      top:44px;
+      left:0;
+      height:calc(100dvh - 44px);
+      width:240px;
+      max-width:85vw;
+      transform:translateX(-100%);
+      transition:transform .25s ease;
+      z-index:1000;
+      box-shadow:8px 0 30px rgba(0,0,0,.45);
+      border-right:1px solid var(--border2);
+    }
+
+    .sidebar.open{
+      transform:translateX(0);
+    }
+
+    .main{
+      width:100%;
+      min-width:0;
+      overflow:hidden;
+    }
+
+    .panel-hdr{
+      padding:10px 12px;
+      flex-wrap:wrap;
+    }
+
+    .panel-hdr h2{
+      font-size:13px;
+    }
+
+    .panel-body{
+      padding:12px;
+    }
+
+    .row{
+      flex-direction:column;
+      gap:0;
+    }
+
+    .inline-flex{
+      flex-wrap:wrap;
+    }
+
+    .chat-toolbar{
+      flex-direction:column;
+      align-items:stretch;
+      gap:8px;
+    }
+
+    .chat-row{
+      align-items:flex-end;
+    }
+
+    .chat-row textarea{
+      min-height:40px;
+      max-height:110px;
+      font-size:12px;
+    }
+
+    .chat-msgs{
+      padding:10px 12px;
+    }
+
+    .msg{
+      max-width:100%;
+      font-size:11px;
+    }
+
+    .card-grid{
+      grid-template-columns:1fr 1fr;
+    }
+
+    table{
+      display:block;
+      overflow-x:auto;
+      white-space:nowrap;
+      width:100%;
+    }
+
+    th,td{
+      font-size:10px;
+    }
+
+    .job-card{
+      padding:10px;
+    }
+
+    .job-card-actions{
+      gap:5px;
+    }
+
+    .btn{
+      font-size:10px;
+      padding:6px 10px;
+    }
+
+    .btn-sm{
+      font-size:9px;
+      padding:4px 8px;
+    }
+
+    .rbox{
+      font-size:10px;
+      max-height:300px;
+    }
+
+    .log-out,.debug-box{
+      max-height:260px;
+      font-size:9px;
+    }
+  }
+
+  @media (max-width: 480px){
+    .card-grid{
+      grid-template-columns:1fr;
+    }
+
+    #base-url{
+      max-width:120px;
+    }
+
+    .chat-row{
+      gap:6px;
+    }
+
+    .img-clip-btn{
+      padding:6px 8px;
+      font-size:13px;
+    }
+
+    .chat-row textarea{
+      font-size:11px;
+    }
+
+    .panel-body{
+      padding:10px;
+    }
+
+    .panel-hdr{
+      padding:8px 10px;
+    }
+  }
 </style>
 </head>
 <body>
 
 <header>
+  <button id="menu-toggle" onclick="toggleSidebar()">☰</button>
   <div class="logo">⚡ JAZZ</div>
   <span class="badge badge-green">v5.2</span>
   <span class="badge badge-cyan">FIXED</span>
@@ -249,6 +488,8 @@
     <div id="status-dot" title="Server status"></div>
   </div>
 </header>
+
+<div id="sidebar-backdrop" onclick="closeSidebar()"></div>
 
 <div class="layout">
 
@@ -530,7 +771,7 @@
       </div>
     </div>
 
-    <!-- ══ DEBUG RUN ══ (NEW — shows full error output synchronously) -->
+    <!-- ══ DEBUG RUN ══ -->
     <div class="panel" id="panel-jobs-debug">
       <div class="panel-hdr"><h2>🔬 Debug Run</h2></div>
       <div class="panel-body">
@@ -625,6 +866,19 @@ function escHtml(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
+// ── Sidebar Controls ───────────────────────────────────────────────────────────
+function toggleSidebar() {
+  const sb = document.querySelector('.sidebar');
+  const backdrop = document.getElementById('sidebar-backdrop');
+  const isOpen = sb.classList.toggle('open');
+  backdrop.classList.toggle('show', isOpen);
+}
+
+function closeSidebar() {
+  document.querySelector('.sidebar').classList.remove('open');
+  document.getElementById('sidebar-backdrop').classList.remove('show');
+}
+
 function showPanel(id) {
   document.querySelectorAll('.panel').forEach(p => { p.classList.remove('active'); p.style.display = ''; });
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -641,6 +895,11 @@ function showPanel(id) {
   if (id === 'jobs-create') updateJobTypeHint();
   if (id === 'jobs-logs') refreshJobLogs();
   if (id === 'jobs-debug') refreshDebugJobs();
+
+  // auto close sidebar on mobile
+  if (window.innerWidth <= 768) {
+    closeSidebar();
+  }
 }
 
 function setToken(token, user) {
@@ -749,7 +1008,7 @@ async function doSignup() {
 }
 
 // ── Chat Image State ──────────────────────────────────────────────────────────
-let _chatImageDataUrl = null;   // base64 data URL ready to send
+let _chatImageDataUrl = null;
 let _chatImageUploading = false;
 
 function onChatImageSelected(event) {
@@ -767,7 +1026,6 @@ function onChatImageSelected(event) {
     return;
   }
 
-  // Show preview immediately from local file
   const localUrl = URL.createObjectURL(file);
   const bar = document.getElementById('img-attach-bar');
   const thumb = document.getElementById('img-preview-thumb');
@@ -783,7 +1041,6 @@ function onChatImageSelected(event) {
   _chatImageDataUrl = null;
   _chatImageUploading = true;
 
-  // Upload to server to get data URL (server needs base64 for vision pipeline)
   const fd = new FormData();
   fd.append('file', file);
   fetch(base() + '/images/upload', { method: 'POST', headers: authH(), body: fd })
@@ -865,7 +1122,6 @@ function doStreamChat() {
   const imageUrl = _chatImageDataUrl || null;
   const displayText = message || '🖼 Analyze this image';
 
-  // Show user bubble — with image thumbnail if attached
   if (imageUrl) {
     const thumb = document.getElementById('img-preview-thumb').src;
     appendMsgWithImage(displayText, thumb, 'user');
@@ -1369,6 +1625,27 @@ async function doRaw() {
     showR('raw-out', data, r.ok);
   } catch(e) { showR('raw-out', {error: e.message}, false); }
 }
+
+// ── Mobile / Outside Click / Resize ───────────────────────────────────────────
+document.addEventListener('click', function(e){
+  const sb = document.querySelector('.sidebar');
+  const btn = document.getElementById('menu-toggle');
+
+  if (!sb || !btn) return;
+
+  if (window.innerWidth <= 768 &&
+      sb.classList.contains('open') &&
+      !sb.contains(e.target) &&
+      !btn.contains(e.target)) {
+    closeSidebar();
+  }
+});
+
+window.addEventListener('resize', () => {
+  if (window.innerWidth > 768) {
+    closeSidebar();
+  }
+});
 
 // ── Init ──────────────────────────────────────────────────────────────────────
 updateTokenUI();
