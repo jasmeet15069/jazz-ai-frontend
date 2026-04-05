@@ -251,3 +251,188 @@ INFO:     95.163.148.112:54382 - "GET /v1/health HTTP/1.1" 404 Not Found
 2026-04-01 04:18:33,382 [INFO] apscheduler.executors.default — Job "index_sqlite_schema (trigger: interval[1:00:00], next run at: 2026-04-01 05:18:31 UTC)" executed successfully
 INFO:     125.63.88.146:54741 - "OPTIONS /health HTTP/1.1" 200 OK
 INFO:     125.63.88.146:54741 - "GET /health HTTP/1.1" 200 OK
+2026-04-01 04:48:31,741 [INFO] apscheduler.executors.default — Running job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-04-01 05:18:31 UTC)" (scheduled at 2026-04-01 04:48:31.740898+00:00)
+2026-04-01 04:48:32,133 [ERROR] jazz — [MYSQL] Pool failed: 2003: Can't connect to MySQL server on 'mysql-5533402-jasmeetsayss-9ad5.f.aivencloud.com:10991' (Errno -2: Name or service not known) ❌
+2026-04-01 04:48:32,134 [INFO] apscheduler.executors.default — Job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-04-01 05:18:31 UTC)" executed successfully
+2026-04-01 05:18:31,741 [INFO] apscheduler.executors.default — Running job "index_sqlite_schema (trigger: interval[1:00:00], next run at: 2026-04-01 06:18:31 UTC)" (scheduled at 2026-04-01 05:18:31.740640+00:00)
+2026-04-01 05:18:31,741 [INFO] apscheduler.executors.default — Running job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-04-01 05:48:31 UTC)" (scheduled at 2026-04-01 05:18:31.740898+00:00)
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]2026-04-01 05:18:31,989 [ERROR] jazz — [MYSQL] Pool failed: 2003: Can't connect to MySQL server on 'mysql-5533402-jasmeetsayss-9ad5.f.aivencloud.com:10991' (Errno -2: Name or service not known) ❌
+2026-04-01 05:18:31,989 [INFO] apscheduler.executors.default — Job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-04-01 05:48:31 UTC)" executed successfully
+Batches: 100%|██████████| 1/1 [00:01<00:00,  1.58s/it]Batches: 100%|██████████| 1/1 [00:01<00:00,  1.58s/it]
+2026-04-01 05:18:33,410 [INFO] jazz — [SQLITE] Schema indexed — 20 tables ✅
+2026-04-01 05:18:33,411 [INFO] apscheduler.executors.default — Job "index_sqlite_schema (trigger: interval[1:00:00], next run at: 2026-04-01 06:18:31 UTC)" executed successfully
+INFO:     163.47.143.186:55151 - "OPTIONS /health HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55151 - "GET /health HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55151 - "OPTIONS /auth/login HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55151 - "POST /auth/login HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55151 - "OPTIONS /user/notifications?limit=20 HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55151 - "GET /user/notifications?limit=20 HTTP/1.1" 404 Not Found
+INFO:     163.47.143.186:55151 - "GET /health HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55151 - "GET /health HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55151 - "OPTIONS /admin/stats HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55151 - "GET /admin/stats HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55151 - "OPTIONS /user/notifications?limit=20 HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55151 - "GET /user/notifications?limit=20 HTTP/1.1" 404 Not Found
+INFO:     163.47.143.186:55151 - "OPTIONS /admin/users HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55151 - "GET /admin/users HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55151 - "GET /health HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55151 - "OPTIONS /admin/stats HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55151 - "GET /admin/stats HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55151 - "OPTIONS /admin/users HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55151 - "GET /admin/users HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55151 - "GET /health HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55151 - "OPTIONS /user/notifications?limit=20 HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55151 - "GET /user/notifications?limit=20 HTTP/1.1" 404 Not Found
+INFO:     163.47.143.186:55151 - "GET /health HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55151 - "GET /health HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55174 - "OPTIONS /admin/announcements HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55174 - "GET /admin/announcements HTTP/1.1" 404 Not Found
+INFO:     163.47.143.186:55174 - "OPTIONS /admin/coupons HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55174 - "GET /admin/coupons HTTP/1.1" 404 Not Found
+INFO:     163.47.143.186:55174 - "OPTIONS /user/notifications?limit=20 HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55174 - "GET /user/notifications?limit=20 HTTP/1.1" 404 Not Found
+INFO:     163.47.143.186:55151 - "OPTIONS /admin/agent-jobs HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55151 - "GET /admin/agent-jobs HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55151 - "GET /health HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55151 - "GET /health HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55151 - "OPTIONS /user/notifications?limit=20 HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55151 - "GET /user/notifications?limit=20 HTTP/1.1" 404 Not Found
+INFO:     163.47.143.186:55151 - "GET /health HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55151 - "GET /health HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55151 - "OPTIONS /user/notifications?limit=20 HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55151 - "GET /user/notifications?limit=20 HTTP/1.1" 404 Not Found
+INFO:     163.47.143.186:55151 - "GET /health HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55151 - "OPTIONS /chat-stream HTTP/1.1" 200 OK
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 97.54it/s]
+2026-04-01 05:26:31,263 [INFO] httpx — HTTP Request: POST https://router.huggingface.co/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:     163.47.143.186:55174 - "POST /chat-stream HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55151 - "GET /health HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55151 - "OPTIONS /user/notifications?limit=20 HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55151 - "GET /user/notifications?limit=20 HTTP/1.1" 404 Not Found
+INFO:     163.47.143.186:55151 - "GET /health HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55151 - "GET /health HTTP/1.1" 200 OK
+2026-04-01 05:27:16,595 [INFO] httpx — HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:     163.47.143.186:55174 - "OPTIONS /user/notifications?limit=20 HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55174 - "GET /user/notifications?limit=20 HTTP/1.1" 404 Not Found
+INFO:     163.47.143.186:55174 - "OPTIONS /health HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55174 - "GET /health HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55174 - "GET /health HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55174 - "OPTIONS /logs HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55174 - "GET /logs HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55174 - "GET /health HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55174 - "OPTIONS /user/stats HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55174 - "GET /user/stats HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55174 - "OPTIONS /user/api-keys HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55174 - "GET /user/api-keys HTTP/1.1" 404 Not Found
+INFO:     163.47.143.186:55174 - "OPTIONS /profile HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55174 - "GET /profile HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55174 - "OPTIONS /user/notifications?limit=20 HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55174 - "GET /user/notifications?limit=20 HTTP/1.1" 404 Not Found
+INFO:     163.47.143.186:55174 - "GET /health HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55174 - "OPTIONS /websites HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55174 - "GET /websites HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55174 - "OPTIONS /prompts HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55174 - "GET /prompts HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55174 - "OPTIONS /memory HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55174 - "GET /memory HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55174 - "OPTIONS /documents HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55174 - "GET /documents HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55174 - "GET /health HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55174 - "OPTIONS /user/notifications?limit=20 HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55174 - "GET /user/notifications?limit=20 HTTP/1.1" 404 Not Found
+INFO:     163.47.143.186:55174 - "GET /health HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55174 - "GET /health HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55174 - "OPTIONS /user/notifications?limit=20 HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55174 - "GET /user/notifications?limit=20 HTTP/1.1" 404 Not Found
+INFO:     163.47.143.186:55174 - "GET /health HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55174 - "GET /health HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55174 - "OPTIONS /user/notifications?limit=20 HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55174 - "GET /user/notifications?limit=20 HTTP/1.1" 404 Not Found
+INFO:     125.63.88.146:55219 - "GET /health HTTP/1.1" 200 OK
+INFO:     125.63.88.146:55219 - "OPTIONS /user/notifications?limit=20 HTTP/1.1" 200 OK
+INFO:     125.63.88.146:55219 - "GET /user/notifications?limit=20 HTTP/1.1" 404 Not Found
+INFO:     163.47.143.186:55174 - "GET /health HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55174 - "OPTIONS /user/notifications?limit=20 HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55174 - "GET /user/notifications?limit=20 HTTP/1.1" 404 Not Found
+INFO:     125.63.88.146:55219 - "GET /health HTTP/1.1" 200 OK
+INFO:     125.63.88.146:55219 - "OPTIONS /user/notifications?limit=20 HTTP/1.1" 200 OK
+INFO:     125.63.88.146:55219 - "GET /user/notifications?limit=20 HTTP/1.1" 404 Not Found
+INFO:     163.47.143.186:55174 - "GET /health HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55174 - "OPTIONS /user/notifications?limit=20 HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55174 - "GET /user/notifications?limit=20 HTTP/1.1" 404 Not Found
+INFO:     125.63.88.146:55219 - "GET /health HTTP/1.1" 200 OK
+INFO:     125.63.88.146:55219 - "OPTIONS /user/notifications?limit=20 HTTP/1.1" 200 OK
+INFO:     125.63.88.146:55219 - "GET /user/notifications?limit=20 HTTP/1.1" 404 Not Found
+INFO:     163.47.143.186:55174 - "GET /health HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55174 - "OPTIONS /user/notifications?limit=20 HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55174 - "GET /user/notifications?limit=20 HTTP/1.1" 404 Not Found
+INFO:     125.63.88.146:55219 - "GET /health HTTP/1.1" 200 OK
+INFO:     125.63.88.146:55219 - "OPTIONS /user/notifications?limit=20 HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55174 - "GET /user/notifications?limit=20 HTTP/1.1" 404 Not Found
+INFO:     125.63.88.146:55219 - "GET /health HTTP/1.1" 200 OK
+INFO:     125.63.88.146:55219 - "GET /health HTTP/1.1" 200 OK
+INFO:     125.63.88.146:55219 - "OPTIONS /user/notifications?limit=20 HTTP/1.1" 200 OK
+INFO:     125.63.88.146:55219 - "GET /user/notifications?limit=20 HTTP/1.1" 404 Not Found
+INFO:     125.63.88.146:55219 - "GET /health HTTP/1.1" 200 OK
+INFO:     125.63.88.146:55219 - "GET /health HTTP/1.1" 200 OK
+INFO:     125.63.88.146:55219 - "OPTIONS /user/notifications?limit=20 HTTP/1.1" 200 OK
+INFO:     125.63.88.146:55219 - "GET /user/notifications?limit=20 HTTP/1.1" 404 Not Found
+INFO:     125.63.88.146:55219 - "GET /health HTTP/1.1" 200 OK
+INFO:     125.63.88.146:55219 - "GET /health HTTP/1.1" 200 OK
+INFO:     125.63.88.146:55219 - "OPTIONS /user/notifications?limit=20 HTTP/1.1" 200 OK
+INFO:     125.63.88.146:55219 - "GET /user/notifications?limit=20 HTTP/1.1" 404 Not Found
+INFO:     125.63.88.146:55219 - "GET /health HTTP/1.1" 200 OK
+INFO:     125.63.88.146:55219 - "GET /health HTTP/1.1" 200 OK
+INFO:     125.63.88.146:55219 - "OPTIONS /user/notifications?limit=20 HTTP/1.1" 200 OK
+INFO:     125.63.88.146:55219 - "GET /user/notifications?limit=20 HTTP/1.1" 404 Not Found
+INFO:     125.63.88.146:55440 - "GET /health HTTP/1.1" 200 OK
+INFO:     125.63.88.146:55462 - "OPTIONS /user/notifications?limit=20 HTTP/1.1" 200 OK
+INFO:     125.63.88.146:55462 - "GET /user/notifications?limit=20 HTTP/1.1" 404 Not Found
+INFO:     125.63.88.146:55463 - "GET /health HTTP/1.1" 200 OK
+INFO:     125.63.88.146:55463 - "OPTIONS /user/notifications?limit=20 HTTP/1.1" 200 OK
+INFO:     125.63.88.146:55463 - "GET /user/notifications?limit=20 HTTP/1.1" 404 Not Found
+INFO:     125.63.88.146:55462 - "GET /health HTTP/1.1" 200 OK
+INFO:     125.63.88.146:55462 - "OPTIONS /user/notifications?limit=20 HTTP/1.1" 200 OK
+INFO:     125.63.88.146:55462 - "GET /user/notifications?limit=20 HTTP/1.1" 404 Not Found
+INFO:     125.63.88.146:55463 - "GET /health HTTP/1.1" 200 OK
+INFO:     125.63.88.146:55463 - "OPTIONS /user/notifications?limit=20 HTTP/1.1" 200 OK
+INFO:     125.63.88.146:55463 - "GET /user/notifications?limit=20 HTTP/1.1" 404 Not Found
+INFO:     125.63.88.146:55462 - "GET /health HTTP/1.1" 200 OK
+INFO:     125.63.88.146:55462 - "OPTIONS /user/notifications?limit=20 HTTP/1.1" 200 OK
+INFO:     125.63.88.146:55462 - "GET /user/notifications?limit=20 HTTP/1.1" 404 Not Found
+INFO:     125.63.88.146:55462 - "GET /health HTTP/1.1" 200 OK
+INFO:     125.63.88.146:55462 - "OPTIONS /user/notifications?limit=20 HTTP/1.1" 200 OK
+INFO:     125.63.88.146:55462 - "GET /user/notifications?limit=20 HTTP/1.1" 404 Not Found
+INFO:     163.47.143.186:55543 - "GET /health HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55543 - "OPTIONS /user/notifications?limit=20 HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55543 - "GET /user/notifications?limit=20 HTTP/1.1" 404 Not Found
+INFO:     125.63.88.146:55462 - "GET /health HTTP/1.1" 200 OK
+INFO:     125.63.88.146:55462 - "OPTIONS /user/notifications?limit=20 HTTP/1.1" 200 OK
+INFO:     125.63.88.146:55462 - "GET /user/notifications?limit=20 HTTP/1.1" 404 Not Found
+INFO:     163.47.143.186:55543 - "GET /health HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55543 - "OPTIONS /user/notifications?limit=20 HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55543 - "GET /user/notifications?limit=20 HTTP/1.1" 404 Not Found
+INFO:     125.63.88.146:55462 - "GET /health HTTP/1.1" 200 OK
+2026-04-01 05:48:31,741 [INFO] apscheduler.executors.default — Running job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-04-01 06:18:31 UTC)" (scheduled at 2026-04-01 05:48:31.740898+00:00)
+2026-04-01 05:48:31,992 [ERROR] jazz — [MYSQL] Pool failed: 2003: Can't connect to MySQL server on 'mysql-5533402-jasmeetsayss-9ad5.f.aivencloud.com:10991' (Errno -2: Name or service not known) ❌
+2026-04-01 05:48:31,992 [INFO] apscheduler.executors.default — Job "index_mysql_schema (trigger: interval[0:30:00], next run at: 2026-04-01 06:18:31 UTC)" executed successfully
+INFO:     125.63.88.146:55462 - "OPTIONS /user/notifications?limit=20 HTTP/1.1" 200 OK
+INFO:     125.63.88.146:55462 - "GET /user/notifications?limit=20 HTTP/1.1" 404 Not Found
+INFO:     163.47.143.186:55543 - "GET /health HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55543 - "OPTIONS /user/notifications?limit=20 HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55543 - "GET /user/notifications?limit=20 HTTP/1.1" 404 Not Found
+INFO:     125.63.88.146:55462 - "GET /health HTTP/1.1" 200 OK
+INFO:     125.63.88.146:55462 - "OPTIONS /user/notifications?limit=20 HTTP/1.1" 200 OK
+INFO:     125.63.88.146:55462 - "GET /user/notifications?limit=20 HTTP/1.1" 404 Not Found
+INFO:     163.47.143.186:55543 - "GET /health HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55543 - "OPTIONS /user/notifications?limit=20 HTTP/1.1" 200 OK
+INFO:     163.47.143.186:55543 - "GET /user/notifications?limit=20 HTTP/1.1" 404 Not Found
+INFO:     125.63.88.146:55462 - "GET /health HTTP/1.1" 200 OK
+INFO:     125.63.88.146:55462 - "GET /health HTTP/1.1" 200 OK
+INFO:     125.63.88.146:55462 - "OPTIONS /user/notifications?limit=20 HTTP/1.1" 200 OK
+INFO:     125.63.88.146:55462 - "GET /user/notifications?limit=20 HTTP/1.1" 404 Not Found
+INFO:     125.63.88.146:55462 - "GET /health HTTP/1.1" 200 OK
+INFO:     125.63.88.146:55462 - "GET /health HTTP/1.1" 200 OK
+INFO:     125.63.88.146:55462 - "OPTIONS /user/notifications?limit=20 HTTP/1.1" 200 OK
+INFO:     125.63.88.146:55462 - "GET /user/notifications?limit=20 HTTP/1.1" 404 Not Found
+INFO:     125.63.88.146:55462 - "GET /health HTTP/1.1" 200 OK

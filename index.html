@@ -3,489 +3,559 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>JAZZ AI — v5.2</title>
+<title>JAZZ AI — Production v7.0</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Rajdhani:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Syne:wght@700;800&display=swap');
+/* ═══════════════════════════════════════════════════════════════════
+   JAZZ AI v7.0 — OBSIDIAN TERMINAL — Production Frontend
+   ═══════════════════════════════════════════════════════════════════ */
 
-  *{box-sizing:border-box;margin:0;padding:0}
-  :root{
-    --bg:#080808;--surface:#0f0f0f;--surface2:#161616;--surface3:#1c1c1c;--border:#1e1e1e;--border2:#2a2a2a;
-    --green:#00ff88;--green-dim:#003322;--green-glow:rgba(0,255,136,.12);
-    --cyan:#00e5ff;--cyan-dim:#001a22;
-    --red:#ff4455;--red-dim:#220011;
-    --yellow:#ffcc00;--yellow-dim:#221a00;
-    --purple:#bf77f6;--purple-dim:#1a0a2e;
-    --orange:#ff8c42;
-    --text:#d8d8d8;--muted:#444;--muted2:#666;
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#050507;--surface:#0a0a0f;--surface2:#0f0f16;--surface3:#14141d;
+  --border:#1a1a26;--border2:#222233;--border3:#2a2a3d;
+  --green:#00ff88;--green-dim:rgba(0,255,136,.08);--green-glow:rgba(0,255,136,.15);
+  --green-border:rgba(0,255,136,.2);
+  --cyan:#00e5ff;--cyan-dim:rgba(0,229,255,.08);
+  --red:#ff4466;--red-dim:rgba(255,68,102,.08);
+  --yellow:#ffc400;--yellow-dim:rgba(255,196,0,.08);
+  --purple:#a855f7;--purple-dim:rgba(168,85,247,.08);
+  --orange:#ff7a30;--orange-dim:rgba(255,122,48,.08);
+  --text:#c8c8d8;--text2:#8888a4;--text3:#555568;
+  --font-mono:'IBM Plex Mono',monospace;
+  --font-ui:'Rajdhani',sans-serif;
+  --font-code:'Space Mono',monospace;
+  --radius:4px;
+  --hdr:48px;
+  --sidebar:220px;
+}
+
+html,body{height:100%;overflow:hidden;background:var(--bg)}
+body{font-family:var(--font-mono);font-size:12px;color:var(--text);display:flex;flex-direction:column}
+
+/* Scanlines */
+body::before{
+  content:'';position:fixed;inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.025) 3px,rgba(0,0,0,.025) 4px);
+  pointer-events:none;z-index:9998
+}
+
+/* ── HEADER ── */
+header{
+  height:var(--hdr);background:var(--surface);
+  border-bottom:1px solid var(--border2);
+  display:flex;align-items:center;padding:0 16px;gap:12px;flex-shrink:0;
+  position:relative;z-index:100;
+}
+header::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent 0%,var(--green) 30%,var(--cyan) 70%,transparent 100%);
+  opacity:.35;
+}
+.logo{
+  font-family:var(--font-ui);font-size:22px;font-weight:700;
+  color:var(--green);letter-spacing:4px;
+  text-shadow:0 0 24px rgba(0,255,136,.4);
+  flex-shrink:0;
+}
+.logo-sub{font-size:10px;color:var(--text3);letter-spacing:2px;font-family:var(--font-mono);margin-top:-3px}
+.hdr-badge{
+  padding:2px 8px;border-radius:2px;font-size:9px;font-weight:600;letter-spacing:.8px;
+  background:var(--green-dim);color:var(--green);border:1px solid var(--green-border);
+  flex-shrink:0;
+}
+.hdr-sep{flex:1}
+#status-indicator{
+  display:flex;align-items:center;gap:6px;
+  font-size:10px;color:var(--text3);font-family:var(--font-mono);
+}
+.status-dot{
+  width:6px;height:6px;border-radius:50%;background:var(--text3);
+  transition:.4s;flex-shrink:0;
+}
+.status-dot.ok{background:var(--green);box-shadow:0 0 8px var(--green)}
+.status-dot.err{background:var(--red);box-shadow:0 0 8px var(--red)}
+#status-text{color:var(--text3);transition:.3s}
+#status-text.ok{color:var(--green)}
+.hdr-user-info{
+  display:flex;align-items:center;gap:8px;padding:4px 10px;
+  background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius);
+}
+.hdr-user-email{font-size:10px;color:var(--cyan);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hdr-user-role{
+  font-size:8px;font-weight:700;letter-spacing:1px;padding:1px 5px;border-radius:2px;
+}
+.hdr-user-role.admin{background:var(--red-dim);color:var(--red);border:1px solid rgba(255,68,102,.3)}
+.hdr-user-role.client{background:var(--cyan-dim);color:var(--cyan);border:1px solid rgba(0,229,255,.2)}
+#menu-toggle{
+  display:none;background:transparent;border:1px solid var(--border2);
+  color:var(--green);padding:4px 10px;border-radius:var(--radius);
+  cursor:pointer;font-family:inherit;font-size:14px;transition:.15s;line-height:1;
+}
+#menu-toggle:hover{border-color:var(--green);box-shadow:0 0 10px var(--green-glow)}
+
+/* ── LAYOUT ── */
+.layout{display:flex;flex:1;overflow:hidden;min-height:0}
+#sidebar-backdrop{
+  position:fixed;inset:var(--hdr) 0 0 0;
+  background:rgba(0,0,0,.6);backdrop-filter:blur(4px);
+  z-index:200;display:none;
+}
+#sidebar-backdrop.show{display:block}
+
+/* ── SIDEBAR ── */
+.sidebar{
+  width:var(--sidebar);background:var(--surface);border-right:1px solid var(--border2);
+  display:flex;flex-direction:column;overflow:hidden;flex-shrink:0;
+  transition:transform .25s ease;
+}
+.sidebar-inner{flex:1;overflow-y:auto;padding-bottom:8px}
+.sidebar-inner::-webkit-scrollbar{width:2px}
+.sidebar-inner::-webkit-scrollbar-thumb{background:var(--border2)}
+
+.sb-group{padding:10px 8px 4px}
+.sb-group-label{
+  font-size:8px;font-weight:600;letter-spacing:2px;text-transform:uppercase;
+  color:var(--text3);padding:0 8px;margin-bottom:4px;
+}
+.nav-item{
+  display:flex;align-items:center;gap:8px;width:100%;text-align:left;
+  background:none;border:none;color:var(--text2);
+  padding:7px 10px;border-radius:var(--radius);cursor:pointer;
+  font-family:var(--font-mono);font-size:11px;transition:.12s;
+  border-left:2px solid transparent;position:relative;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.nav-item .nav-icon{font-size:13px;flex-shrink:0;width:18px;text-align:center}
+.nav-item:hover{color:var(--text);background:var(--surface2)}
+.nav-item.active{color:var(--green);background:var(--green-dim);border-left-color:var(--green)}
+.nav-item.admin-only{display:none}
+.nav-item .badge-count{
+  margin-left:auto;font-size:8px;background:var(--red);color:#fff;
+  padding:1px 4px;border-radius:8px;font-weight:700;flex-shrink:0;
+}
+
+.sidebar-footer{
+  padding:10px;border-top:1px solid var(--border);
+  display:flex;flex-direction:column;gap:6px;
+}
+.sb-logout-btn{
+  width:100%;padding:7px;background:transparent;border:1px solid rgba(255,68,102,.3);
+  color:var(--red);border-radius:var(--radius);cursor:pointer;
+  font-family:var(--font-mono);font-size:10px;font-weight:600;
+  letter-spacing:.5px;transition:.12s;
+}
+.sb-logout-btn:hover{background:var(--red-dim);border-color:var(--red)}
+
+/* ── MAIN AREA ── */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+.panel{display:none;flex:1;flex-direction:column;overflow:hidden}
+.panel.active{display:flex}
+
+.panel-hdr{
+  padding:12px 20px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:10px;flex-shrink:0;
+  background:var(--surface);
+}
+.panel-hdr h2{
+  font-family:var(--font-ui);font-size:16px;font-weight:600;
+  color:var(--green);letter-spacing:1px;
+}
+.panel-hdr .hdr-actions{display:flex;gap:6px;margin-left:auto;align-items:center;flex-wrap:wrap}
+.panel-body{flex:1;overflow-y:auto;padding:16px 20px}
+.panel-body::-webkit-scrollbar{width:4px}
+.panel-body::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+
+/* ── FORMS ── */
+.form-group{margin-bottom:12px}
+.form-group label,.fg label{
+  display:block;font-size:9px;color:var(--text3);
+  text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-weight:600;
+}
+input,textarea,select{
+  width:100%;background:#06060a;border:1px solid var(--border2);
+  color:var(--text);padding:7px 10px;border-radius:var(--radius);
+  font-family:var(--font-mono);font-size:11px;outline:none;transition:.15s;
+}
+input:focus,textarea:focus,select:focus{
+  border-color:var(--cyan);box-shadow:0 0 0 2px rgba(0,229,255,.06);
+}
+input[readonly],input[disabled]{
+  color:var(--text3);background:#050508;cursor:default;
+  border-color:var(--border);
+}
+textarea{resize:vertical;min-height:72px;line-height:1.65}
+select option{background:var(--surface2);color:var(--text)}
+.row{display:flex;gap:10px}
+.row .form-group,.row .fg{flex:1;min-width:0}
+.fg{margin-bottom:12px}
+
+/* ── BUTTONS ── */
+.btn{
+  padding:7px 14px;border-radius:var(--radius);border:none;cursor:pointer;
+  font-family:var(--font-mono);font-size:11px;font-weight:600;
+  letter-spacing:.5px;transition:.15s;white-space:nowrap;
+}
+.btn-primary{background:var(--green);color:#000;font-weight:700}
+.btn-primary:hover{filter:brightness(1.1);box-shadow:0 0 16px var(--green-glow)}
+.btn-secondary{background:transparent;border:1px solid var(--border2);color:var(--text2)}
+.btn-secondary:hover{border-color:var(--cyan);color:var(--cyan)}
+.btn-danger{background:transparent;border:1px solid rgba(255,68,102,.35);color:var(--red)}
+.btn-danger:hover{background:var(--red-dim);border-color:var(--red)}
+.btn-purple{background:transparent;border:1px solid rgba(168,85,247,.35);color:var(--purple)}
+.btn-purple:hover{background:var(--purple-dim);border-color:var(--purple)}
+.btn-orange{background:transparent;border:1px solid rgba(255,122,48,.35);color:var(--orange)}
+.btn-orange:hover{background:var(--orange-dim);border-color:var(--orange)}
+.btn-cyan{background:transparent;border:1px solid rgba(0,229,255,.3);color:var(--cyan)}
+.btn-cyan:hover{background:var(--cyan-dim);border-color:var(--cyan)}
+.btn-sm{padding:4px 10px;font-size:10px}
+.btn-xs{padding:2px 7px;font-size:9px}
+.btn:disabled{opacity:.3;cursor:not-allowed}
+
+/* ── OUTPUT BOXES ── */
+.rbox{
+  background:#05050a;border:1px solid var(--border2);border-radius:var(--radius);
+  padding:10px 12px;margin-top:8px;font-size:11px;line-height:1.75;
+  white-space:pre-wrap;word-break:break-word;max-height:380px;overflow-y:auto;
+  font-family:var(--font-code);
+}
+.rbox::-webkit-scrollbar{width:3px}
+.rbox::-webkit-scrollbar-thumb{background:var(--border2)}
+.rbox.ok{border-color:var(--green-border);color:var(--green)}
+.rbox.error{border-color:rgba(255,68,102,.3);color:var(--red)}
+.rbox.info{border-color:var(--border2);color:var(--text)}
+.rbox.stream{border-color:rgba(0,229,255,.2);color:var(--cyan)}
+
+/* ── STATS CARDS ── */
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin-bottom:14px}
+.stat-card{
+  background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius);
+  padding:12px 14px;transition:.15s;
+}
+.stat-card:hover{border-color:var(--border3)}
+.stat-card .sc-label{font-size:8px;color:var(--text3);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:6px}
+.stat-card .sc-val{font-family:var(--font-ui);font-size:20px;font-weight:700}
+.stat-card .sc-val.ok{color:var(--green)}
+.stat-card .sc-val.err{color:var(--red)}
+.stat-card .sc-val.warn{color:var(--yellow)}
+.stat-card .sc-val.info{color:var(--cyan)}
+.stat-card .sc-val.muted{color:var(--text2)}
+
+/* ── TABLES ── */
+.table-wrap{overflow-x:auto;border-radius:var(--radius);border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:11px}
+thead{background:var(--surface2)}
+th{
+  padding:8px 12px;text-align:left;color:var(--cyan);
+  font-size:9px;letter-spacing:1px;text-transform:uppercase;
+  border-bottom:1px solid var(--border2);font-weight:600;white-space:nowrap;
+}
+td{
+  padding:8px 12px;border-bottom:1px solid var(--border);
+  color:var(--text);vertical-align:middle;
+}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:rgba(255,255,255,.012)}
+
+/* ── PILLS ── */
+.pill{
+  display:inline-flex;align-items:center;padding:2px 7px;
+  border-radius:10px;font-size:9px;font-weight:600;letter-spacing:.4px;white-space:nowrap;
+}
+.pill-green{background:var(--green-dim);color:var(--green);border:1px solid var(--green-border)}
+.pill-cyan{background:var(--cyan-dim);color:var(--cyan);border:1px solid rgba(0,229,255,.2)}
+.pill-red{background:var(--red-dim);color:var(--red);border:1px solid rgba(255,68,102,.25)}
+.pill-yellow{background:var(--yellow-dim);color:var(--yellow);border:1px solid rgba(255,196,0,.25)}
+.pill-purple{background:var(--purple-dim);color:var(--purple);border:1px solid rgba(168,85,247,.25)}
+.pill-orange{background:var(--orange-dim);color:var(--orange);border:1px solid rgba(255,122,48,.25)}
+.pill-muted{background:var(--surface2);color:var(--text3);border:1px solid var(--border2)}
+
+/* ── CHAT ── */
+.chat-container{display:flex;flex-direction:column;height:100%;overflow:hidden}
+.chat-messages{
+  flex:1;overflow-y:auto;padding:14px 16px;
+  display:flex;flex-direction:column;gap:10px;
+}
+.chat-messages::-webkit-scrollbar{width:4px}
+.chat-messages::-webkit-scrollbar-thumb{background:var(--border2)}
+.msg{
+  max-width:82%;padding:10px 14px;border-radius:var(--radius);
+  font-size:12px;line-height:1.7;white-space:pre-wrap;word-break:break-word;
+}
+.msg.user{
+  align-self:flex-end;background:var(--green-dim);
+  border:1px solid var(--green-border);color:var(--green);
+}
+.msg.ai{
+  align-self:flex-start;background:var(--surface2);
+  border:1px solid var(--border2);color:var(--text);
+}
+.msg.system{
+  align-self:center;background:transparent;border:1px solid var(--border);
+  color:var(--text3);font-size:10px;padding:3px 12px;border-radius:10px;
+}
+.msg-meta{font-size:9px;color:var(--text3);margin-top:5px}
+.chat-footer{
+  border-top:1px solid var(--border);padding:10px 14px;
+  background:var(--surface);flex-shrink:0;display:flex;flex-direction:column;gap:8px;
+}
+.chat-toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.chat-toolbar select{flex:1;min-width:160px}
+.toggle-label{
+  display:flex;align-items:center;gap:5px;cursor:pointer;
+  font-size:11px;color:var(--text2);white-space:nowrap;user-select:none;
+}
+.toggle-label:hover{color:var(--text)}
+.toggle-label input{width:auto}
+.chat-input-row{display:flex;gap:8px;align-items:flex-end}
+.chat-input-row textarea{flex:1;min-height:40px;max-height:120px;resize:none}
+.img-attach-bar{
+  display:none;align-items:center;gap:8px;padding:6px 10px;
+  background:#06060a;border:1px solid var(--border2);border-radius:var(--radius);
+}
+.img-attach-bar.visible{display:flex}
+.img-preview-thumb{width:44px;height:44px;object-fit:cover;border-radius:3px;border:1px solid var(--border2)}
+.img-attach-name{font-size:10px;color:var(--cyan);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.img-attach-status{font-size:10px;color:var(--text3)}
+.attach-btn{
+  background:transparent;border:1px solid var(--border2);color:var(--text2);
+  border-radius:var(--radius);padding:6px 9px;cursor:pointer;font-size:13px;
+  line-height:1;transition:.12s;flex-shrink:0;
+}
+.attach-btn:hover{border-color:var(--cyan);color:var(--cyan)}
+.attach-btn.active{border-color:var(--green);color:var(--green);background:var(--green-dim)}
+
+/* ── JOB CARDS ── */
+.job-card{
+  background:var(--surface2);border:1px solid var(--border2);
+  border-radius:var(--radius);padding:14px;margin-bottom:10px;
+  transition:.15s;
+}
+.job-card:hover{border-color:var(--border3)}
+.job-card-hdr{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.job-card-hdr h4{color:var(--cyan);font-size:13px;font-weight:600;flex:1;min-width:100px;font-family:var(--font-ui)}
+.job-card-meta{
+  display:flex;gap:14px;flex-wrap:wrap;font-size:10px;
+  color:var(--text3);margin-bottom:10px;line-height:1.9;
+}
+.job-card-meta span{display:flex;align-items:center;gap:3px}
+.job-card-meta b{color:var(--text)}
+.job-card-actions{display:flex;gap:6px;flex-wrap:wrap}
+.job-incard-out{display:none;margin-top:8px}
+
+/* ── LOG OUTPUT ── */
+.log-out{
+  background:#040408;border:1px solid var(--border);border-radius:var(--radius);
+  padding:10px;font-size:10px;line-height:1.9;color:var(--text3);
+  max-height:320px;overflow-y:auto;white-space:pre-wrap;word-break:break-all;margin-top:8px;
+  font-family:var(--font-code);
+}
+.log-out::-webkit-scrollbar{width:3px}
+.log-out::-webkit-scrollbar-thumb{background:var(--border2)}
+.log-out .l-ok{color:var(--green)}
+.log-out .l-err{color:var(--red)}
+.log-out .l-warn{color:var(--yellow)}
+
+/* ── MISC ── */
+hr.div{border:none;border-top:1px solid var(--border);margin:14px 0}
+.section-title{
+  font-family:var(--font-ui);font-size:11px;font-weight:600;
+  color:var(--cyan);text-transform:uppercase;letter-spacing:.8px;
+  margin-bottom:10px;
+}
+.note{
+  background:#060608;border:1px solid var(--border2);border-radius:var(--radius);
+  padding:8px 12px;font-size:10px;color:var(--text3);margin-bottom:12px;line-height:1.7;
+}
+.note.warn{border-color:rgba(255,196,0,.2);color:var(--yellow)}
+.note.safe{border-color:var(--green-border);color:#447744}
+.note.info{border-color:rgba(0,229,255,.2);color:var(--cyan)}
+.inline-flex{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+
+/* ── ADMIN GATE ── */
+.admin-locked{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  height:100%;gap:16px;
+  background:radial-gradient(ellipse at center, rgba(255,68,102,.04) 0%, transparent 70%);
+}
+.admin-locked .lock-icon{font-size:48px;opacity:.4}
+.admin-locked h3{
+  font-family:var(--font-ui);font-size:18px;font-weight:700;
+  color:var(--red);letter-spacing:2px;
+}
+.admin-locked p{font-size:11px;color:var(--text3);text-align:center;max-width:300px;line-height:1.7}
+
+/* ── NOTIFICATIONS BELL ── */
+.notif-wrap{position:relative}
+.notif-btn{
+  background:transparent;border:1px solid var(--border2);
+  color:var(--text2);padding:5px 9px;border-radius:var(--radius);
+  cursor:pointer;font-size:14px;line-height:1;transition:.12s;position:relative;
+}
+.notif-btn:hover{border-color:var(--cyan);color:var(--cyan)}
+.notif-badge{
+  position:absolute;top:-4px;right:-4px;
+  background:var(--red);color:#fff;font-size:8px;font-weight:700;
+  padding:1px 4px;border-radius:8px;min-width:16px;text-align:center;
+  display:none;
+}
+.notif-badge.show{display:block}
+.notif-dropdown{
+  position:absolute;top:calc(100% + 6px);right:0;width:320px;
+  background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius);
+  z-index:500;display:none;box-shadow:0 16px 48px rgba(0,0,0,.6);
+}
+.notif-dropdown.open{display:block}
+.notif-hdr{
+  padding:10px 14px;border-bottom:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;
+}
+.notif-hdr span{font-family:var(--font-ui);font-size:12px;color:var(--cyan);font-weight:600;letter-spacing:.5px}
+.notif-list{max-height:280px;overflow-y:auto}
+.notif-list::-webkit-scrollbar{width:3px}
+.notif-list::-webkit-scrollbar-thumb{background:var(--border2)}
+.notif-item{
+  padding:10px 14px;border-bottom:1px solid var(--border);cursor:pointer;transition:.12s;
+}
+.notif-item:hover{background:var(--surface2)}
+.notif-item:last-child{border-bottom:none}
+.notif-item.unread{border-left:2px solid var(--green)}
+.notif-item-title{font-size:11px;color:var(--text);font-weight:600;margin-bottom:3px}
+.notif-item-msg{font-size:10px;color:var(--text3);line-height:1.5}
+.notif-item-time{font-size:9px;color:var(--text3);margin-top:3px}
+.notif-empty{padding:20px;text-align:center;color:var(--text3);font-size:10px}
+
+/* ── WEBSITES ── */
+.site-card{
+  background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius);
+  padding:14px;margin-bottom:8px;
+}
+.site-card-hdr{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.site-card-hdr h4{font-family:var(--font-ui);color:var(--cyan);font-size:13px;font-weight:600;flex:1}
+.site-card-meta{font-size:10px;color:var(--text3);margin-bottom:8px;line-height:1.7}
+.site-card-actions{display:flex;gap:6px;flex-wrap:wrap}
+
+/* ── API KEYS ── */
+.apikey-card{
+  background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius);
+  padding:12px;margin-bottom:8px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+}
+.apikey-prefix{
+  font-family:var(--font-code);font-size:11px;color:var(--green);
+  background:var(--green-dim);padding:3px 8px;border-radius:2px;
+  border:1px solid var(--green-border);flex-shrink:0;
+}
+.apikey-name{font-size:12px;color:var(--text);flex:1}
+.apikey-meta{font-size:10px;color:var(--text3)}
+
+/* ── DEBUG BOX ── */
+.debug-box{
+  background:#040408;border:1px solid rgba(255,122,48,.2);border-radius:var(--radius);
+  padding:10px;margin-top:8px;font-size:10px;line-height:1.8;color:var(--orange);
+  max-height:340px;overflow-y:auto;white-space:pre-wrap;word-break:break-all;
+  font-family:var(--font-code);
+}
+
+/* ── LOADING STATES ── */
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes spin{to{transform:rotate(360deg)}}
+.fade-in{animation:fadeIn .2s ease-out}
+.running-dot{animation:pulse 1.2s ease-in-out infinite}
+.spinner{
+  display:inline-block;width:12px;height:12px;
+  border:2px solid var(--border2);border-top-color:var(--green);
+  border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px;
+}
+
+/* ── CODE AREA ── */
+.code-output{
+  background:#040408;border:1px solid var(--border);border-radius:var(--radius);
+  padding:10px;font-family:var(--font-code);font-size:11px;line-height:1.7;
+  color:var(--text);max-height:280px;overflow:auto;white-space:pre-wrap;
+  word-break:break-all;margin-top:6px;
+}
+.code-output.stdout{color:var(--green)}
+.code-output.stderr{color:var(--red)}
+
+/* ══════════════════════════ MOBILE ══════════════════════════ */
+@media(max-width:768px){
+  :root{--sidebar:260px}
+  html,body{overflow:auto;height:100%}
+  body{min-height:100vh}
+  header{padding:0 10px;gap:8px}
+  .logo{font-size:18px;letter-spacing:2px}
+  .hdr-badge{display:none}
+  .hdr-user-email{max-width:120px}
+  #menu-toggle{display:inline-flex;align-items:center;justify-content:center;height:32px;flex-shrink:0}
+  .layout{overflow:hidden}
+  .sidebar{
+    position:fixed;top:var(--hdr);left:0;height:calc(100dvh - var(--hdr));
+    transform:translateX(-100%);z-index:300;
+    box-shadow:12px 0 40px rgba(0,0,0,.5);
   }
-  html,body{height:100%;overflow:hidden}
-  body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:12px;display:flex;flex-direction:column}
-
-  /* ── Scanline overlay ── */
-  body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.03) 2px,rgba(0,0,0,.03) 4px);pointer-events:none;z-index:9999}
-
-  /* ── Header ── */
-  header{
-    background:var(--surface);border-bottom:1px solid var(--border2);
-    padding:0 16px;height:44px;display:flex;align-items:center;gap:12px;flex-shrink:0;
-    position:relative;
-  }
-  header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--green),transparent);opacity:.4}
-  .logo{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--green);letter-spacing:3px;text-shadow:0 0 20px rgba(0,255,136,.5)}
-  .badge{padding:2px 7px;border-radius:2px;font-size:10px;font-weight:700;letter-spacing:.5px}
-  .badge-green {background:var(--green-dim);color:var(--green); border:1px solid #004433}
-  .badge-cyan  {background:var(--cyan-dim); color:var(--cyan);  border:1px solid #003344}
-  .badge-orange{background:#1a0d00;         color:var(--orange);border:1px solid #331a00}
-  #status-dot{width:7px;height:7px;border-radius:50%;background:var(--muted);flex-shrink:0;transition:.3s}
-  #status-dot.ok {background:var(--green);box-shadow:0 0 8px var(--green)}
-  #status-dot.err{background:var(--red);  box-shadow:0 0 8px var(--red)}
-  .header-right{display:flex;align-items:center;gap:8px;margin-left:auto}
-  #base-url{background:#0a0a0a;border:1px solid var(--border2);color:var(--cyan);padding:4px 8px;border-radius:3px;font-family:inherit;font-size:11px;width:230px;outline:none}
-  #base-url:focus{border-color:var(--cyan)}
-  .header-right label{color:var(--muted2);font-size:10px}
-
-  /* Sidebar Toggle */
-  #menu-toggle{
-    display:none;
-    background:transparent;
-    border:1px solid var(--border2);
-    color:var(--green);
-    padding:4px 8px;
-    border-radius:3px;
-    cursor:pointer;
-    font-family:inherit;
-    font-size:14px;
-    transition:.15s;
-  }
-  #menu-toggle:hover{
-    border-color:var(--green);
-    box-shadow:0 0 10px rgba(0,255,136,.15);
-  }
-
-  /* Sidebar backdrop */
-  #sidebar-backdrop{
-    position:fixed;
-    inset:44px 0 0 0;
-    background:rgba(0,0,0,.45);
-    backdrop-filter:blur(2px);
-    z-index:999;
-    display:none;
-  }
-  #sidebar-backdrop.show{
-    display:block;
-  }
-
-  /* ── Layout ── */
-  .layout{display:grid;grid-template-columns:200px 1fr;flex:1;overflow:hidden;min-height:0}
-
-  /* ── Sidebar ── */
-  .sidebar{background:var(--surface);border-right:1px solid var(--border2);display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden}
-  .sidebar::-webkit-scrollbar{width:3px}
-  .sidebar::-webkit-scrollbar-track{background:transparent}
-  .sidebar::-webkit-scrollbar-thumb{background:var(--border2)}
-  .sb-section{padding:10px 8px;border-bottom:1px solid var(--border)}
-  .sb-section h3{color:var(--muted2);font-size:9px;letter-spacing:2px;text-transform:uppercase;padding:0 6px;margin-bottom:6px}
-  .nav-btn{
-    display:flex;align-items:center;gap:7px;width:100%;text-align:left;
-    background:none;border:none;color:var(--muted2);padding:6px 8px;
-    border-radius:3px;cursor:pointer;font-family:inherit;font-size:11px;
-    transition:.12s;border-left:2px solid transparent;
-  }
-  .nav-btn:hover{color:var(--text);background:var(--surface2)}
-  .nav-btn.active{color:var(--green);background:var(--green-glow);border-left-color:var(--green)}
-  .sb-token{
-    background:#0a0a0a;border:1px solid var(--border);border-radius:3px;
-    padding:5px 7px;font-size:9px;color:var(--muted);
-    word-break:break-all;max-height:44px;overflow:hidden;
-    cursor:pointer;margin-top:6px;transition:.15s;
-  }
-  .sb-token:hover{border-color:var(--green-dim)}
-  .sb-token.set{color:var(--green)}
-  .sb-info{font-size:9px;color:var(--muted);margin-top:3px;padding:0 2px}
-  .sb-info span{color:var(--cyan)}
-
-  /* ── Main ── */
-  .main{display:flex;flex-direction:column;overflow:hidden;min-width:0;background:var(--bg)}
-  .panel{display:none;flex:1;overflow:hidden;flex-direction:column}
-  .panel.active{display:flex}
-  .panel-hdr{
-    padding:10px 16px;border-bottom:1px solid var(--border);
-    display:flex;align-items:center;gap:10px;flex-shrink:0;
-    background:var(--surface);
-  }
-  .panel-hdr h2{color:var(--green);font-family:'Syne',sans-serif;font-size:14px;font-weight:700;letter-spacing:1px}
-  .panel-body{flex:1;overflow-y:auto;padding:14px 16px}
-  .panel-body::-webkit-scrollbar{width:4px}
-  .panel-body::-webkit-scrollbar-track{background:transparent}
-  .panel-body::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
-
-  /* ── Forms ── */
-  .fg{margin-bottom:10px}
-  .fg label,.form-group label{display:block;color:var(--muted2);font-size:9px;margin-bottom:3px;text-transform:uppercase;letter-spacing:.8px}
-  input,textarea,select{
-    width:100%;background:#0a0a0a;border:1px solid var(--border2);color:var(--text);
-    padding:6px 9px;border-radius:3px;font-family:inherit;font-size:11px;outline:none;transition:.12s;
-  }
-  input:focus,textarea:focus,select:focus{border-color:var(--cyan);box-shadow:0 0 0 1px rgba(0,229,255,.08)}
-  textarea{resize:vertical;min-height:70px;line-height:1.6}
-  select option{background:var(--surface2)}
-  .row{display:flex;gap:10px}
-  .row .fg,.row .form-group{flex:1}
-
-  /* ── Buttons ── */
-  .btn{
-    padding:6px 13px;border-radius:3px;border:none;cursor:pointer;
-    font-family:inherit;font-size:11px;font-weight:600;letter-spacing:.4px;
-    transition:.12s;white-space:nowrap;
-  }
-  .btn-primary {background:var(--green);color:#000}
-  .btn-primary:hover{background:#00dd77;box-shadow:0 0 12px rgba(0,255,136,.3)}
-  .btn-secondary{background:transparent;border:1px solid var(--border2);color:var(--muted2)}
-  .btn-secondary:hover{border-color:var(--cyan);color:var(--cyan)}
-  .btn-danger   {background:transparent;border:1px solid rgba(255,68,85,.4);color:var(--red)}
-  .btn-danger:hover{background:var(--red-dim);border-color:var(--red)}
-  .btn-purple   {background:transparent;border:1px solid rgba(191,119,246,.4);color:var(--purple)}
-  .btn-purple:hover{background:var(--purple-dim);border-color:var(--purple)}
-  .btn-orange   {background:transparent;border:1px solid rgba(255,140,66,.4);color:var(--orange)}
-  .btn-orange:hover{background:#1a0d00;border-color:var(--orange)}
-  .btn-sm{padding:3px 9px;font-size:10px}
-  .btn:disabled{opacity:.35;cursor:not-allowed}
-
-  /* ── Response boxes ── */
-  .rbox{
-    background:#0a0a0a;border:1px solid var(--border2);border-radius:4px;
-    padding:10px 12px;margin-top:8px;font-size:11px;line-height:1.7;
-    white-space:pre-wrap;word-break:break-word;max-height:400px;overflow-y:auto;
-  }
-  .rbox::-webkit-scrollbar{width:3px}
-  .rbox::-webkit-scrollbar-thumb{background:var(--border2)}
-  .rbox.ok    {border-color:var(--green-dim);color:var(--green)}
-  .rbox.error {border-color:var(--red-dim);color:var(--red)}
-  .rbox.info  {border-color:var(--border2);color:var(--text)}
-  .rbox.stream{border-color:var(--cyan-dim);color:var(--cyan)}
-
-  /* ── Chat ── */
-  .chat-msgs{flex:1;overflow-y:auto;padding:12px 16px;display:flex;flex-direction:column;gap:8px}
-  .chat-msgs::-webkit-scrollbar{width:4px}
-  .chat-msgs::-webkit-scrollbar-thumb{background:var(--border2)}
-  .msg{max-width:80%;padding:9px 13px;border-radius:4px;font-size:12px;line-height:1.6;white-space:pre-wrap;word-break:break-word}
-  .msg.user  {align-self:flex-end;background:var(--green-dim);border:1px solid #004433;color:var(--green)}
-  .msg.ai    {align-self:flex-start;background:var(--surface2);border:1px solid var(--border2);color:var(--text)}
-  .msg.system{align-self:center;background:transparent;border:1px solid var(--border);color:var(--muted);font-size:10px;padding:3px 10px}
-  .msg-meta  {font-size:9px;color:var(--muted);margin-top:4px}
-  .chat-foot {padding:10px 16px;border-top:1px solid var(--border);flex-shrink:0;display:flex;flex-direction:column;gap:7px;background:var(--surface)}
-  .chat-toolbar{display:flex;align-items:center;gap:10px}
-  .chat-row  {display:flex;gap:7px}
-  .chat-row textarea{flex:1;min-height:38px;max-height:100px}
-  .toggle-label{display:flex;align-items:center;gap:5px;cursor:pointer;white-space:nowrap;font-size:11px;color:var(--muted2);user-select:none}
-  .toggle-label:hover{color:var(--text)}
-
-  /* ── Grid cards ── */
-  .card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;margin-bottom:12px}
-  .card{background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:10px 12px}
-  .card .cl{font-size:9px;color:var(--muted2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px}
-  .card .cv{font-size:13px;font-weight:700;color:var(--cyan)}
-  .card .cv.ok {color:var(--green)}
-  .card .cv.err{color:var(--red)}
-  .card .cv.warn{color:var(--yellow)}
-
-  /* ── Tables ── */
-  table{width:100%;border-collapse:collapse;font-size:11px}
-  th{background:var(--surface2);color:var(--cyan);text-align:left;padding:6px 9px;border-bottom:1px solid var(--border2);font-size:9px;letter-spacing:.8px;text-transform:uppercase}
-  td{padding:6px 9px;border-bottom:1px solid var(--border);color:var(--text);vertical-align:middle}
-  tr:hover td{background:rgba(255,255,255,.015)}
-
-  /* ── Pills ── */
-  .pill{display:inline-block;padding:1px 6px;border-radius:10px;font-size:9px;white-space:nowrap;font-weight:600}
-  .pill-green {background:var(--green-dim);color:var(--green); border:1px solid #003322}
-  .pill-yellow{background:var(--yellow-dim);color:var(--yellow);border:1px solid #443200}
-  .pill-red   {background:var(--red-dim);  color:var(--red);   border:1px solid #440011}
-  .pill-cyan  {background:var(--cyan-dim); color:var(--cyan);  border:1px solid #002233}
-  .pill-purple{background:var(--purple-dim);color:var(--purple);border:1px solid #2e1050}
-  .pill-orange{background:#1a0d00;color:var(--orange);border:1px solid #332000}
-  .pill-muted {background:#141414;color:var(--muted2);border:1px solid #2a2a2a}
-
-  /* ── Job cards ── */
-  .job-card{background:var(--surface2);border:1px solid var(--border2);border-radius:4px;padding:12px;margin-bottom:10px;transition:.15s}
-  .job-card:hover{border-color:var(--border2);box-shadow:0 2px 16px rgba(0,0,0,.3)}
-  .job-card-hdr{display:flex;align-items:center;gap:7px;margin-bottom:7px;flex-wrap:wrap}
-  .job-card-hdr h4{color:var(--cyan);font-size:12px;font-weight:600;flex:1;min-width:100px}
-  .job-card-meta{display:flex;gap:14px;flex-wrap:wrap;font-size:10px;color:var(--muted2);margin-bottom:8px;line-height:1.8}
-  .job-card-meta span{display:flex;gap:3px;align-items:center}
-  .job-card-meta b{color:var(--text)}
-  .job-card-actions{display:flex;gap:6px;flex-wrap:wrap}
-
-  /* ── Log output ── */
-  .log-out{
-    background:#050505;border:1px solid var(--border);border-radius:3px;
-    padding:10px;font-size:10px;line-height:1.9;color:var(--muted2);
-    max-height:320px;overflow-y:auto;white-space:pre-wrap;word-break:break-all;margin-top:8px;
-  }
-  .log-out::-webkit-scrollbar{width:3px}
-  .log-out::-webkit-scrollbar-thumb{background:var(--border2)}
-  .log-out .l-ok {color:var(--green)}
-  .log-out .l-err{color:var(--red)}
-  .log-out .l-warn{color:var(--yellow)}
-
-  /* ── Debug panel ── */
-  .debug-box{
-    background:#050505;border:1px solid rgba(255,140,66,.2);border-radius:4px;
-    padding:10px;margin-top:8px;font-size:10px;line-height:1.8;color:var(--orange);
-    max-height:350px;overflow-y:auto;white-space:pre-wrap;word-break:break-all;
-  }
-
-  /* ── Misc ── */
-  hr.div{border:none;border-top:1px solid var(--border);margin:12px 0}
-  .sec-title{color:var(--cyan);font-size:10px;margin-bottom:8px;font-weight:600;letter-spacing:.5px;text-transform:uppercase}
-  .note{background:#0a0a0a;border:1px solid var(--border);border-radius:3px;padding:7px 10px;font-size:10px;color:var(--muted2);margin-bottom:10px;line-height:1.7}
-  .note.warn{border-color:rgba(255,204,0,.2);color:var(--yellow)}
-  .note.safe{border-color:rgba(0,255,136,.15);color:#557755}
-  .inline-flex{display:flex;align-items:center;gap:8px}
-
-  /* ── Scrollbar global ── */
-  ::-webkit-scrollbar{width:4px;height:4px}
-  ::-webkit-scrollbar-track{background:transparent}
-  ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
-  ::-webkit-scrollbar-thumb:hover{background:#333}
-
-  /* ── Image attach ── */
-  .img-attach-bar{display:none;align-items:center;gap:8px;padding:6px 10px;background:#0a0a0a;border:1px solid var(--border2);border-radius:3px;margin-bottom:4px}
-  .img-attach-bar.visible{display:flex}
-  .img-preview{width:48px;height:48px;object-fit:cover;border-radius:3px;border:1px solid var(--border2)}
-  .img-attach-name{font-size:10px;color:var(--cyan);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .img-attach-status{font-size:10px;color:var(--muted2)}
-  #chat-img-input{display:none}
-  .img-clip-btn{background:transparent;border:1px solid var(--border2);color:var(--muted2);border-radius:3px;padding:5px 8px;cursor:pointer;font-size:14px;line-height:1;transition:.12s;flex-shrink:0}
-  .img-clip-btn:hover{border-color:var(--cyan);color:var(--cyan)}
-  .img-clip-btn.active{border-color:var(--green);color:var(--green);background:var(--green-glow)}
-  .msg.ai img.msg-img{max-width:180px;max-height:140px;border-radius:3px;border:1px solid var(--border2);margin-bottom:6px;display:block}
-
-  /* ── Animations ── */
-  @keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:.4}}
-  .running-dot{animation:pulse-dot 1.2s ease-in-out infinite}
-  @keyframes fade-in{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
-  .fade-in{animation:fade-in .2s ease-out}
-
-  /* ── MOBILE RESPONSIVE ── */
-  @media (max-width: 768px){
-    html,body{
-      overflow:auto;
-      height:100%;
-    }
-
-    body{
-      min-height:100vh;
-    }
-
-    header{
-      padding:0 10px;
-      gap:8px;
-      flex-wrap:nowrap;
-    }
-
-    #menu-toggle{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      min-width:34px;
-      height:30px;
-      padding:0 10px;
-      flex-shrink:0;
-    }
-
-    .logo{
-      font-size:16px;
-      letter-spacing:2px;
-    }
-
-    .badge{
-      display:none;
-    }
-
-    .header-right{
-      gap:6px;
-      min-width:0;
-      flex:1;
-      justify-content:flex-end;
-    }
-
-    .header-right label{
-      display:none;
-    }
-
-    #base-url{
-      width:100%;
-      max-width:160px;
-      min-width:90px;
-      font-size:10px;
-      padding:4px 6px;
-    }
-
-    .layout{
-      grid-template-columns:1fr;
-      overflow:hidden;
-      position:relative;
-    }
-
-    .sidebar{
-      position:fixed;
-      top:44px;
-      left:0;
-      height:calc(100dvh - 44px);
-      width:240px;
-      max-width:85vw;
-      transform:translateX(-100%);
-      transition:transform .25s ease;
-      z-index:1000;
-      box-shadow:8px 0 30px rgba(0,0,0,.45);
-      border-right:1px solid var(--border2);
-    }
-
-    .sidebar.open{
-      transform:translateX(0);
-    }
-
-    .main{
-      width:100%;
-      min-width:0;
-      overflow:hidden;
-    }
-
-    .panel-hdr{
-      padding:10px 12px;
-      flex-wrap:wrap;
-    }
-
-    .panel-hdr h2{
-      font-size:13px;
-    }
-
-    .panel-body{
-      padding:12px;
-    }
-
-    .row{
-      flex-direction:column;
-      gap:0;
-    }
-
-    .inline-flex{
-      flex-wrap:wrap;
-    }
-
-    .chat-toolbar{
-      flex-direction:column;
-      align-items:stretch;
-      gap:8px;
-    }
-
-    .chat-row{
-      align-items:flex-end;
-    }
-
-    .chat-row textarea{
-      min-height:40px;
-      max-height:110px;
-      font-size:12px;
-    }
-
-    .chat-msgs{
-      padding:10px 12px;
-    }
-
-    .msg{
-      max-width:100%;
-      font-size:11px;
-    }
-
-    .card-grid{
-      grid-template-columns:1fr 1fr;
-    }
-
-    table{
-      display:block;
-      overflow-x:auto;
-      white-space:nowrap;
-      width:100%;
-    }
-
-    th,td{
-      font-size:10px;
-    }
-
-    .job-card{
-      padding:10px;
-    }
-
-    .job-card-actions{
-      gap:5px;
-    }
-
-    .btn{
-      font-size:10px;
-      padding:6px 10px;
-    }
-
-    .btn-sm{
-      font-size:9px;
-      padding:4px 8px;
-    }
-
-    .rbox{
-      font-size:10px;
-      max-height:300px;
-    }
-
-    .log-out,.debug-box{
-      max-height:260px;
-      font-size:9px;
-    }
-  }
-
-  @media (max-width: 480px){
-    .card-grid{
-      grid-template-columns:1fr;
-    }
-
-    #base-url{
-      max-width:120px;
-    }
-
-    .chat-row{
-      gap:6px;
-    }
-
-    .img-clip-btn{
-      padding:6px 8px;
-      font-size:13px;
-    }
-
-    .chat-row textarea{
-      font-size:11px;
-    }
-
-    .panel-body{
-      padding:10px;
-    }
-
-    .panel-hdr{
-      padding:8px 10px;
-    }
-  }
+  .sidebar.open{transform:translateX(0)}
+  .main{width:100%;min-width:0}
+  .panel-hdr{padding:10px 12px;flex-wrap:wrap}
+  .panel-hdr h2{font-size:14px}
+  .panel-hdr .hdr-actions{gap:5px}
+  .panel-body{padding:12px}
+  .row{flex-direction:column;gap:0}
+  .chat-toolbar{flex-direction:column;align-items:stretch}
+  .chat-toolbar select{min-width:unset}
+  .chat-messages{padding:10px 12px}
+  .msg{max-width:100%;font-size:11px}
+  .card-grid{grid-template-columns:1fr 1fr}
+  table{display:block;overflow-x:auto;white-space:nowrap}
+  th,td{font-size:10px;padding:6px 10px}
+  .notif-dropdown{width:280px;right:-10px}
+  .hdr-sep{display:none}
+}
+@media(max-width:480px){
+  .card-grid{grid-template-columns:1fr}
+  .hdr-user-email{display:none}
+  .panel-body{padding:10px}
+}
 </style>
 </head>
 <body>
 
+<!-- HEADER -->
 <header>
   <button id="menu-toggle" onclick="toggleSidebar()">☰</button>
-  <div class="logo">⚡ JAZZ</div>
-  <span class="badge badge-green">v5.2</span>
-  <span class="badge badge-cyan">FIXED</span>
-  <span class="badge badge-orange">AGENT JOBS</span>
-  <div class="header-right">
-    <label>BASE URL</label>
-    <input id="base-url" value="http://80.225.251.107:8000"/>
-    <div id="status-dot" title="Server status"></div>
+  <div>
+    <div class="logo">⚡ JAZZ</div>
+  </div>
+  <span class="hdr-badge">v7.0</span>
+  <div class="hdr-sep"></div>
+
+  <!-- Notifications -->
+  <div class="notif-wrap" id="notif-wrap">
+    <button class="notif-btn" onclick="toggleNotifications()" title="Notifications">🔔
+      <span class="notif-badge" id="notif-badge"></span>
+    </button>
+    <div class="notif-dropdown" id="notif-dropdown">
+      <div class="notif-hdr">
+        <span>NOTIFICATIONS</span>
+        <button class="btn btn-xs btn-secondary" onclick="markAllRead()">Mark all read</button>
+      </div>
+      <div class="notif-list" id="notif-list">
+        <div class="notif-empty">No notifications</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Server status -->
+  <div id="status-indicator">
+    <div class="status-dot" id="status-dot"></div>
+    <span id="status-text">connecting</span>
+  </div>
+
+  <!-- User info (readonly display) -->
+  <div class="hdr-user-info" id="hdr-user-info" style="display:none">
+    <span class="hdr-user-email" id="hdr-email">—</span>
+    <span class="hdr-user-role" id="hdr-role">user</span>
   </div>
 </header>
 
@@ -493,50 +563,149 @@
 
 <div class="layout">
 
-  <!-- Sidebar -->
-  <div class="sidebar">
-    <div class="sb-section">
-      <h3>Auth</h3>
-      <button class="nav-btn active" onclick="showPanel('login')">🔐 Login</button>
-      <button class="nav-btn" onclick="showPanel('signup')">✍️ Signup</button>
-      <div class="sb-info">Token: <span id="token-status">—</span></div>
-      <div class="sb-info">User: <span id="user-email-display">—</span></div>
-      <div class="sb-info">Role: <span id="user-role-display">—</span></div>
-      <div class="sb-token" id="token-preview" onclick="copyToken()" title="Click to copy">No token</div>
-      <button class="btn btn-danger btn-sm" style="margin-top:7px;width:100%" onclick="logout()">Logout</button>
-    </div>
-    <div class="sb-section">
-      <h3>Core</h3>
-      <button class="nav-btn" onclick="showPanel('health')">💚 Health</button>
-      <button class="nav-btn" onclick="showPanel('chat')">💬 Chat (stream)</button>
-      <button class="nav-btn" onclick="showPanel('chat-basic')">📤 Chat (basic)</button>
-      <button class="nav-btn" onclick="showPanel('documents')">📄 Documents</button>
-      <button class="nav-btn" onclick="showPanel('memory')">🧠 Memory</button>
-      <button class="nav-btn" onclick="showPanel('stats')">📊 User Stats</button>
-    </div>
-    <div class="sb-section">
-      <h3>Agent Jobs ⚡</h3>
-      <button class="nav-btn" onclick="showPanel('jobs')">🤖 My Jobs</button>
-      <button class="nav-btn" onclick="showPanel('jobs-create')">➕ Create Job</button>
-      <button class="nav-btn" onclick="showPanel('jobs-logs')">📋 Job Logs</button>
-      <button class="nav-btn" onclick="showPanel('jobs-debug')">🔬 Debug Run</button>
-    </div>
-    <div class="sb-section">
-      <h3>Admin</h3>
-      <button class="nav-btn" onclick="showPanel('admin')">🛡️ Admin Panel</button>
-      <button class="nav-btn" onclick="showPanel('raw')">🔧 Raw Request</button>
-    </div>
-  </div>
+  <!-- ══ SIDEBAR ══ -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-inner" id="sidebar-inner">
 
-  <!-- Main -->
+      <div class="sb-group" id="sb-auth-section">
+        <div class="sb-group-label">Account</div>
+        <button class="nav-item active" onclick="nav('login')" id="nav-login" data-panel="login">
+          <span class="nav-icon">🔐</span>Login
+        </button>
+        <button class="nav-item" onclick="nav('signup')" id="nav-signup" data-panel="signup">
+          <span class="nav-icon">✍️</span>Signup
+        </button>
+      </div>
+
+      <div class="sb-group" id="sb-main-section" style="display:none">
+        <div class="sb-group-label">Chat</div>
+        <button class="nav-item" onclick="nav('chat')" data-panel="chat">
+          <span class="nav-icon">💬</span>Chat (Stream)
+        </button>
+        <button class="nav-item" onclick="nav('chat-basic')" data-panel="chat-basic">
+          <span class="nav-icon">📤</span>Chat (Basic)
+        </button>
+        <button class="nav-item" onclick="nav('sessions')" data-panel="sessions">
+          <span class="nav-icon">📁</span>Sessions
+        </button>
+      </div>
+
+      <div class="sb-group" id="sb-tools-section" style="display:none">
+        <div class="sb-group-label">Tools</div>
+        <button class="nav-item" onclick="nav('documents')" data-panel="documents">
+          <span class="nav-icon">📄</span>Documents
+        </button>
+        <button class="nav-item" onclick="nav('memory')" data-panel="memory">
+          <span class="nav-icon">🧠</span>Memory
+        </button>
+        <button class="nav-item" onclick="nav('websites')" data-panel="websites">
+          <span class="nav-icon">🌐</span>Websites
+        </button>
+        <button class="nav-item" onclick="nav('code')" data-panel="code">
+          <span class="nav-icon">⚡</span>Code Runner
+        </button>
+        <button class="nav-item" onclick="nav('prompts')" data-panel="prompts">
+          <span class="nav-icon">📝</span>Prompt Library
+        </button>
+      </div>
+
+      <div class="sb-group" id="sb-jobs-section" style="display:none">
+        <div class="sb-group-label">Agent Jobs</div>
+        <button class="nav-item" onclick="nav('jobs')" data-panel="jobs">
+          <span class="nav-icon">🤖</span>My Jobs
+        </button>
+        <button class="nav-item" onclick="nav('jobs-create')" data-panel="jobs-create">
+          <span class="nav-icon">➕</span>Create Job
+        </button>
+        <button class="nav-item" onclick="nav('jobs-logs')" data-panel="jobs-logs">
+          <span class="nav-icon">📋</span>Job Logs
+        </button>
+        <button class="nav-item" onclick="nav('jobs-debug')" data-panel="jobs-debug">
+          <span class="nav-icon">🔬</span>Debug Run
+        </button>
+      </div>
+
+      <div class="sb-group" id="sb-user-section" style="display:none">
+        <div class="sb-group-label">Account</div>
+        <button class="nav-item" onclick="nav('stats')" data-panel="stats">
+          <span class="nav-icon">📊</span>My Stats
+        </button>
+        <button class="nav-item" onclick="nav('apikeys')" data-panel="apikeys">
+          <span class="nav-icon">🔑</span>API Keys
+        </button>
+        <button class="nav-item" onclick="nav('profile')" data-panel="profile">
+          <span class="nav-icon">👤</span>Profile
+        </button>
+        <button class="nav-item" onclick="nav('coupons')" data-panel="coupons">
+          <span class="nav-icon">🎟️</span>Redeem Coupon
+        </button>
+        <button class="nav-item" onclick="nav('export')" data-panel="export">
+          <span class="nav-icon">📦</span>Export Data
+        </button>
+      </div>
+
+      <!-- ADMIN ONLY -->
+      <div class="sb-group" id="sb-admin-section" style="display:none">
+        <div class="sb-group-label">⚔ Admin</div>
+        <button class="nav-item admin-only" onclick="nav('admin-dash')" data-panel="admin-dash">
+          <span class="nav-icon">🛡️</span>Dashboard
+        </button>
+        <button class="nav-item admin-only" onclick="nav('admin-users')" data-panel="admin-users">
+          <span class="nav-icon">👥</span>Users
+        </button>
+        <button class="nav-item admin-only" onclick="nav('admin-announce')" data-panel="admin-announce">
+          <span class="nav-icon">📢</span>Announcements
+        </button>
+        <button class="nav-item admin-only" onclick="nav('admin-coupons')" data-panel="admin-coupons">
+          <span class="nav-icon">🎫</span>Coupons
+        </button>
+        <button class="nav-item admin-only" onclick="nav('admin-broadcast')" data-panel="admin-broadcast">
+          <span class="nav-icon">📡</span>Broadcast
+        </button>
+        <button class="nav-item admin-only" onclick="nav('admin-jobs')" data-panel="admin-jobs">
+          <span class="nav-icon">⚙️</span>All Jobs
+        </button>
+        <button class="nav-item admin-only" onclick="nav('admin-chats')" data-panel="admin-chats">
+          <span class="nav-icon">💬</span>All Chats
+        </button>
+        <button class="nav-item admin-only" onclick="nav('sqlite')" data-panel="sqlite">
+          <span class="nav-icon">🗄️</span>SQLite Query
+        </button>
+        <button class="nav-item admin-only" onclick="nav('server-logs')" data-panel="server-logs">
+          <span class="nav-icon">📜</span>Server Logs
+        </button>
+        <button class="nav-item admin-only" onclick="nav('raw')" data-panel="raw">
+          <span class="nav-icon">🔧</span>Raw Request
+        </button>
+      </div>
+
+      <!-- Health always visible after login -->
+      <div class="sb-group" id="sb-health-section" style="display:none">
+        <div class="sb-group-label">System</div>
+        <button class="nav-item" onclick="nav('health')" data-panel="health">
+          <span class="nav-icon">💚</span>Health Check
+        </button>
+      </div>
+
+    </div><!-- /sidebar-inner -->
+    <div class="sidebar-footer" id="sidebar-footer" style="display:none">
+      <button class="sb-logout-btn" onclick="logout()">⏻ Sign Out</button>
+    </div>
+  </div><!-- /sidebar -->
+
+  <!-- ══ MAIN ══ -->
   <div class="main">
 
-    <!-- ══ LOGIN ══ -->
+    <!-- ── LOGIN ── -->
     <div class="panel active" id="panel-login">
       <div class="panel-hdr"><h2>🔐 Login</h2></div>
-      <div class="panel-body">
-        <div class="fg"><label>Email</label><input id="login-email" type="email" placeholder="you@example.com" value="jasmeet.15069@gmail.com"/></div>
-        <div class="fg"><label>Password</label><input id="login-pass" type="password" placeholder="••••••••"/></div>
+      <div class="panel-body" style="max-width:440px">
+        <div class="fg"><label>Email</label>
+          <input id="login-email" type="email" placeholder="you@example.com" value="jasmeet.15069@gmail.com"/>
+        </div>
+        <div class="fg"><label>Password</label>
+          <input id="login-pass" type="password" placeholder="••••••••"/>
+        </div>
         <div class="inline-flex">
           <button class="btn btn-primary" onclick="doLogin()">Login</button>
           <button class="btn btn-secondary" onclick="doAdminLogin()">Admin Login</button>
@@ -545,10 +714,10 @@
       </div>
     </div>
 
-    <!-- ══ SIGNUP ══ -->
+    <!-- ── SIGNUP ── -->
     <div class="panel" id="panel-signup">
-      <div class="panel-hdr"><h2>✍️ Signup</h2></div>
-      <div class="panel-body">
+      <div class="panel-hdr"><h2>✍️ Create Account</h2></div>
+      <div class="panel-body" style="max-width:440px">
         <div class="fg"><label>Full Name</label><input id="signup-name" placeholder="Jane Doe"/></div>
         <div class="fg"><label>Email</label><input id="signup-email" type="email" placeholder="you@example.com"/></div>
         <div class="fg"><label>Password (min 8 chars)</label><input id="signup-pass" type="password" placeholder="••••••••"/></div>
@@ -557,11 +726,11 @@
       </div>
     </div>
 
-    <!-- ══ HEALTH ══ -->
+    <!-- ── HEALTH ── -->
     <div class="panel" id="panel-health">
       <div class="panel-hdr">
-        <h2>💚 Health</h2>
-        <button class="btn btn-secondary btn-sm" onclick="doHealth()">Refresh</button>
+        <h2>💚 Health Check</h2>
+        <div class="hdr-actions"><button class="btn btn-secondary btn-sm" onclick="doHealth()">↺ Refresh</button></div>
       </div>
       <div class="panel-body">
         <div id="health-grid" class="card-grid"></div>
@@ -569,44 +738,50 @@
       </div>
     </div>
 
-    <!-- ══ CHAT STREAM ══ -->
-    <div class="panel" id="panel-chat" style="flex-direction:column">
+    <!-- ── CHAT STREAM ── -->
+    <div class="panel" id="panel-chat">
       <div class="panel-hdr">
         <h2>💬 Chat — Streaming</h2>
-        <button class="btn btn-danger btn-sm" onclick="clearChat()">Clear</button>
+        <div class="hdr-actions">
+          <button class="btn btn-secondary btn-sm" onclick="exportChat('markdown')">⬇ MD</button>
+          <button class="btn btn-secondary btn-sm" onclick="exportChat('json')">⬇ JSON</button>
+          <button class="btn btn-danger btn-sm" onclick="clearChat()">Clear</button>
+        </div>
       </div>
-      <div class="chat-msgs" id="chat-messages">
-        <div class="msg system">Send a message to start ▸</div>
-      </div>
-      <div class="chat-foot">
-        <div class="chat-toolbar">
-          <div class="fg" style="margin:0;flex:1">
+      <div class="chat-container">
+        <div class="chat-messages" id="chat-messages">
+          <div class="msg system">Send a message to start ▸</div>
+        </div>
+        <div class="chat-footer">
+          <div class="chat-toolbar">
             <select id="chat-model">
-              <option value="uncensored">🔓 Uncensored (Dolphin Mistral 24B)</option>
-              <option value="censored">🔒 Censored (Groq Llama 3.3 70B)</option>
+              <option value="uncensored">🔓 Uncensored — Dolphin Mistral 24B</option>
+              <option value="censored">🔒 Censored — Groq Llama 3.3 70B</option>
             </select>
+            <select id="chat-session-sel" style="max-width:180px">
+              <option value="">No session</option>
+            </select>
+            <label class="toggle-label"><input type="checkbox" id="chat-rag" checked/> RAG</label>
           </div>
-          <label class="toggle-label"><input type="checkbox" id="chat-rag" checked/> RAG</label>
-        </div>
-        <!-- Image attach preview bar -->
-        <div class="img-attach-bar" id="img-attach-bar">
-          <img class="img-preview" id="img-preview-thumb" src="" alt="preview"/>
-          <div style="flex:1;min-width:0">
-            <div class="img-attach-name" id="img-attach-name">image.jpg</div>
-            <div class="img-attach-status" id="img-attach-status">Ready to send</div>
+          <div class="img-attach-bar" id="img-attach-bar">
+            <img class="img-preview-thumb" id="img-thumb" src="" alt=""/>
+            <div style="flex:1;min-width:0">
+              <div class="img-attach-name" id="img-name">image.jpg</div>
+              <div class="img-attach-status" id="img-status">Ready</div>
+            </div>
+            <button class="btn btn-xs btn-danger" onclick="clearImage()">✕</button>
           </div>
-          <button class="btn btn-danger btn-sm" onclick="clearChatImage()" title="Remove image">✕</button>
-        </div>
-        <div class="chat-row">
-          <input type="file" id="chat-img-input" accept="image/jpeg,image/png,image/gif,image/webp" onchange="onChatImageSelected(event)"/>
-          <button class="img-clip-btn" id="img-clip-btn" onclick="document.getElementById('chat-img-input').click()" title="Attach image">📎</button>
-          <textarea id="chat-input" placeholder="Type your message… (Enter to send, Shift+Enter newline)" onkeydown="chatKeydown(event)"></textarea>
-          <button class="btn btn-primary" id="chat-send-btn" onclick="doStreamChat()">Send</button>
+          <div class="chat-input-row">
+            <input type="file" id="img-file-input" accept="image/jpeg,image/png,image/gif,image/webp" style="display:none" onchange="onImageSelected(event)"/>
+            <button class="attach-btn" id="attach-btn" onclick="document.getElementById('img-file-input').click()" title="Attach image">📎</button>
+            <textarea id="chat-input" placeholder="Type a message… (Enter = send, Shift+Enter = newline)" onkeydown="chatKeydown(event)"></textarea>
+            <button class="btn btn-primary" id="chat-send-btn" onclick="doStreamChat()">Send</button>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- ══ CHAT BASIC ══ -->
+    <!-- ── CHAT BASIC ── -->
     <div class="panel" id="panel-chat-basic">
       <div class="panel-hdr"><h2>📤 Chat — Basic</h2></div>
       <div class="panel-body">
@@ -614,12 +789,12 @@
           <div class="fg">
             <label>Model</label>
             <select id="basic-model">
-              <option value="uncensored">Uncensored (Dolphin)</option>
-              <option value="censored">Censored (Groq)</option>
+              <option value="uncensored">Uncensored (Dolphin Mistral 24B)</option>
+              <option value="censored">Censored (Groq Llama 3.3 70B)</option>
             </select>
           </div>
           <div class="fg" style="display:flex;align-items:flex-end">
-            <label class="toggle-label" style="padding-bottom:7px"><input type="checkbox" id="basic-rag" checked/> Use RAG</label>
+            <label class="toggle-label" style="padding-bottom:8px"><input type="checkbox" id="basic-rag" checked/> Use RAG</label>
           </div>
         </div>
         <div class="fg"><label>Message</label><textarea id="basic-msg" placeholder="Ask something…"></textarea></div>
@@ -629,141 +804,228 @@
       </div>
     </div>
 
-    <!-- ══ DOCUMENTS ══ -->
-    <div class="panel" id="panel-documents">
-      <div class="panel-hdr"><h2>📄 Documents</h2></div>
+    <!-- ── CHAT SESSIONS ── -->
+    <div class="panel" id="panel-sessions">
+      <div class="panel-hdr">
+        <h2>📁 Chat Sessions</h2>
+        <div class="hdr-actions">
+          <button class="btn btn-primary btn-sm" onclick="createSession()">+ New Session</button>
+          <button class="btn btn-secondary btn-sm" onclick="loadSessions()">↺ Refresh</button>
+        </div>
+      </div>
       <div class="panel-body">
-        <p class="sec-title">Upload Document</p>
-        <div class="fg"><label>File (PDF, DOCX, XLSX, CSV, TXT…)</label><input type="file" id="doc-file" accept=".pdf,.docx,.xlsx,.csv,.txt,.md,.json,.xml,.py,.js,.ts,.html,.sql"/></div>
+        <div id="sessions-list"></div>
+      </div>
+    </div>
+
+    <!-- ── DOCUMENTS ── -->
+    <div class="panel" id="panel-documents">
+      <div class="panel-hdr">
+        <h2>📄 Documents</h2>
+        <div class="hdr-actions"><button class="btn btn-secondary btn-sm" onclick="loadDocuments()">↺ Refresh</button></div>
+      </div>
+      <div class="panel-body">
+        <div class="section-title">Upload Document</div>
+        <div class="fg"><label>File (PDF, DOCX, XLSX, CSV, TXT, MD, JSON…)</label>
+          <input type="file" id="doc-file" accept=".pdf,.docx,.xlsx,.csv,.txt,.md,.json,.xml,.py,.js,.ts,.html,.sql"/>
+        </div>
         <button class="btn btn-primary" onclick="doUploadDoc()">Upload & Index</button>
         <div id="doc-upload-out" class="rbox info" style="display:none"></div>
         <hr class="div"/>
-        <div class="inline-flex" style="margin-bottom:8px">
-          <p class="sec-title" style="margin:0">My Documents</p>
-          <button class="btn btn-secondary btn-sm" onclick="loadDocuments()">Refresh</button>
-        </div>
+        <div class="section-title">My Documents</div>
         <div id="docs-table"></div>
       </div>
     </div>
 
-    <!-- ══ MEMORY ══ -->
+    <!-- ── MEMORY ── -->
     <div class="panel" id="panel-memory">
-      <div class="panel-hdr"><h2>🧠 Memory</h2></div>
-      <div class="panel-body">
-        <div class="inline-flex" style="margin-bottom:12px">
-          <button class="btn btn-secondary btn-sm" onclick="loadMemory()">Refresh</button>
-          <button class="btn btn-danger btn-sm" onclick="clearAllMemory()">Clear All</button>
+      <div class="panel-hdr">
+        <h2>🧠 Memory</h2>
+        <div class="hdr-actions">
+          <button class="btn btn-secondary btn-sm" onclick="loadMemory()">↺ Refresh</button>
+          <button class="btn btn-danger btn-sm" onclick="clearAllMemory()">🗑 Clear All</button>
         </div>
-        <p class="sec-title">Add Memory</p>
+      </div>
+      <div class="panel-body">
+        <div id="memory-status" class="note" style="display:none"></div>
+        <div class="section-title">Add Memory</div>
         <div class="row">
           <div class="fg"><label>Content</label><input id="mem-content" placeholder="Remember that I prefer dark mode…"/></div>
-          <div class="fg" style="max-width:140px"><label>Category</label>
+          <div class="fg" style="max-width:150px"><label>Category</label>
             <select id="mem-cat">
               <option>general</option><option>preference</option><option>profession</option>
               <option>goal</option><option>personal</option><option>technical</option>
             </select>
           </div>
         </div>
-        <button class="btn btn-primary btn-sm" onclick="addMemory()">Add</button>
+        <button class="btn btn-primary btn-sm" onclick="addMemory()">Add Memory</button>
         <hr class="div"/>
-        <div id="memory-status" style="font-size:10px;color:var(--muted2);margin-bottom:6px"></div>
         <div id="memory-table"></div>
       </div>
     </div>
 
-    <!-- ══ STATS ══ -->
-    <div class="panel" id="panel-stats">
+    <!-- ── WEBSITES ── -->
+    <div class="panel" id="panel-websites">
       <div class="panel-hdr">
-        <h2>📊 User Stats</h2>
-        <button class="btn btn-secondary btn-sm" onclick="loadStats()">Refresh</button>
+        <h2>🌐 Website Builder</h2>
+        <div class="hdr-actions"><button class="btn btn-secondary btn-sm" onclick="loadWebsites()">↺ Refresh</button></div>
       </div>
       <div class="panel-body">
-        <div id="stats-grid" class="card-grid"></div>
-        <div id="stats-out" class="rbox info" style="display:none"></div>
+        <div class="section-title">Build New Website</div>
+        <div class="fg"><label>Description</label>
+          <textarea id="ws-desc" placeholder="A portfolio website for a freelance photographer…"></textarea>
+        </div>
+        <div class="row">
+          <div class="fg"><label>Title (optional)</label><input id="ws-title" placeholder="My Portfolio"/></div>
+          <div class="fg" style="max-width:160px"><label>Style</label>
+            <select id="ws-style">
+              <option value="modern">Modern</option>
+              <option value="minimal">Minimal</option>
+              <option value="glassmorphism">Glassmorphism</option>
+              <option value="retro">Retro</option>
+              <option value="brutalist">Brutalist</option>
+            </select>
+          </div>
+          <div class="fg" style="max-width:160px"><label>Model</label>
+            <select id="ws-model"><option value="censored">Censored</option><option value="uncensored">Uncensored</option></select>
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="buildWebsite()"><span class="spinner" id="ws-spinner" style="display:none"></span>Build Website</button>
+        <div id="ws-build-out" class="rbox info" style="display:none"></div>
+        <hr class="div"/>
+        <div class="section-title">My Websites</div>
+        <div id="websites-list"></div>
       </div>
     </div>
 
-    <!-- ══ MY JOBS ══ -->
+    <!-- ── CODE RUNNER ── -->
+    <div class="panel" id="panel-code">
+      <div class="panel-hdr"><h2>⚡ Code Runner</h2></div>
+      <div class="panel-body">
+        <div class="note warn">Python sandbox blocks: os, subprocess, sys, file I/O, sockets. 10s timeout.</div>
+        <div class="row">
+          <div class="fg" style="max-width:160px"><label>Language</label>
+            <select id="code-lang">
+              <option value="python">Python</option>
+              <option value="javascript">JavaScript (Node)</option>
+              <option value="bash">Bash</option>
+            </select>
+          </div>
+        </div>
+        <div class="fg"><label>Code</label>
+          <textarea id="code-input" style="min-height:160px;font-family:var(--font-code);font-size:11px" placeholder="print('Hello, JAZZ!')"></textarea>
+        </div>
+        <button class="btn btn-primary" onclick="runCode()">▶ Run</button>
+        <div id="code-result" style="display:none;margin-top:10px">
+          <div class="section-title" style="margin-bottom:6px">stdout</div>
+          <div class="code-output stdout" id="code-stdout"></div>
+          <div class="section-title" style="margin-top:10px;margin-bottom:6px">stderr</div>
+          <div class="code-output stderr" id="code-stderr"></div>
+          <div style="font-size:10px;color:var(--text3);margin-top:6px" id="code-meta"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PROMPT LIBRARY ── -->
+    <div class="panel" id="panel-prompts">
+      <div class="panel-hdr">
+        <h2>📝 Prompt Library</h2>
+        <div class="hdr-actions"><button class="btn btn-secondary btn-sm" onclick="loadPrompts()">↺ Refresh</button></div>
+      </div>
+      <div class="panel-body">
+        <div class="section-title">Add Prompt</div>
+        <div class="row">
+          <div class="fg"><label>Title</label><input id="prompt-title" placeholder="Code Review Expert"/></div>
+          <div class="fg" style="max-width:160px"><label>Category</label>
+            <select id="prompt-cat"><option>general</option><option>coding</option><option>writing</option><option>analysis</option><option>creative</option></select>
+          </div>
+        </div>
+        <div class="fg"><label>Content</label>
+          <textarea id="prompt-content" style="min-height:100px" placeholder="You are an expert code reviewer…"></textarea>
+        </div>
+        <label class="toggle-label" style="margin-bottom:10px"><input type="checkbox" id="prompt-public"/> Make Public</label>
+        <button class="btn btn-primary btn-sm" onclick="createPrompt()">Save Prompt</button>
+        <div id="prompt-out" class="rbox info" style="display:none"></div>
+        <hr class="div"/>
+        <div id="prompts-list"></div>
+      </div>
+    </div>
+
+    <!-- ── JOBS ── -->
     <div class="panel" id="panel-jobs">
       <div class="panel-hdr">
         <h2>🤖 Agent Jobs</h2>
-        <button class="btn btn-secondary btn-sm" onclick="loadJobs()">Refresh</button>
-        <button class="btn btn-purple btn-sm" onclick="showPanel('jobs-create')">+ New Job</button>
+        <div class="hdr-actions">
+          <button class="btn btn-secondary btn-sm" onclick="loadJobs()">↺ Refresh</button>
+          <button class="btn btn-purple btn-sm" onclick="nav('jobs-create')">+ New Job</button>
+        </div>
       </div>
-      <div class="panel-body">
-        <div id="jobs-list"><p style="color:var(--muted2);font-size:11px">Loading…</p></div>
-      </div>
+      <div class="panel-body"><div id="jobs-list"></div></div>
     </div>
 
-    <!-- ══ CREATE JOB ══ -->
+    <!-- ── CREATE JOB ── -->
     <div class="panel" id="panel-jobs-create">
       <div class="panel-hdr"><h2>➕ Create Agent Job</h2></div>
       <div class="panel-body">
-        <p class="sec-title">Job Settings</p>
         <div class="row">
           <div class="fg"><label>Job Name</label><input id="jc-name" placeholder="Naukri Daily Apply"/></div>
-          <div class="fg" style="max-width:190px">
-            <label>Job Type</label>
-            <select id="jc-type" onchange="updateJobTypeHint()">
+          <div class="fg" style="max-width:200px"><label>Job Type</label>
+            <select id="jc-type" onchange="updateJobHint()">
               <option value="naukri_apply">🟠 Naukri.com Apply</option>
               <option value="linkedin_apply">🔵 LinkedIn Easy Apply</option>
               <option value="custom">⚙️ Custom</option>
             </select>
           </div>
         </div>
-        <div class="fg"><label>Description (optional)</label><input id="jc-desc" placeholder="Auto-apply to Data Analyst roles every morning"/></div>
-
-        <p class="sec-title">Schedule</p>
+        <div class="fg"><label>Description</label><input id="jc-desc" placeholder="Auto-apply to Data Analyst roles"/></div>
+        <div class="section-title">Schedule</div>
         <div class="row">
           <div class="fg">
             <label>Cron Schedule</label>
             <input id="jc-cron" value="0 11 * * *" placeholder="0 11 * * *"/>
-            <div style="font-size:9px;color:var(--muted2);margin-top:3px">min hr day month weekday — "0 11 * * *" = 11:00 AM daily</div>
+            <div style="font-size:9px;color:var(--text3);margin-top:3px">min hr day month weekday — "0 11 * * *" = 11:00 AM daily</div>
           </div>
           <div class="fg" style="max-width:110px"><label>Window Start</label><input id="jc-win-start" value="11:00"/></div>
           <div class="fg" style="max-width:110px"><label>Window End</label><input id="jc-win-end" value="12:00"/></div>
         </div>
-
-        <p class="sec-title">Credentials</p>
+        <div class="section-title">Credentials</div>
         <div class="note safe">🔒 Credentials are Fernet-encrypted before storage. Never stored in plaintext.</div>
         <div class="row">
-          <div class="fg"><label>Login Email</label><input id="jc-cred-email" type="email" placeholder="your@naukri.com"/></div>
-          <div class="fg"><label>Password</label><input id="jc-cred-pass" type="password" placeholder="••••••••"/></div>
+          <div class="fg"><label>Login Email</label><input id="jc-email" type="email" placeholder="your@account.com"/></div>
+          <div class="fg"><label>Password</label><input id="jc-pass" type="password" placeholder="••••••••"/></div>
         </div>
-
-        <p class="sec-title">Search Parameters</p>
-        <div id="job-type-hint" class="note"></div>
-        <div class="fg"><label>Roles (comma separated)</label><input id="jc-roles" placeholder="Data Analyst, Power BI Developer, Business Analyst"/></div>
+        <div class="section-title">Search Parameters</div>
+        <div id="job-hint" class="note"></div>
+        <div class="fg"><label>Roles (comma separated)</label><input id="jc-roles" placeholder="Data Analyst, Power BI Developer"/></div>
         <div class="row">
-          <div class="fg"><label>Location</label><input id="jc-location" placeholder="Gurugram"/></div>
+          <div class="fg"><label>Location</label><input id="jc-loc" placeholder="Gurugram"/></div>
           <div class="fg" style="max-width:90px"><label>Exp Min</label><input id="jc-exp-min" type="number" value="2" min="0" max="30"/></div>
           <div class="fg" style="max-width:90px"><label>Exp Max</label><input id="jc-exp-max" type="number" value="6" min="0" max="30"/></div>
-          <div class="fg" style="max-width:90px"><label>Max Apply</label><input id="jc-max-apply" type="number" value="15" min="1" max="50"/></div>
+          <div class="fg" style="max-width:90px"><label>Max Apply</label><input id="jc-max" type="number" value="15" min="1" max="50"/></div>
         </div>
         <div class="row">
-          <div class="fg"><label>Exclude Keywords (comma separated)</label><input id="jc-exclude" placeholder="intern, contract, unpaid"/></div>
-          <div class="fg" style="max-width:160px;display:flex;align-items:flex-end">
-            <label class="toggle-label" style="padding-bottom:8px"><input type="checkbox" id="jc-easy-only" checked/> Easy Apply Only</label>
+          <div class="fg"><label>Exclude Keywords</label><input id="jc-exclude" placeholder="intern, contract, unpaid"/></div>
+          <div class="fg" style="max-width:180px;display:flex;align-items:flex-end">
+            <label class="toggle-label" style="padding-bottom:8px"><input type="checkbox" id="jc-easy" checked/> Easy Apply Only</label>
           </div>
         </div>
-
-        <div class="inline-flex" style="margin-top:6px">
-          <button class="btn btn-primary" onclick="createJob()">Create & Schedule Job</button>
-          <button class="btn btn-secondary" onclick="showPanel('jobs')">Cancel</button>
+        <div class="inline-flex">
+          <button class="btn btn-primary" onclick="createJob()">Create & Schedule</button>
+          <button class="btn btn-secondary" onclick="nav('jobs')">Cancel</button>
         </div>
         <div id="job-create-out" class="rbox info" style="display:none"></div>
       </div>
     </div>
 
-    <!-- ══ JOB LOGS ══ -->
+    <!-- ── JOB LOGS ── -->
     <div class="panel" id="panel-jobs-logs">
       <div class="panel-hdr">
         <h2>📋 Job Logs</h2>
-        <button class="btn btn-secondary btn-sm" onclick="refreshJobLogs()">Refresh</button>
+        <div class="hdr-actions"><button class="btn btn-secondary btn-sm" onclick="refreshJobLogs()">↺ Refresh</button></div>
       </div>
       <div class="panel-body">
         <div class="fg"><label>Select Job</label>
-          <select id="log-job-select" onchange="loadJobLogs()">
+          <select id="log-job-sel" onchange="loadJobLogs()">
             <option value="">— select a job —</option>
           </select>
         </div>
@@ -771,59 +1033,263 @@
       </div>
     </div>
 
-    <!-- ══ DEBUG RUN ══ -->
+    <!-- ── DEBUG RUN ── -->
     <div class="panel" id="panel-jobs-debug">
       <div class="panel-hdr"><h2>🔬 Debug Run</h2></div>
       <div class="panel-body">
-        <div class="note warn">
-          ⚠ Debug Run executes the job <b>synchronously</b> and returns the full output + any errors directly in this panel.
-          Use this to diagnose why a job produces no logs. The request will hang until the job finishes.
-        </div>
+        <div class="note warn">⚠ Debug Run executes synchronously and returns full output directly. Request hangs until job finishes.</div>
         <div class="fg"><label>Select Job</label>
-          <select id="debug-job-select">
-            <option value="">— select a job —</option>
-          </select>
+          <select id="debug-job-sel"><option value="">— select a job —</option></select>
         </div>
         <div class="inline-flex">
           <button class="btn btn-orange" onclick="doDebugRun()">🔬 Debug Run Now</button>
-          <button class="btn btn-secondary btn-sm" onclick="refreshDebugJobs()">Refresh Jobs</button>
+          <button class="btn btn-secondary btn-sm" onclick="refreshDebugJobs()">↺ Refresh Jobs</button>
         </div>
-        <div id="debug-status" style="margin-top:8px;font-size:10px;color:var(--muted2)"></div>
+        <div id="debug-status" style="margin-top:8px;font-size:10px;color:var(--text3)"></div>
         <div id="debug-out" style="display:none"></div>
       </div>
     </div>
 
-    <!-- ══ ADMIN ══ -->
-    <div class="panel" id="panel-admin">
-      <div class="panel-hdr"><h2>🛡️ Admin</h2></div>
+    <!-- ── STATS ── -->
+    <div class="panel" id="panel-stats">
+      <div class="panel-hdr">
+        <h2>📊 My Stats</h2>
+        <div class="hdr-actions"><button class="btn btn-secondary btn-sm" onclick="loadStats()">↺ Refresh</button></div>
+      </div>
       <div class="panel-body">
-        <div class="inline-flex" style="flex-wrap:wrap;margin-bottom:12px;gap:6px">
-          <button class="btn btn-secondary btn-sm" onclick="adminStats()">System Stats</button>
-          <button class="btn btn-secondary btn-sm" onclick="adminUsers()">Users</button>
-          <button class="btn btn-secondary btn-sm" onclick="adminAllJobs()">All Agent Jobs</button>
-          <button class="btn btn-secondary btn-sm" onclick="adminLogs()">Server Logs</button>
-        </div>
-        <div id="admin-out" class="rbox info" style="display:none"></div>
-        <div id="admin-table"></div>
+        <div id="stats-grid" class="card-grid"></div>
+        <div id="stats-out" class="rbox info" style="display:none"></div>
       </div>
     </div>
 
-    <!-- ══ RAW REQUEST ══ -->
+    <!-- ── API KEYS ── -->
+    <div class="panel" id="panel-apikeys">
+      <div class="panel-hdr">
+        <h2>🔑 API Keys</h2>
+        <div class="hdr-actions"><button class="btn btn-secondary btn-sm" onclick="loadApiKeys()">↺ Refresh</button></div>
+      </div>
+      <div class="panel-body">
+        <div class="section-title">Create New Key</div>
+        <div class="row">
+          <div class="fg"><label>Key Name</label><input id="ak-name" placeholder="My App Key"/></div>
+          <div class="fg" style="max-width:180px"><label>Expires (optional)</label><input id="ak-expires" type="date"/></div>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="createApiKey()">Generate Key</button>
+        <div id="ak-out" class="rbox info" style="display:none"></div>
+        <hr class="div"/>
+        <div id="apikeys-list"></div>
+      </div>
+    </div>
+
+    <!-- ── PROFILE ── -->
+    <div class="panel" id="panel-profile">
+      <div class="panel-hdr"><h2>👤 Profile</h2></div>
+      <div class="panel-body" style="max-width:480px">
+        <div class="fg"><label>Full Name</label><input id="prof-name" placeholder="Jane Doe"/></div>
+        <div class="fg"><label>Email (readonly)</label><input id="prof-email" readonly/></div>
+        <div class="fg"><label>Role (readonly)</label><input id="prof-role" readonly/></div>
+        <div class="fg"><label>Subscription (readonly)</label><input id="prof-sub" readonly/></div>
+        <div class="fg"><label>Preferred Model</label>
+          <select id="prof-model">
+            <option value="uncensored">Uncensored (Dolphin Mistral)</option>
+            <option value="censored">Censored (Groq Llama)</option>
+          </select>
+        </div>
+        <label class="toggle-label" style="margin-bottom:12px"><input type="checkbox" id="prof-memory"/> Enable Memory</label>
+        <div class="inline-flex">
+          <button class="btn btn-primary" onclick="updateProfile()">Save Profile</button>
+        </div>
+        <div id="prof-out" class="rbox info" style="display:none"></div>
+        <hr class="div"/>
+        <div class="section-title">Change Password</div>
+        <div class="fg"><label>Current Password</label><input id="pw-current" type="password" placeholder="••••••••"/></div>
+        <div class="fg"><label>New Password (min 8)</label><input id="pw-new" type="password" placeholder="••••••••"/></div>
+        <button class="btn btn-secondary btn-sm" onclick="changePassword()">Change Password</button>
+        <div id="pw-out" class="rbox info" style="display:none"></div>
+      </div>
+    </div>
+
+    <!-- ── COUPONS ── -->
+    <div class="panel" id="panel-coupons">
+      <div class="panel-hdr"><h2>🎟️ Redeem Coupon</h2></div>
+      <div class="panel-body" style="max-width:440px">
+        <div class="note info">Enter a coupon code to upgrade your subscription tier.</div>
+        <div class="fg"><label>Coupon Code</label><input id="coupon-code" placeholder="JAZZ-PRO-2025" style="text-transform:uppercase"/></div>
+        <button class="btn btn-primary" onclick="redeemCoupon()">Redeem</button>
+        <div id="coupon-out" class="rbox info" style="display:none"></div>
+      </div>
+    </div>
+
+    <!-- ── EXPORT ── -->
+    <div class="panel" id="panel-export">
+      <div class="panel-hdr"><h2>📦 Export Data</h2></div>
+      <div class="panel-body" style="max-width:480px">
+        <div class="note info">GDPR-compliant full export of all your data: chat history, memories, documents, agent jobs, websites, and more.</div>
+        <div class="inline-flex">
+          <button class="btn btn-primary" onclick="exportGDPR()">⬇ Download Full Export (JSON)</button>
+          <button class="btn btn-secondary" onclick="exportChat('markdown')">⬇ Chat History (MD)</button>
+          <button class="btn btn-secondary" onclick="exportChat('json')">⬇ Chat History (JSON)</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════ ADMIN PANELS ════════════════ -->
+
+    <!-- ── ADMIN DASHBOARD ── -->
+    <div class="panel" id="panel-admin-dash">
+      <div class="panel-hdr">
+        <h2>🛡️ Admin Dashboard</h2>
+        <div class="hdr-actions"><button class="btn btn-secondary btn-sm" onclick="adminStats()">↺ Refresh</button></div>
+      </div>
+      <div class="panel-body">
+        <div id="admin-stats-grid" class="card-grid"></div>
+        <div id="admin-stats-out" class="rbox info" style="display:none"></div>
+      </div>
+    </div>
+
+    <!-- ── ADMIN USERS ── -->
+    <div class="panel" id="panel-admin-users">
+      <div class="panel-hdr">
+        <h2>👥 User Management</h2>
+        <div class="hdr-actions"><button class="btn btn-secondary btn-sm" onclick="adminLoadUsers()">↺ Refresh</button></div>
+      </div>
+      <div class="panel-body">
+        <div class="note warn">⚔ Admin access only. Full user data visibility.</div>
+        <div id="admin-users-table"></div>
+        <div id="admin-user-detail" style="display:none;margin-top:14px">
+          <hr class="div"/>
+          <div class="section-title" id="user-detail-title"></div>
+          <div id="user-detail-content"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── ADMIN ANNOUNCEMENTS ── -->
+    <div class="panel" id="panel-admin-announce">
+      <div class="panel-hdr"><h2>📢 Announcements</h2></div>
+      <div class="panel-body">
+        <div class="section-title">Create Announcement</div>
+        <div class="fg"><label>Title</label><input id="ann-title" placeholder="System Maintenance"/></div>
+        <div class="fg"><label>Message</label><textarea id="ann-msg" placeholder="We'll be down for maintenance…"></textarea></div>
+        <div class="row">
+          <div class="fg" style="max-width:160px"><label>Type</label>
+            <select id="ann-type"><option value="info">Info</option><option value="warning">Warning</option><option value="success">Success</option><option value="error">Error</option></select>
+          </div>
+          <div class="fg"><label>Expires (optional)</label><input id="ann-expires" type="datetime-local"/></div>
+        </div>
+        <button class="btn btn-primary" onclick="createAnnouncement()">Publish</button>
+        <div id="ann-out" class="rbox info" style="display:none"></div>
+        <hr class="div"/>
+        <div class="section-title">Active Announcements</div>
+        <div id="ann-list"></div>
+      </div>
+    </div>
+
+    <!-- ── ADMIN COUPONS ── -->
+    <div class="panel" id="panel-admin-coupons">
+      <div class="panel-hdr">
+        <h2>🎫 Coupon Management</h2>
+        <div class="hdr-actions"><button class="btn btn-secondary btn-sm" onclick="adminLoadCoupons()">↺ Refresh</button></div>
+      </div>
+      <div class="panel-body">
+        <div class="section-title">Create Coupon</div>
+        <div class="row">
+          <div class="fg"><label>Code</label><input id="cp-code" placeholder="JAZZ-PRO-2025" style="text-transform:uppercase"/></div>
+          <div class="fg" style="max-width:160px"><label>Tier</label>
+            <select id="cp-tier"><option value="pro">Pro</option><option value="enterprise">Enterprise</option><option value="free">Free</option></select>
+          </div>
+          <div class="fg" style="max-width:100px"><label>Max Uses</label><input id="cp-uses" type="number" value="1" min="1"/></div>
+        </div>
+        <div class="fg"><label>Description</label><input id="cp-desc" placeholder="Promo for beta users"/></div>
+        <div class="fg"><label>Expires (optional)</label><input id="cp-expires" type="datetime-local"/></div>
+        <button class="btn btn-primary btn-sm" onclick="adminCreateCoupon()">Create Coupon</button>
+        <div id="cp-out" class="rbox info" style="display:none"></div>
+        <hr class="div"/>
+        <div id="coupons-table"></div>
+      </div>
+    </div>
+
+    <!-- ── BROADCAST ── -->
+    <div class="panel" id="panel-admin-broadcast">
+      <div class="panel-hdr"><h2>📡 Broadcast Notification</h2></div>
+      <div class="panel-body" style="max-width:480px">
+        <div class="note warn">⚠ This will send a notification to ALL registered users.</div>
+        <div class="fg"><label>Title</label><input id="bc-title" placeholder="Exciting Update!"/></div>
+        <div class="fg"><label>Message</label><textarea id="bc-msg" placeholder="We've added new features…"></textarea></div>
+        <div class="fg" style="max-width:160px"><label>Type</label>
+          <select id="bc-type"><option value="info">Info</option><option value="success">Success</option><option value="warning">Warning</option><option value="error">Error</option></select>
+        </div>
+        <button class="btn btn-orange" onclick="doBroadcast()">📡 Broadcast to All Users</button>
+        <div id="bc-out" class="rbox info" style="display:none"></div>
+      </div>
+    </div>
+
+    <!-- ── ADMIN ALL JOBS ── -->
+    <div class="panel" id="panel-admin-jobs">
+      <div class="panel-hdr">
+        <h2>⚙️ All Agent Jobs</h2>
+        <div class="hdr-actions"><button class="btn btn-secondary btn-sm" onclick="adminLoadJobs()">↺ Refresh</button></div>
+      </div>
+      <div class="panel-body"><div id="admin-jobs-table"></div></div>
+    </div>
+
+    <!-- ── ADMIN ALL CHATS ── -->
+    <div class="panel" id="panel-admin-chats">
+      <div class="panel-hdr">
+        <h2>💬 All Chat Logs</h2>
+        <div class="hdr-actions">
+          <input id="admin-chats-limit" type="number" value="50" min="10" max="500" style="width:70px"/>
+          <button class="btn btn-secondary btn-sm" onclick="adminLoadChats()">Load</button>
+        </div>
+      </div>
+      <div class="panel-body"><div id="admin-chats-table"></div></div>
+    </div>
+
+    <!-- ── SQLITE ── -->
+    <div class="panel" id="panel-sqlite">
+      <div class="panel-hdr"><h2>🗄️ SQLite Query</h2></div>
+      <div class="panel-body">
+        <div class="section-title">Natural Language Query</div>
+        <div class="fg"><label>Question</label><input id="sq-nl" placeholder="How many users signed up today?"/></div>
+        <button class="btn btn-primary btn-sm" onclick="doSqliteNL()">Ask</button>
+        <div id="sq-nl-out" class="rbox info" style="display:none"></div>
+        <hr class="div"/>
+        <div class="section-title">Raw SQL (readonly)</div>
+        <div class="fg"><textarea id="sq-raw" style="font-family:var(--font-code)" placeholder="SELECT * FROM users LIMIT 10;"></textarea></div>
+        <div class="inline-flex">
+          <button class="btn btn-secondary btn-sm" onclick="doSqliteRaw()">Execute</button>
+          <button class="btn btn-secondary btn-sm" onclick="loadSqliteTables()">List Tables</button>
+        </div>
+        <div id="sq-raw-out" class="rbox info" style="display:none"></div>
+      </div>
+    </div>
+
+    <!-- ── SERVER LOGS ── -->
+    <div class="panel" id="panel-server-logs">
+      <div class="panel-hdr">
+        <h2>📜 Server Logs</h2>
+        <div class="hdr-actions"><button class="btn btn-secondary btn-sm" onclick="loadServerLogs()">↺ Refresh</button></div>
+      </div>
+      <div class="panel-body">
+        <div class="log-out" id="server-log-out" style="max-height:calc(100vh - 160px)">Loading…</div>
+      </div>
+    </div>
+
+    <!-- ── RAW REQUEST ── -->
     <div class="panel" id="panel-raw">
       <div class="panel-hdr"><h2>🔧 Raw Request</h2></div>
       <div class="panel-body">
         <div class="row">
-          <div class="fg" style="max-width:100px">
-            <label>Method</label>
+          <div class="fg" style="max-width:100px"><label>Method</label>
             <select id="raw-method"><option>GET</option><option>POST</option><option>PUT</option><option>DELETE</option></select>
           </div>
           <div class="fg"><label>Path</label><input id="raw-path" placeholder="/health"/></div>
         </div>
-        <div class="fg"><label>Body (JSON)</label><textarea id="raw-body" style="min-height:110px" placeholder='{"key": "value"}'></textarea></div>
-        <div class="inline-flex">
-          <button class="btn btn-primary" onclick="doRaw()">Send</button>
-          <label class="toggle-label"><input type="checkbox" id="raw-auth" checked/> Include Auth Token</label>
+        <div class="fg"><label>Body (JSON)</label>
+          <textarea id="raw-body" style="min-height:100px;font-family:var(--font-code)" placeholder='{"key":"value"}'></textarea>
         </div>
+        <label class="toggle-label" style="margin-bottom:10px"><input type="checkbox" id="raw-auth" checked/> Include Auth Token</label>
+        <button class="btn btn-primary" onclick="doRaw()">Send</button>
         <div id="raw-out" class="rbox info" style="display:none"></div>
       </div>
     </div>
@@ -834,823 +1300,1252 @@
 <script>
 'use strict';
 
+// ═══════════════════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════════════════
+ const BASE_URL ='http://80.225.251.107:8000';
+ //'http://localhost:8000'; 
 let TOKEN = localStorage.getItem('jazz_token') || '';
 let CURRENT_USER = JSON.parse(localStorage.getItem('jazz_user') || 'null');
 let _jobsCache = [];
+let _chatImageDataUrl = null;
+let _chatImageUploading = false;
+let _notifOpen = false;
 
-// ── Utils ──────────────────────────────────────────────────────────────────────
-const base = () => document.getElementById('base-url').value.replace(/\/+$/, '');
-const authH = () => TOKEN ? {'Authorization': 'Bearer ' + TOKEN} : {};
+// ═══════════════════════════════════════════════════════════════
+//  API HELPERS
+// ═══════════════════════════════════════════════════════════════
+const base = () => BASE_URL;
+const authH = () => TOKEN ? {'Authorization':'Bearer '+TOKEN} : {};
 
-async function api(method, path, body) {
-  try {
-    const opts = { method, headers: {'Content-Type': 'application/json', ...authH()} };
-    if (body && method !== 'GET') opts.body = JSON.stringify(body);
-    const r = await fetch(base() + path, opts);
-    const data = await r.json().catch(() => ({raw: `HTTP ${r.status}`}));
-    return {ok: r.ok, data, status: r.status};
-  } catch(e) {
-    return {ok: false, data: {error: e.message}, status: 0};
-  }
+async function api(method, path, body){
+  try{
+    const opts={method,headers:{'Content-Type':'application/json',...authH()}};
+    if(body && method!=='GET') opts.body=JSON.stringify(body);
+    const r=await fetch(base()+path,opts);
+    const data=await r.json().catch(()=>({raw:`HTTP ${r.status}`}));
+    return{ok:r.ok,data,status:r.status};
+  }catch(e){return{ok:false,data:{error:e.message},status:0}}
 }
 
-function showR(id, data, ok) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  el.style.display = 'block';
-  el.className = 'rbox ' + (ok ? 'ok' : 'error');
-  el.textContent = JSON.stringify(data, null, 2);
+function showR(id,data,ok){
+  const el=document.getElementById(id);
+  if(!el)return;
+  el.style.display='block';
+  el.className='rbox '+(ok?'ok':'error');
+  el.textContent=JSON.stringify(data,null,2);
 }
 
-function escHtml(s) {
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function fmt(dt){return dt?(dt+'').slice(0,19).replace('T',' '):'—'}
+function fmtSz(b){return b>1048576?(b/1048576).toFixed(1)+' MB':b>1024?(b/1024).toFixed(1)+' KB':b+' B'}
+
+// ═══════════════════════════════════════════════════════════════
+//  NAVIGATION
+// ═══════════════════════════════════════════════════════════════
+function nav(id){
+  document.querySelectorAll('.panel').forEach(p=>{p.classList.remove('active');p.style.display=''});
+  document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
+  const panel=document.getElementById('panel-'+id);
+  if(panel){panel.style.display='flex';panel.classList.add('active')}
+  document.querySelectorAll('.nav-item').forEach(b=>{
+    if(b.getAttribute('onclick')?.includes(`'${id}'`))b.classList.add('active');
+  });
+  // Auto-load on navigate
+  const loaders={
+    health:doHealth,documents:loadDocuments,memory:loadMemory,
+    stats:loadStats,jobs:loadJobs,'jobs-create':updateJobHint,
+    'jobs-logs':refreshJobLogs,'jobs-debug':refreshDebugJobs,
+    websites:loadWebsites,prompts:loadPrompts,apikeys:loadApiKeys,
+    sessions:loadSessions,profile:loadProfile,
+    'admin-dash':adminStats,'admin-users':adminLoadUsers,
+    'admin-jobs':adminLoadJobs,'admin-chats':adminLoadChats,
+    'admin-coupons':adminLoadCoupons,'admin-announce':adminLoadAnnouncements,
+    'server-logs':loadServerLogs,sqlite:loadSqliteTables,
+  };
+  if(loaders[id])loaders[id]();
+  if(window.innerWidth<=768)closeSidebar();
 }
 
-// ── Sidebar Controls ───────────────────────────────────────────────────────────
-function toggleSidebar() {
-  const sb = document.querySelector('.sidebar');
-  const backdrop = document.getElementById('sidebar-backdrop');
-  const isOpen = sb.classList.toggle('open');
-  backdrop.classList.toggle('show', isOpen);
+function toggleSidebar(){
+  const sb=document.getElementById('sidebar');
+  const bd=document.getElementById('sidebar-backdrop');
+  const open=sb.classList.toggle('open');
+  bd.classList.toggle('show',open);
 }
-
-function closeSidebar() {
-  document.querySelector('.sidebar').classList.remove('open');
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
   document.getElementById('sidebar-backdrop').classList.remove('show');
 }
 
-function showPanel(id) {
-  document.querySelectorAll('.panel').forEach(p => { p.classList.remove('active'); p.style.display = ''; });
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  const panel = document.getElementById('panel-' + id);
-  if (panel) { panel.style.display = 'flex'; panel.classList.add('active'); }
-  document.querySelectorAll('.nav-btn').forEach(b => {
-    if (b.getAttribute('onclick')?.includes(`'${id}'`)) b.classList.add('active');
+// ═══════════════════════════════════════════════════════════════
+//  AUTH STATE
+// ═══════════════════════════════════════════════════════════════
+function setToken(token,user){
+  TOKEN=token;CURRENT_USER=user;
+  localStorage.setItem('jazz_token',token);
+  localStorage.setItem('jazz_user',JSON.stringify(user));
+  applyAuthState();
+}
+
+function applyAuthState(){
+  const loggedIn=!!TOKEN&&!!CURRENT_USER;
+  const isAdmin=CURRENT_USER?.role==='admin';
+
+  // Show/hide sidebar sections
+  document.getElementById('sb-auth-section').style.display=loggedIn?'none':'block';
+  ['sb-main-section','sb-tools-section','sb-jobs-section','sb-user-section','sb-health-section'].forEach(id=>{
+    document.getElementById(id).style.display=loggedIn?'block':'none';
   });
-  if (id === 'health') doHealth();
-  if (id === 'documents') loadDocuments();
-  if (id === 'memory') loadMemory();
-  if (id === 'stats') loadStats();
-  if (id === 'jobs') loadJobs();
-  if (id === 'jobs-create') updateJobTypeHint();
-  if (id === 'jobs-logs') refreshJobLogs();
-  if (id === 'jobs-debug') refreshDebugJobs();
+  document.getElementById('sb-admin-section').style.display=isAdmin?'block':'none';
+  document.getElementById('sidebar-footer').style.display=loggedIn?'block':'none';
+  document.getElementById('hdr-user-info').style.display=loggedIn?'flex':'none';
 
-  // auto close sidebar on mobile
-  if (window.innerWidth <= 768) {
-    closeSidebar();
+  // Admin nav items
+  document.querySelectorAll('.nav-item.admin-only').forEach(el=>{
+    el.style.display=isAdmin?'flex':'none';
+  });
+
+  // Header user info
+  if(CURRENT_USER){
+    document.getElementById('hdr-email').textContent=CURRENT_USER.email||'';
+    const roleEl=document.getElementById('hdr-role');
+    roleEl.textContent=CURRENT_USER.role||'user';
+    roleEl.className='hdr-user-role '+(CURRENT_USER.role==='admin'?'admin':'client');
+  }
+
+  if(loggedIn){
+    loadNotifications();
+    setInterval(loadNotifications,30000);
   }
 }
 
-function setToken(token, user) {
-  TOKEN = token; CURRENT_USER = user;
-  localStorage.setItem('jazz_token', token);
-  localStorage.setItem('jazz_user', JSON.stringify(user));
-  updateTokenUI();
+function logout(){
+  TOKEN='';CURRENT_USER=null;
+  localStorage.removeItem('jazz_token');localStorage.removeItem('jazz_user');
+  applyAuthState();
+  nav('login');
+  document.querySelectorAll('.rbox').forEach(el=>{el.style.display='none'});
+  clearChat();
 }
 
-function updateTokenUI() {
-  const status = document.getElementById('token-status');
-  const preview = document.getElementById('token-preview');
-  const emailEl = document.getElementById('user-email-display');
-  const roleEl  = document.getElementById('user-role-display');
-  if (TOKEN) {
-    status.textContent = '✅'; status.style.color = 'var(--green)';
-    preview.textContent = TOKEN.slice(0,38) + '…'; preview.className = 'sb-token set';
-    if (CURRENT_USER) {
-      emailEl.textContent = CURRENT_USER.email || '—';
-      roleEl.textContent  = CURRENT_USER.role  || '—';
-    }
-  } else {
-    status.textContent = '—'; status.style.color = 'var(--muted)';
-    preview.textContent = 'No token'; preview.className = 'sb-token';
-    emailEl.textContent = '—'; roleEl.textContent = '—';
-  }
+// ═══════════════════════════════════════════════════════════════
+//  HEALTH
+// ═══════════════════════════════════════════════════════════════
+async function doHealth(){
+  const dot=document.getElementById('status-dot');
+  const txt=document.getElementById('status-text');
+  try{
+    const{ok,data}=await api('GET','/health');
+    dot.className='status-dot '+(ok?'ok':'err');
+    txt.textContent=ok?'online':'error';
+    txt.className=ok?'ok':'';
+    if(ok)renderHealthCards(data);
+    else showR('health-out',data,false);
+  }catch(e){dot.className='status-dot err';txt.textContent='offline'}
 }
 
-function copyToken() {
-  if (TOKEN) { navigator.clipboard.writeText(TOKEN).catch(()=>{}); }
-}
-
-function logout() {
-  TOKEN = ''; CURRENT_USER = null;
-  localStorage.removeItem('jazz_token'); localStorage.removeItem('jazz_user');
-  updateTokenUI();
-}
-
-// ── Health ─────────────────────────────────────────────────────────────────────
-async function doHealth() {
-  const dot = document.getElementById('status-dot');
-  try {
-    const {ok, data} = await api('GET', '/health');
-    dot.className = ok ? 'ok' : 'err';
-    if (ok) renderHealthGrid(data);
-    else showR('health-out', data, false);
-  } catch(e) {
-    dot.className = 'err'; showR('health-out', {error: e.message}, false);
-  }
-}
-
-function renderHealthGrid(d) {
-  const g = document.getElementById('health-grid');
-  const s = d.services || {};
-  const cards = [
-    {l:'Status',    v: d.status,                    ok: d.status==='healthy'},
-    {l:'Version',   v: d.version,                   ok: true},
-    {l:'Uptime',    v: fmtUptime(d.uptime_seconds), ok: true},
-    {l:'SQLite',    v: s.sqlite   ? '✅' : '❌',    ok: s.sqlite},
-    {l:'ChromaDB',  v: s.chromadb ? '✅' : '❌',    ok: s.chromadb},
-    {l:'MySQL',     v: s.mysql    ? '✅' : '❌',     ok: !!s.mysql},
-    {l:'Playwright',v: s.playwright ? '✅' : '❌',  ok: !!s.playwright},
-    {l:'Agents',    v: (d.agents||[]).length,        ok: true},
+function renderHealthCards(d){
+  const g=document.getElementById('health-grid');
+  const s=d.services||{};
+  const cards=[
+    {l:'Status',v:d.status,cls:d.status==='healthy'?'ok':'err'},
+    {l:'Version',v:d.version,cls:'info'},
+    {l:'Uptime',v:fmtUp(d.uptime_seconds),cls:'muted'},
+    {l:'SQLite',v:s.sqlite?'✅ OK':'❌ Down',cls:s.sqlite?'ok':'err'},
+    {l:'ChromaDB',v:s.chromadb?'✅ OK':'❌ Down',cls:s.chromadb?'ok':'err'},
+    {l:'MySQL',v:s.mysql?'✅ OK':'— Off',cls:s.mysql?'ok':'muted'},
+    {l:'Playwright',v:s.playwright?'✅ Ready':'❌ N/A',cls:s.playwright?'ok':'warn'},
+    {l:'Agents',v:(d.agents||[]).length,cls:'info'},
   ];
-  g.innerHTML = cards.map(c => `
-    <div class="card fade-in">
-      <div class="cl">${c.l}</div>
-      <div class="cv ${c.ok ? 'ok' : 'err'}">${c.v ?? '—'}</div>
+  g.innerHTML=cards.map(c=>`
+    <div class="stat-card fade-in">
+      <div class="sc-label">${c.l}</div>
+      <div class="sc-val ${c.cls}">${c.v??'—'}</div>
     </div>`).join('');
-  document.getElementById('health-out').style.display = 'none';
+  document.getElementById('health-out').style.display='none';
 }
 
-function fmtUptime(s) {
-  if (!s) return '0s';
-  const h = Math.floor(s/3600), m = Math.floor((s%3600)/60), ss = s%60;
-  return h ? `${h}h ${m}m` : m ? `${m}m ${ss}s` : `${ss}s`;
+function fmtUp(s){
+  if(!s)return'0s';
+  const h=Math.floor(s/3600),m=Math.floor((s%3600)/60),ss=s%60;
+  return h?`${h}h ${m}m`:m?`${m}m ${ss}s`:`${ss}s`;
 }
 
-// ── Auth ───────────────────────────────────────────────────────────────────────
-async function doLogin() {
-  const {ok, data} = await api('POST', '/auth/login', {
-    email: document.getElementById('login-email').value,
-    password: document.getElementById('login-pass').value
+// ═══════════════════════════════════════════════════════════════
+//  AUTH
+// ═══════════════════════════════════════════════════════════════
+async function doLogin(){
+  const{ok,data}=await api('POST','/auth/login',{
+    email:document.getElementById('login-email').value,
+    password:document.getElementById('login-pass').value
   });
-  if (ok && data.access_token) { setToken(data.access_token, data.user); showR('login-out', {success:true, user:data.user}, true); }
-  else showR('login-out', data, false);
+  if(ok&&data.access_token){setToken(data.access_token,data.user);showR('login-out',{success:true,user:data.user},true);nav('chat');}
+  else showR('login-out',data,false);
 }
 
-async function doAdminLogin() {
-  const {ok, data} = await api('POST', '/auth/admin-login', {
-    email: document.getElementById('login-email').value,
-    password: document.getElementById('login-pass').value
+async function doAdminLogin(){
+  const{ok,data}=await api('POST','/auth/admin-login',{
+    email:document.getElementById('login-email').value,
+    password:document.getElementById('login-pass').value
   });
-  if (ok && data.access_token) { setToken(data.access_token, data.user); showR('login-out', {success:true, user:data.user}, true); }
-  else showR('login-out', data, false);
+  if(ok&&data.access_token){setToken(data.access_token,data.user);showR('login-out',{success:true,user:data.user},true);nav('admin-dash');}
+  else showR('login-out',data,false);
 }
 
-async function doSignup() {
-  const {ok, data} = await api('POST', '/auth/signup', {
-    email: document.getElementById('signup-email').value,
-    password: document.getElementById('signup-pass').value,
-    full_name: document.getElementById('signup-name').value || undefined
+async function doSignup(){
+  const{ok,data}=await api('POST','/auth/signup',{
+    email:document.getElementById('signup-email').value,
+    password:document.getElementById('signup-pass').value,
+    full_name:document.getElementById('signup-name').value||undefined
   });
-  if (ok && data.access_token) { setToken(data.access_token, data.user); showR('signup-out', {success:true, user:data.user}, true); }
-  else showR('signup-out', data, false);
+  if(ok&&data.access_token){setToken(data.access_token,data.user);showR('signup-out',{success:true},true);nav('chat');}
+  else showR('signup-out',data,false);
 }
 
-// ── Chat Image State ──────────────────────────────────────────────────────────
-let _chatImageDataUrl = null;
-let _chatImageUploading = false;
+// ═══════════════════════════════════════════════════════════════
+//  NOTIFICATIONS
+// ═══════════════════════════════════════════════════════════════
+async function loadNotifications(){
+  if(!TOKEN)return;
+  const{ok,data}=await api('GET','/user/notifications?limit=20');
+  if(!ok)return;
+  const notifs=data.notifications||[];
+  const unread=data.unread_count||0;
+  const badge=document.getElementById('notif-badge');
+  badge.textContent=unread>9?'9+':unread;
+  badge.classList.toggle('show',unread>0);
+  const list=document.getElementById('notif-list');
+  if(!notifs.length){list.innerHTML='<div class="notif-empty">No notifications</div>';return;}
+  list.innerHTML=notifs.map(n=>`
+    <div class="notif-item ${n.is_read?'':'unread'}" onclick="markRead('${n.id}')">
+      <div class="notif-item-title">${esc(n.title)}</div>
+      <div class="notif-item-msg">${esc(n.message)}</div>
+      <div class="notif-item-time">${fmt(n.created_at)}</div>
+    </div>`).join('');
+}
 
-function onChatImageSelected(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  const allowed = ['image/jpeg','image/png','image/gif','image/webp'];
-  if (!allowed.includes(file.type)) {
-    appendMsg('⚠ Unsupported image type. Use JPG, PNG, GIF or WEBP.', 'system');
-    event.target.value = '';
-    return;
+function toggleNotifications(){
+  _notifOpen=!_notifOpen;
+  document.getElementById('notif-dropdown').classList.toggle('open',_notifOpen);
+}
+
+async function markRead(nid){
+  await api('POST',`/user/notifications/${nid}/read`);
+  loadNotifications();
+}
+
+async function markAllRead(){
+  await api('POST','/user/notifications/read-all');
+  loadNotifications();
+}
+
+document.addEventListener('click',e=>{
+  const wrap=document.getElementById('notif-wrap');
+  if(wrap&&!wrap.contains(e.target)&&_notifOpen){
+    _notifOpen=false;
+    document.getElementById('notif-dropdown').classList.remove('open');
   }
-  if (file.size > 20 * 1024 * 1024) {
-    appendMsg('⚠ Image too large (max 20 MB).', 'system');
-    event.target.value = '';
-    return;
-  }
+});
 
-  const localUrl = URL.createObjectURL(file);
-  const bar = document.getElementById('img-attach-bar');
-  const thumb = document.getElementById('img-preview-thumb');
-  const nameEl = document.getElementById('img-attach-name');
-  const statusEl = document.getElementById('img-attach-status');
-  const clipBtn = document.getElementById('img-clip-btn');
-
-  thumb.src = localUrl;
-  nameEl.textContent = file.name;
-  statusEl.textContent = '⏳ Uploading…';
-  bar.classList.add('visible');
-  clipBtn.classList.add('active');
-  _chatImageDataUrl = null;
-  _chatImageUploading = true;
-
-  const fd = new FormData();
-  fd.append('file', file);
-  fetch(base() + '/images/upload', { method: 'POST', headers: authH(), body: fd })
-    .then(r => r.json())
-    .then(data => {
-      if (data.data_url) {
-        _chatImageDataUrl = data.data_url;
-        statusEl.textContent = '✅ Ready — ' + (file.size / 1024).toFixed(0) + ' KB';
-        statusEl.style.color = 'var(--green)';
-      } else {
-        statusEl.textContent = '❌ Upload failed: ' + (data.detail || JSON.stringify(data));
-        statusEl.style.color = 'var(--red)';
-        _chatImageDataUrl = null;
-      }
-      _chatImageUploading = false;
-    })
-    .catch(err => {
-      statusEl.textContent = '❌ ' + err.message;
-      statusEl.style.color = 'var(--red)';
-      _chatImageUploading = false;
-    });
+// ═══════════════════════════════════════════════════════════════
+//  CHAT IMAGE
+// ═══════════════════════════════════════════════════════════════
+function onImageSelected(e){
+  const file=e.target.files[0];
+  if(!file)return;
+  const allowed=['image/jpeg','image/png','image/gif','image/webp'];
+  if(!allowed.includes(file.type)){appendMsg('⚠ Unsupported image type','system');e.target.value='';return}
+  if(file.size>20*1024*1024){appendMsg('⚠ Image too large (max 20 MB)','system');e.target.value='';return}
+  const localUrl=URL.createObjectURL(file);
+  document.getElementById('img-thumb').src=localUrl;
+  document.getElementById('img-name').textContent=file.name;
+  document.getElementById('img-status').textContent='⏳ Uploading…';
+  document.getElementById('img-attach-bar').classList.add('visible');
+  document.getElementById('attach-btn').classList.add('active');
+  _chatImageDataUrl=null;_chatImageUploading=true;
+  const fd=new FormData();fd.append('file',file);
+  fetch(base()+'/images/upload',{method:'POST',headers:authH(),body:fd})
+    .then(r=>r.json()).then(d=>{
+      if(d.data_url){_chatImageDataUrl=d.data_url;document.getElementById('img-status').textContent='✅ Ready';document.getElementById('img-status').style.color='var(--green)'}
+      else{document.getElementById('img-status').textContent='❌ Failed';_chatImageDataUrl=null}
+      _chatImageUploading=false;
+    }).catch(()=>{document.getElementById('img-status').textContent='❌ Error';_chatImageUploading=false});
 }
 
-function clearChatImage() {
-  _chatImageDataUrl = null;
-  _chatImageUploading = false;
-  document.getElementById('chat-img-input').value = '';
+function clearImage(){
+  _chatImageDataUrl=null;_chatImageUploading=false;
+  document.getElementById('img-file-input').value='';
   document.getElementById('img-attach-bar').classList.remove('visible');
-  document.getElementById('img-preview-thumb').src = '';
-  document.getElementById('img-attach-status').style.color = 'var(--muted2)';
-  document.getElementById('img-clip-btn').classList.remove('active');
+  document.getElementById('attach-btn').classList.remove('active');
 }
 
-// ── Chat Stream ────────────────────────────────────────────────────────────────
-function appendMsg(text, role, meta='') {
-  const wrap = document.getElementById('chat-messages');
-  const div = document.createElement('div');
-  div.className = 'msg ' + role;
+// ═══════════════════════════════════════════════════════════════
+//  CHAT STREAM
+// ═══════════════════════════════════════════════════════════════
+function appendMsg(text,role,meta=''){
+  const wrap=document.getElementById('chat-messages');
+  const div=document.createElement('div');
+  div.className='msg '+role;
   div.appendChild(document.createTextNode(text));
-  if (meta) { const m = document.createElement('div'); m.className='msg-meta'; m.textContent=meta; div.appendChild(m); }
-  wrap.appendChild(div);
-  wrap.scrollTop = wrap.scrollHeight;
+  if(meta){const m=document.createElement('div');m.className='msg-meta';m.textContent=meta;div.appendChild(m)}
+  wrap.appendChild(div);wrap.scrollTop=wrap.scrollHeight;
   return div;
 }
 
-function appendMsgWithImage(text, imgSrc, role) {
-  const wrap = document.getElementById('chat-messages');
-  const div = document.createElement('div');
-  div.className = 'msg ' + role;
-  const img = document.createElement('img');
-  img.src = imgSrc; img.className = 'msg-img'; img.alt = 'attached image';
-  div.appendChild(img);
-  div.appendChild(document.createTextNode(text));
-  wrap.appendChild(div);
-  wrap.scrollTop = wrap.scrollHeight;
-  return div;
+function chatKeydown(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();doStreamChat()}}
+function clearChat(){
+  document.getElementById('chat-messages').innerHTML='<div class="msg system">Chat cleared ▸</div>';
+  clearImage();
 }
 
-function chatKeydown(e) {
-  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); doStreamChat(); }
-}
-
-function clearChat() {
-  document.getElementById('chat-messages').innerHTML = '<div class="msg system">Chat cleared ▸</div>';
-  clearChatImage();
-}
-
-function doStreamChat() {
-  if (!TOKEN) { appendMsg('⚠ Please login first', 'system'); return; }
-  const input = document.getElementById('chat-input');
-  const message = input.value.trim();
-  if (!message && !_chatImageDataUrl) return;
-
-  if (_chatImageUploading) {
-    appendMsg('⏳ Image still uploading, please wait a moment…', 'system');
-    return;
-  }
-
-  const imageUrl = _chatImageDataUrl || null;
-  const displayText = message || '🖼 Analyze this image';
-
-  if (imageUrl) {
-    const thumb = document.getElementById('img-preview-thumb').src;
-    appendMsgWithImage(displayText, thumb, 'user');
-  } else {
-    appendMsg(displayText, 'user');
-  }
-
-  input.value = '';
-  clearChatImage();
-
-  const aiDiv = appendMsg('▍', 'ai');
-  let fullText = '', agent = '';
-  const btn = document.getElementById('chat-send-btn');
-  btn.disabled = true;
-
-  const payload = {
-    message: displayText,
-    model_type: document.getElementById('chat-model').value,
-    use_rag: document.getElementById('chat-rag').checked,
+async function doStreamChat(){
+  if(!TOKEN){appendMsg('⚠ Please login first','system');return}
+  const input=document.getElementById('chat-input');
+  const msg=input.value.trim();
+  if(!msg&&!_chatImageDataUrl)return;
+  if(_chatImageUploading){appendMsg('⏳ Image still uploading…','system');return}
+  const imageUrl=_chatImageDataUrl||null;
+  const displayText=msg||'🖼 Analyze this image';
+  appendMsg(displayText,'user');
+  input.value='';clearImage();
+  const aiDiv=appendMsg('▍','ai');
+  const btn=document.getElementById('chat-send-btn');
+  btn.disabled=true;
+  let fullText='',agent='';
+  const sid=document.getElementById('chat-session-sel').value||undefined;
+  const payload={
+    message:displayText,
+    model_type:document.getElementById('chat-model').value,
+    use_rag:document.getElementById('chat-rag').checked,
+    ...(imageUrl&&{image_url:imageUrl}),
+    ...(sid&&{session_id:sid})
   };
-  if (imageUrl) payload.image_url = imageUrl;
-
-  fetch(base() + '/chat-stream', {
-    method: 'POST',
-    headers: {'Content-Type':'application/json', ...authH()},
-    body: JSON.stringify(payload)
-  }).then(res => {
-    if (!res.ok) return res.json().then(d => { aiDiv.childNodes[0].textContent = '❌ ' + JSON.stringify(d); btn.disabled = false; });
-    const reader = res.body.getReader();
-    const decoder = new TextDecoder();
-    let buf = '';
-    function read() {
-      reader.read().then(({done, value}) => {
-        if (done) {
-          if (agent) { const m = document.createElement('div'); m.className='msg-meta'; m.textContent=`agent: ${agent}`; aiDiv.appendChild(m); }
-          btn.disabled = false; return;
+  try{
+    const res=await fetch(base()+'/chat-stream',{
+      method:'POST',headers:{'Content-Type':'application/json',...authH()},body:JSON.stringify(payload)
+    });
+    if(!res.ok){const d=await res.json().catch(()=>({}));aiDiv.childNodes[0].textContent='❌ '+(d.detail||JSON.stringify(d));btn.disabled=false;return}
+    const reader=res.body.getReader();const decoder=new TextDecoder();let buf='';
+    function read(){
+      reader.read().then(({done,value})=>{
+        if(done){if(agent){const m=document.createElement('div');m.className='msg-meta';m.textContent=`agent: ${agent}`;aiDiv.appendChild(m)}btn.disabled=false;return}
+        buf+=decoder.decode(value,{stream:true});
+        const lines=buf.split('\n');buf=lines.pop();
+        for(const line of lines){
+          if(!line.startsWith('data: '))continue;
+          try{
+            const ev=JSON.parse(line.slice(6));
+            if(ev.type==='chunk'){fullText+=ev.content;aiDiv.childNodes[0].textContent=fullText}
+            else if(ev.type==='agent')agent=ev.agent;
+            else if(ev.type==='error'){fullText+='\n❌ '+ev.message;aiDiv.childNodes[0].textContent=fullText}
+          }catch(e){}
         }
-        buf += decoder.decode(value, {stream: true});
-        const lines = buf.split('\n'); buf = lines.pop();
-        for (const line of lines) {
-          if (!line.startsWith('data: ')) continue;
-          try {
-            const evt = JSON.parse(line.slice(6));
-            if (evt.type === 'chunk') { fullText += evt.content; aiDiv.childNodes[0].textContent = fullText; }
-            else if (evt.type === 'agent') agent = evt.agent;
-            else if (evt.type === 'status') { aiDiv.childNodes[0].textContent = evt.message || '▍'; }
-            else if (evt.type === 'error') { fullText += '\n❌ ' + evt.message; aiDiv.childNodes[0].textContent = fullText; }
-          } catch(e) {}
-        }
-        document.getElementById('chat-messages').scrollTop = 99999;
-        read();
+        document.getElementById('chat-messages').scrollTop=99999;read();
       });
     }
     read();
-  }).catch(e => { aiDiv.childNodes[0].textContent = '❌ ' + e.message; btn.disabled = false; });
+  }catch(e){aiDiv.childNodes[0].textContent='❌ '+e.message;btn.disabled=false}
 }
 
-// ── Chat Basic ─────────────────────────────────────────────────────────────────
-async function doBasicChat() {
-  const {ok, data} = await api('POST', '/chat', {
-    message: document.getElementById('basic-msg').value,
-    model_type: document.getElementById('basic-model').value,
-    use_rag: document.getElementById('basic-rag').checked,
-    image_url: document.getElementById('basic-image').value || undefined
+async function doBasicChat(){
+  const{ok,data}=await api('POST','/chat',{
+    message:document.getElementById('basic-msg').value,
+    model_type:document.getElementById('basic-model').value,
+    use_rag:document.getElementById('basic-rag').checked,
+    image_url:document.getElementById('basic-image').value||undefined
   });
-  showR('basic-out', data, ok);
+  showR('basic-out',data,ok);
 }
 
-// ── Documents ─────────────────────────────────────────────────────────────────
-async function loadDocuments() {
-  if (!TOKEN) { document.getElementById('docs-table').innerHTML = '<p style="color:var(--muted2);font-size:11px">Login first</p>'; return; }
-  const {ok, data} = await api('GET', '/documents');
-  const docs = data.documents || [];
-  if (!ok || !docs.length) { document.getElementById('docs-table').innerHTML = '<p style="color:var(--muted2);font-size:11px">No documents yet</p>'; return; }
-  document.getElementById('docs-table').innerHTML = `
-    <table>
-      <tr><th>Name</th><th>Type</th><th>Size</th><th>Chunks</th><th>Uploaded</th></tr>
-      ${docs.map(d => `<tr>
-        <td>${escHtml(d.filename || d.original_name)}</td>
-        <td><span class="pill pill-cyan">${(d.file_type||'').split('/')[1] || '?'}</span></td>
-        <td>${(d.file_size/1024).toFixed(1)} KB</td>
-        <td>${d.chunk_count}</td>
-        <td style="color:var(--muted2)">${(d.uploaded_at||'').slice(0,19)}</td>
-      </tr>`).join('')}
-    </table>`;
+async function exportChat(fmt){
+  if(!TOKEN)return;
+  const a=document.createElement('a');
+  a.href=base()+`/chat/export?fmt=${fmt}`;
+  a.click();
 }
 
-async function doUploadDoc() {
-  const file = document.getElementById('doc-file').files[0];
-  if (!file) { showR('doc-upload-out', {error:'No file selected'}, false); return; }
-  const fd = new FormData(); fd.append('file', file);
-  const r = await fetch(base() + '/documents/upload', {method:'POST', headers: authH(), body: fd});
-  const data = await r.json().catch(() => ({}));
-  showR('doc-upload-out', data, r.ok);
-  if (r.ok) loadDocuments();
+// ═══════════════════════════════════════════════════════════════
+//  SESSIONS
+// ═══════════════════════════════════════════════════════════════
+async function loadSessions(){
+  if(!TOKEN)return;
+  const{ok,data}=await api('GET','/chat/sessions');
+  const sessions=data.sessions||[];
+  // Populate dropdown in chat
+  const sel=document.getElementById('chat-session-sel');
+  const cur=sel.value;
+  sel.innerHTML='<option value="">No session</option>'+sessions.map(s=>`<option value="${s.id}">${esc(s.title)} (${s.message_count} msgs)</option>`).join('');
+  if(cur)sel.value=cur;
+  const list=document.getElementById('sessions-list');
+  if(!sessions.length){list.innerHTML='<p style="color:var(--text3);font-size:11px">No sessions yet.</p>';return}
+  list.innerHTML=`<div class="table-wrap"><table>
+    <thead><tr><th>Title</th><th>Messages</th><th>Created</th><th>Actions</th></tr></thead>
+    <tbody>${sessions.map(s=>`<tr>
+      <td>${esc(s.title)}</td>
+      <td>${s.message_count||0}</td>
+      <td style="color:var(--text3)">${fmt(s.created_at)}</td>
+      <td style="display:flex;gap:4px">
+        <button class="btn btn-xs btn-danger" onclick="deleteSession('${s.id}')">Del</button>
+      </td>
+    </tr>`).join('')}</tbody>
+  </table></div>`;
 }
 
-// ── Memory ────────────────────────────────────────────────────────────────────
-async function loadMemory() {
-  if (!TOKEN) return;
-  const {ok, data} = await api('GET', '/memory');
-  if (!ok) { document.getElementById('memory-status').textContent = JSON.stringify(data); return; }
-  document.getElementById('memory-status').textContent =
-    `${data.count} / ${data.max_memories} memories · enabled: ${data.memory_enabled}`;
-  const memories = data.memories || [];
-  if (!memories.length) { document.getElementById('memory-table').innerHTML = '<p style="color:var(--muted2);font-size:11px">No memories yet</p>'; return; }
-  document.getElementById('memory-table').innerHTML = `
-    <table>
-      <tr><th>Content</th><th>Category</th><th>Source</th><th></th></tr>
-      ${memories.map(m => `<tr>
-        <td>${escHtml(m.content)}</td>
-        <td><span class="pill pill-cyan">${m.category||'general'}</span></td>
-        <td><span class="pill ${m.source==='auto'?'pill-yellow':'pill-green'}">${m.source||'manual'}</span></td>
-        <td><button class="btn btn-danger btn-sm" onclick="deleteMemory('${m.id}')">Del</button></td>
-      </tr>`).join('')}
-    </table>`;
+async function createSession(){
+  const title=prompt('Session title:','New Chat');
+  if(!title)return;
+  const{ok,data}=await api('POST','/chat/sessions',{title});
+  if(ok)loadSessions();
+  else alert(JSON.stringify(data));
 }
 
-async function addMemory() {
-  const content = document.getElementById('mem-content').value.trim();
-  const category = document.getElementById('mem-cat').value;
-  if (!content) return;
-  const {ok, data} = await api('POST', '/memory', {content, category});
-  if (ok) { document.getElementById('mem-content').value = ''; loadMemory(); }
-  else document.getElementById('memory-status').textContent = JSON.stringify(data);
+async function deleteSession(sid){
+  if(!confirm('Delete this session and all its messages?'))return;
+  const{ok}=await api('DELETE',`/chat/sessions/${sid}`);
+  if(ok)loadSessions();
 }
 
-async function deleteMemory(id) {
-  const {ok} = await api('DELETE', `/memory/${id}`);
-  if (ok) loadMemory();
+// ═══════════════════════════════════════════════════════════════
+//  DOCUMENTS
+// ═══════════════════════════════════════════════════════════════
+async function loadDocuments(){
+  if(!TOKEN)return;
+  const{ok,data}=await api('GET','/documents');
+  const docs=data.documents||[];
+  const el=document.getElementById('docs-table');
+  if(!ok||!docs.length){el.innerHTML='<p style="color:var(--text3);font-size:11px">No documents uploaded yet.</p>';return}
+  el.innerHTML=`<div class="table-wrap"><table>
+    <thead><tr><th>Filename</th><th>Type</th><th>Size</th><th>Chunks</th><th>Uploaded</th><th>Action</th></tr></thead>
+    <tbody>${docs.map(d=>`<tr>
+      <td>${esc(d.original_name||d.filename)}</td>
+      <td><span class="pill pill-cyan">${(d.file_type||'').split('/').pop()||'?'}</span></td>
+      <td>${fmtSz(d.file_size)}</td>
+      <td>${d.chunk_count}</td>
+      <td style="color:var(--text3)">${fmt(d.uploaded_at)}</td>
+      <td><button class="btn btn-xs btn-danger" onclick="deleteDoc('${d.id}')">Del</button></td>
+    </tr>`).join('')}</tbody>
+  </table></div>`;
 }
 
-async function clearAllMemory() {
-  if (!confirm('Clear ALL memories?')) return;
-  const {ok, data} = await api('DELETE', '/memory');
-  document.getElementById('memory-status').textContent = ok ? '✅ Cleared' : JSON.stringify(data);
-  loadMemory();
+async function doUploadDoc(){
+  const file=document.getElementById('doc-file').files[0];
+  if(!file){showR('doc-upload-out',{error:'No file selected'},false);return}
+  const fd=new FormData();fd.append('file',file);
+  const r=await fetch(base()+'/documents/upload',{method:'POST',headers:authH(),body:fd});
+  const data=await r.json().catch(()=>({}));
+  showR('doc-upload-out',data,r.ok);
+  if(r.ok)loadDocuments();
 }
 
-// ── Stats ─────────────────────────────────────────────────────────────────────
-async function loadStats() {
-  if (!TOKEN) return;
-  const {ok, data} = await api('GET', '/user/stats');
-  if (!ok) { showR('stats-out', data, false); return; }
-  const pw = data.playwright_available;
-  const cards = [
-    {l:'Subscription',    v: data.subscription,   ok: data.subscription !== 'free'},
-    {l:'Messages Today',  v: `${data.messages_used_today} / ${data.messages_limit===-1?'∞':data.messages_limit}`, ok: true},
-    {l:'Documents',       v: `${data.documents} / ${data.document_limit===-1?'∞':data.document_limit}`,          ok: true},
-    {l:'Memories',        v: data.memory_count,    ok: true},
-    {l:'Agent Jobs',      v: `${data.agent_jobs} / ${data.agent_jobs_limit===-1?'∞':data.agent_jobs_limit}`,     ok: true},
-    {l:'MySQL Access',    v: data.mysql_access    ? '✅' : '❌', ok: data.mysql_access},
-    {l:'Image Analysis',  v: data.image_analysis  ? '✅' : '❌', ok: data.image_analysis},
-    {l:'Playwright',      v: pw ? '✅ Ready' : '❌ Not Installed', ok: pw, warn: !pw},
+async function deleteDoc(id){
+  if(!confirm('Delete this document?'))return;
+  const{ok}=await api('DELETE',`/documents/${id}`);
+  if(ok)loadDocuments();
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  MEMORY
+// ═══════════════════════════════════════════════════════════════
+async function loadMemory(){
+  if(!TOKEN)return;
+  const{ok,data}=await api('GET','/memory');
+  if(!ok)return;
+  const st=document.getElementById('memory-status');
+  st.style.display='block';
+  st.className='note '+(data.memory_enabled?'safe':'warn');
+  st.textContent=`${data.count} / ${data.max_memories} memories · Memory ${data.memory_enabled?'enabled ✅':'disabled ❌'}`;
+  const mems=data.memories||[];
+  const el=document.getElementById('memory-table');
+  if(!mems.length){el.innerHTML='<p style="color:var(--text3);font-size:11px">No memories yet. They are auto-extracted during chat.</p>';return}
+  el.innerHTML=`<div class="table-wrap"><table>
+    <thead><tr><th>Content</th><th>Category</th><th>Source</th><th>Action</th></tr></thead>
+    <tbody>${mems.map(m=>`<tr>
+      <td>${esc(m.content)}</td>
+      <td><span class="pill pill-cyan">${m.category||'general'}</span></td>
+      <td><span class="pill ${m.source==='auto'?'pill-yellow':'pill-green'}">${m.source||'manual'}</span></td>
+      <td><button class="btn btn-xs btn-danger" onclick="deleteMemory('${m.id}')">Del</button></td>
+    </tr>`).join('')}</tbody>
+  </table></div>`;
+}
+
+async function addMemory(){
+  const content=document.getElementById('mem-content').value.trim();
+  if(!content)return;
+  const{ok,data}=await api('POST','/memory',{content,category:document.getElementById('mem-cat').value});
+  if(ok){document.getElementById('mem-content').value='';loadMemory()}
+  else alert(JSON.stringify(data));
+}
+
+async function deleteMemory(id){
+  await api('DELETE',`/memory/${id}`);loadMemory();
+}
+
+async function clearAllMemory(){
+  if(!confirm('Delete ALL memories permanently?'))return;
+  await api('DELETE','/memory');loadMemory();
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  STATS
+// ═══════════════════════════════════════════════════════════════
+async function loadStats(){
+  if(!TOKEN)return;
+  const{ok,data}=await api('GET','/user/stats');
+  if(!ok){showR('stats-out',data,false);return}
+  const pw=data.playwright_available;
+  const cards=[
+    {l:'Subscription',v:data.subscription?.toUpperCase(),cls:data.subscription==='free'?'warn':'ok'},
+    {l:'Messages Today',v:`${data.messages_used_today} / ${data.messages_limit===-1?'∞':data.messages_limit}`,cls:'info'},
+    {l:'Documents',v:`${data.documents} / ${data.document_limit===-1?'∞':data.document_limit}`,cls:'muted'},
+    {l:'Websites',v:`${data.websites} / ${data.websites_limit===-1?'∞':data.websites_limit}`,cls:'muted'},
+    {l:'Memories',v:data.memory_count,cls:'info'},
+    {l:'Agent Jobs',v:`${data.agent_jobs} / ${data.agent_jobs_limit===-1?'∞':data.agent_jobs_limit}`,cls:'muted'},
+    {l:'API Keys',v:`${data.api_keys} / ${data.api_keys_limit===-1?'∞':data.api_keys_limit}`,cls:'muted'},
+    {l:'MySQL Access',v:data.mysql_access?'✅':'❌',cls:data.mysql_access?'ok':'err'},
+    {l:'Playwright',v:pw?'✅ Ready':'❌ N/A',cls:pw?'ok':'warn'},
+    {l:'Version',v:data.version,cls:'info'},
   ];
-  document.getElementById('stats-grid').innerHTML = cards.map(c => `
-    <div class="card fade-in">
-      <div class="cl">${c.l}</div>
-      <div class="cv ${c.warn ? 'err' : c.ok ? 'ok' : 'err'}">${c.v}</div>
+  document.getElementById('stats-grid').innerHTML=cards.map(c=>`
+    <div class="stat-card fade-in">
+      <div class="sc-label">${c.l}</div>
+      <div class="sc-val ${c.cls}">${c.v??'—'}</div>
     </div>`).join('');
-  document.getElementById('stats-out').style.display = 'none';
+  document.getElementById('stats-out').style.display='none';
 }
 
-// ── Job Type Hint ─────────────────────────────────────────────────────────────
-function updateJobTypeHint() {
-  const type = document.getElementById('jc-type').value;
-  const hint = document.getElementById('job-type-hint');
-  if (type === 'naukri_apply') {
-    hint.innerHTML = `<b style="color:var(--cyan)">Naukri.com Auto-Apply</b><br>
-    Logs in to Naukri.com, searches each role, clicks Apply/Easy Apply on matching jobs within the time window.`;
-  } else if (type === 'linkedin_apply') {
-    hint.innerHTML = `<b style="color:var(--cyan)">LinkedIn Easy Apply</b><br>
-    Logs in to LinkedIn, searches with Easy Apply filter, submits applications automatically.<br>
-    <span style="color:var(--yellow)">⚠ LinkedIn may require 2FA — disable it first.</span>`;
-  } else {
-    hint.innerHTML = `<b style="color:var(--cyan)">Custom Job</b><br>Reserved for future custom automation scripts.`;
-  }
+// ═══════════════════════════════════════════════════════════════
+//  WEBSITES
+// ═══════════════════════════════════════════════════════════════
+async function buildWebsite(){
+  const desc=document.getElementById('ws-desc').value.trim();
+  if(!desc){showR('ws-build-out',{error:'Description required'},false);return}
+  document.getElementById('ws-spinner').style.display='inline-block';
+  const{ok,data}=await api('POST','/websites/build',{
+    description:desc,
+    title:document.getElementById('ws-title').value||undefined,
+    style:document.getElementById('ws-style').value,
+    model_type:document.getElementById('ws-model').value
+  });
+  document.getElementById('ws-spinner').style.display='none';
+  showR('ws-build-out',ok?{success:true,preview:BASE_URL+data.preview_url,id:data.id}:data,ok);
+  if(ok)loadWebsites();
 }
 
-// ── Load Jobs ─────────────────────────────────────────────────────────────────
-async function loadJobs() {
-  if (!TOKEN) { document.getElementById('jobs-list').innerHTML = '<p style="color:var(--muted2);font-size:11px">Login first</p>'; return; }
-  const {ok, data} = await api('GET', '/agent-jobs');
-  if (!ok) { document.getElementById('jobs-list').innerHTML = `<p style="color:var(--red);font-size:11px">${JSON.stringify(data)}</p>`; return; }
-  const jobs = data.jobs || [];
-  _jobsCache = jobs;
-  if (!jobs.length) {
-    document.getElementById('jobs-list').innerHTML = `
-      <p style="color:var(--muted2);font-size:11px">No agent jobs yet.</p>
-      <button class="btn btn-purple btn-sm" style="margin-top:10px" onclick="showPanel('jobs-create')">+ Create Your First Job</button>`;
-    return;
-  }
-  document.getElementById('jobs-list').innerHTML = jobs.map(j => renderJobCard(j)).join('');
-}
-
-function renderJobCard(j) {
-  const params = (() => { try { return JSON.parse(j.parameters || '{}'); } catch(e) { return {}; } })();
-  const sP = {idle:'pill-muted',running:'pill-yellow running-dot',completed:'pill-green',failed:'pill-red'}[j.status] || 'pill-muted';
-  const eP = j.enabled ? 'pill-green' : 'pill-red';
-  const tP = j.job_type === 'naukri_apply' ? 'pill-orange' : j.job_type === 'linkedin_apply' ? 'pill-cyan' : 'pill-muted';
-  const roles = (params.roles || []).join(', ') || '—';
-  const lsP = {completed:'pill-green',failed:'pill-red'}[j.last_run_status] || 'pill-muted';
-  return `
-    <div class="job-card fade-in" id="jcard-${j.id}">
-      <div class="job-card-hdr">
-        <h4>${escHtml(j.name)}</h4>
-        <span class="pill ${tP}">${j.job_type}</span>
-        <span class="pill ${sP}">${j.status}</span>
-        <span class="pill ${eP}">${j.enabled ? 'enabled' : 'disabled'}</span>
+async function loadWebsites(){
+  if(!TOKEN)return;
+  const{ok,data}=await api('GET','/websites');
+  const sites=data.websites||[];
+  const el=document.getElementById('websites-list');
+  if(!sites.length){el.innerHTML='<p style="color:var(--text3);font-size:11px">No websites built yet.</p>';return}
+  el.innerHTML=sites.map(s=>`
+    <div class="site-card fade-in">
+      <div class="site-card-hdr">
+        <h4>${esc(s.title)}</h4>
+        <span class="pill pill-cyan">${fmtSz(s.html_size)}</span>
       </div>
-      <div class="job-card-meta">
-        <span>⏰ <b>${escHtml(j.cron_schedule)}</b></span>
-        <span>🕐 <b>${j.time_window_start}–${j.time_window_end}</b></span>
-        <span>🔍 <b>${escHtml(roles)}</b></span>
-        <span>📍 <b>${escHtml(params.location || '—')}</b></span>
-        <span>✅ Applied: <b>${j.total_applied || 0}</b></span>
-        <span>▶ Runs: <b>${j.total_runs || 0}</b></span>
-        <span>🕒 Last: <b>${j.last_run_at ? j.last_run_at.slice(0,16) : 'never'}</b></span>
-        <span>Status: <span class="pill ${lsP}">${j.last_run_status || '—'}</span></span>
+      <div class="site-card-meta">${esc(s.description||'')}<br/>Created: ${fmt(s.created_at)}</div>
+      <div class="site-card-actions">
+        <a href="${BASE_URL+'/preview/'+s.filename}" target="_blank" class="btn btn-cyan btn-xs">🔗 Preview</a>
+        <button class="btn btn-danger btn-xs" onclick="deleteWebsite('${s.id}')">🗑 Delete</button>
       </div>
-      <div class="job-card-actions">
-        <button class="btn btn-primary btn-sm" onclick="runJobNow('${j.id}','${escHtml(j.name)}')">▶ Run Now</button>
-        <button class="btn btn-secondary btn-sm" onclick="toggleJob('${j.id}')">${j.enabled ? '⏸ Disable' : '▶ Enable'}</button>
-        <button class="btn btn-purple btn-sm" onclick="viewJobLogs('${j.id}','${escHtml(j.name)}')">📋 Logs</button>
-        <button class="btn btn-orange btn-sm" onclick="goDebug('${j.id}')">🔬 Debug</button>
-        <button class="btn btn-danger btn-sm" onclick="deleteJob('${j.id}','${escHtml(j.name)}')">🗑 Delete</button>
+    </div>`).join('');
+}
+
+async function deleteWebsite(id){
+  if(!confirm('Delete this website?'))return;
+  await api('DELETE',`/websites/${id}`);loadWebsites();
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  CODE RUNNER
+// ═══════════════════════════════════════════════════════════════
+async function runCode(){
+  const code=document.getElementById('code-input').value;
+  const lang=document.getElementById('code-lang').value;
+  if(!code.trim())return;
+  const{ok,data}=await api('POST','/code/run',{code,language:lang});
+  document.getElementById('code-result').style.display='block';
+  document.getElementById('code-stdout').textContent=data.stdout||'(no output)';
+  document.getElementById('code-stderr').textContent=data.stderr||'(no errors)';
+  document.getElementById('code-meta').textContent=`exit: ${data.exit_code} · ${data.duration_ms}ms · ${ok?'success':'error'}`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  PROMPTS
+// ═══════════════════════════════════════════════════════════════
+async function createPrompt(){
+  const title=document.getElementById('prompt-title').value.trim();
+  const content=document.getElementById('prompt-content').value.trim();
+  if(!title||!content){showR('prompt-out',{error:'Title and content required'},false);return}
+  const{ok,data}=await api('POST','/prompts',{
+    title,content,
+    category:document.getElementById('prompt-cat').value,
+    is_public:document.getElementById('prompt-public').checked
+  });
+  showR('prompt-out',ok?{success:true}:data,ok);
+  if(ok){document.getElementById('prompt-title').value='';document.getElementById('prompt-content').value='';loadPrompts()}
+}
+
+async function loadPrompts(){
+  if(!TOKEN)return;
+  const{ok,data}=await api('GET','/prompts');
+  const prompts=data.prompts||[];
+  const el=document.getElementById('prompts-list');
+  if(!prompts.length){el.innerHTML='<p style="color:var(--text3);font-size:11px">No prompts saved yet.</p>';return}
+  el.innerHTML=`<div class="table-wrap"><table>
+    <thead><tr><th>Title</th><th>Category</th><th>Uses</th><th>Public</th><th>Actions</th></tr></thead>
+    <tbody>${prompts.map(p=>`<tr>
+      <td>${esc(p.title)}</td>
+      <td><span class="pill pill-cyan">${p.category||'general'}</span></td>
+      <td>${p.use_count||0}</td>
+      <td>${p.is_public?'✅':'—'}</td>
+      <td style="display:flex;gap:4px">
+        <button class="btn btn-xs btn-secondary" onclick="usePrompt('${p.id}')">Use</button>
+        ${p.user_id===CURRENT_USER?.id?`<button class="btn btn-xs btn-danger" onclick="deletePrompt('${p.id}')">Del</button>`:''}
+      </td>
+    </tr>`).join('')}</tbody>
+  </table></div>`;
+}
+
+async function usePrompt(id){
+  const{ok,data}=await api('POST',`/prompts/${id}/use`);
+  if(ok){document.getElementById('chat-input').value=data.content;nav('chat')}
+}
+
+async function deletePrompt(id){
+  await api('DELETE',`/prompts/${id}`);loadPrompts();
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  PROFILE
+// ═══════════════════════════════════════════════════════════════
+async function loadProfile(){
+  if(!TOKEN)return;
+  const{ok,data}=await api('GET','/profile');
+  if(!ok)return;
+  document.getElementById('prof-name').value=data.full_name||'';
+  document.getElementById('prof-email').value=data.email||'';
+  document.getElementById('prof-role').value=data.role||'';
+  document.getElementById('prof-sub').value=data.subscription||'';
+  document.getElementById('prof-model').value=data.preferred_model||'uncensored';
+  document.getElementById('prof-memory').checked=!!data.memory_enabled;
+}
+
+async function updateProfile(){
+  const{ok,data}=await api('PUT','/profile',{
+    full_name:document.getElementById('prof-name').value||undefined,
+    preferred_model:document.getElementById('prof-model').value,
+    memory_enabled:document.getElementById('prof-memory').checked
+  });
+  showR('prof-out',ok?{success:true}:data,ok);
+}
+
+async function changePassword(){
+  const cur=document.getElementById('pw-current').value;
+  const nw=document.getElementById('pw-new').value;
+  if(!cur||!nw){showR('pw-out',{error:'Both fields required'},false);return}
+  const{ok,data}=await api('POST','/auth/change-password',{current_password:cur,new_password:nw});
+  showR('pw-out',ok?{success:true,message:'Password changed'}:data,ok);
+  if(ok){document.getElementById('pw-current').value='';document.getElementById('pw-new').value=''}
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  API KEYS
+// ═══════════════════════════════════════════════════════════════
+async function loadApiKeys(){
+  if(!TOKEN)return;
+  const{ok,data}=await api('GET','/user/api-keys');
+  const keys=data.api_keys||[];
+  const el=document.getElementById('apikeys-list');
+  if(!keys.length){el.innerHTML='<p style="color:var(--text3);font-size:11px">No API keys yet.</p>';return}
+  el.innerHTML=keys.map(k=>`
+    <div class="apikey-card">
+      <span class="apikey-prefix">${esc(k.key_prefix)}…</span>
+      <div>
+        <div class="apikey-name">${esc(k.name)}</div>
+        <div class="apikey-meta">Created: ${fmt(k.created_at)} · Last used: ${fmt(k.last_used_at)} · ${k.is_active?'✅ Active':'❌ Revoked'}</div>
       </div>
-      <div id="jcard-out-${j.id}" style="display:none" class="rbox info"></div>
-    </div>`;
+      <button class="btn btn-xs btn-danger" style="margin-left:auto" onclick="revokeApiKey('${k.id}')">Revoke</button>
+    </div>`).join('');
 }
 
-async function runJobNow(jobId, name) {
-  if (!confirm(`Run "${name}" immediately?\n(Bypasses time window)`)) return;
-  const el = document.getElementById(`jcard-out-${jobId}`);
-  if (el) { el.style.display='block'; el.className='rbox info'; el.textContent='⚡ Triggering job…'; }
-  const {ok, data} = await api('POST', `/agent-jobs/${jobId}/run`);
-  if (el) {
-    el.className = 'rbox ' + (ok ? 'ok' : 'error');
-    el.textContent = ok ? '⚡ Job triggered! Refresh logs in a few seconds…' : JSON.stringify(data);
-  }
-  if (ok) setTimeout(() => loadJobs(), 3000);
+async function createApiKey(){
+  const name=document.getElementById('ak-name').value.trim();
+  const exp=document.getElementById('ak-expires').value;
+  if(!name){showR('ak-out',{error:'Name required'},false);return}
+  const{ok,data}=await api('POST','/user/api-keys',{name,expires_at:exp||undefined});
+  if(ok){
+    showR('ak-out',{success:true,key:data.key,note:data.note},true);
+    document.getElementById('ak-name').value='';
+    loadApiKeys();
+  }else showR('ak-out',data,false);
 }
 
-async function toggleJob(jobId) {
-  const {ok, data} = await api('POST', `/agent-jobs/${jobId}/toggle`);
-  if (ok) loadJobs();
-  else {
-    const el = document.getElementById(`jcard-out-${jobId}`);
-    if (el) { el.style.display='block'; el.className='rbox error'; el.textContent=JSON.stringify(data); }
-  }
+async function revokeApiKey(id){
+  if(!confirm('Revoke this API key permanently?'))return;
+  await api('DELETE',`/user/api-keys/${id}`);loadApiKeys();
 }
 
-async function deleteJob(jobId, name) {
-  if (!confirm(`Delete job "${name}"?\nThis will also remove all logs.`)) return;
-  const {ok, data} = await api('DELETE', `/agent-jobs/${jobId}`);
-  if (ok) loadJobs();
-  else {
-    const el = document.getElementById(`jcard-out-${jobId}`);
-    if (el) { el.style.display='block'; el.className='rbox error'; el.textContent=JSON.stringify(data); }
-  }
+// ═══════════════════════════════════════════════════════════════
+//  COUPONS (user)
+// ═══════════════════════════════════════════════════════════════
+async function redeemCoupon(){
+  const code=document.getElementById('coupon-code').value.trim().toUpperCase();
+  if(!code){showR('coupon-out',{error:'Code required'},false);return}
+  const{ok,data}=await api('POST','/coupons/redeem',{code});
+  showR('coupon-out',ok?{success:true,message:data.message,new_plan:data.new_subscription}:data,ok);
+  if(ok){loadStats();loadProfile()}
 }
 
-async function viewJobLogs(jobId, name) {
-  showPanel('jobs-logs');
+// ═══════════════════════════════════════════════════════════════
+//  EXPORT
+// ═══════════════════════════════════════════════════════════════
+function exportGDPR(){
+  if(!TOKEN)return;
+  const a=document.createElement('a');a.href=base()+'/user/export';a.click();
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  JOBS
+// ═══════════════════════════════════════════════════════════════
+function updateJobHint(){
+  const type=document.getElementById('jc-type').value;
+  const hint=document.getElementById('job-hint');
+  if(type==='naukri_apply')hint.innerHTML='<b style="color:var(--cyan)">Naukri.com Auto-Apply</b><br>Logs in, searches roles, clicks Apply/Easy Apply.';
+  else if(type==='linkedin_apply')hint.innerHTML='<b style="color:var(--cyan)">LinkedIn Easy Apply</b><br>Logs in, filters Easy Apply, auto-submits.<br><span style="color:var(--yellow)">⚠ Disable 2FA first.</span>';
+  else hint.innerHTML='<b style="color:var(--cyan)">Custom Job</b><br>Reserved for future custom automation.';
+}
+
+async function loadJobs(){
+  if(!TOKEN)return;
+  const{ok,data}=await api('GET','/agent-jobs');
+  const jobs=data.jobs||[];
+  _jobsCache=jobs;
+  const el=document.getElementById('jobs-list');
+  if(!jobs.length){el.innerHTML=`<p style="color:var(--text3);font-size:11px">No jobs yet.</p><button class="btn btn-purple btn-sm" style="margin-top:10px" onclick="nav('jobs-create')">+ Create First Job</button>`;return}
+  el.innerHTML=jobs.map(j=>renderJobCard(j)).join('');
+}
+
+function renderJobCard(j){
+  const params=()=>{try{return JSON.parse(j.parameters||'{}')}catch(e){return{}}};
+  const p=params();
+  const sP={idle:'pill-muted',running:'pill-yellow',completed:'pill-green',failed:'pill-red'}[j.status]||'pill-muted';
+  const eP=j.enabled?'pill-green':'pill-red';
+  const tP=j.job_type==='naukri_apply'?'pill-orange':j.job_type==='linkedin_apply'?'pill-cyan':'pill-muted';
+  const lsP={completed:'pill-green',failed:'pill-red'}[j.last_run_status]||'pill-muted';
+  return`<div class="job-card fade-in" id="jcard-${j.id}">
+    <div class="job-card-hdr">
+      <h4>${esc(j.name)}</h4>
+      <span class="pill ${tP}">${j.job_type}</span>
+      <span class="pill ${sP} ${j.status==='running'?'running-dot':''}">${j.status}</span>
+      <span class="pill ${eP}">${j.enabled?'on':'off'}</span>
+    </div>
+    <div class="job-card-meta">
+      <span>⏰ <b>${esc(j.cron_schedule)}</b></span>
+      <span>🕐 <b>${j.time_window_start}–${j.time_window_end}</b></span>
+      <span>🔍 <b>${esc((p.roles||[]).join(', ')||'—')}</b></span>
+      <span>📍 <b>${esc(p.location||'—')}</b></span>
+      <span>✅ Applied: <b>${j.total_applied||0}</b></span>
+      <span>▶ Runs: <b>${j.total_runs||0}</b></span>
+      <span>🕒 Last: <b>${j.last_run_at?j.last_run_at.slice(0,16):'never'}</b></span>
+      <span>Status: <span class="pill ${lsP}">${j.last_run_status||'—'}</span></span>
+    </div>
+    <div class="job-card-actions">
+      <button class="btn btn-primary btn-sm" onclick="runJobNow('${j.id}','${esc(j.name)}')">▶ Run Now</button>
+      <button class="btn btn-secondary btn-sm" onclick="toggleJob('${j.id}')">${j.enabled?'⏸ Disable':'▶ Enable'}</button>
+      <button class="btn btn-purple btn-sm" onclick="viewLogs('${j.id}','${esc(j.name)}')">📋 Logs</button>
+      <button class="btn btn-orange btn-sm" onclick="goDebug('${j.id}')">🔬 Debug</button>
+      <button class="btn btn-danger btn-sm" onclick="deleteJob('${j.id}','${esc(j.name)}')">🗑 Delete</button>
+    </div>
+    <div class="job-incard-out" id="jco-${j.id}"></div>
+  </div>`;
+}
+
+async function runJobNow(id,name){
+  if(!confirm(`Run "${name}" immediately?`))return;
+  const el=document.getElementById(`jco-${id}`);
+  el.style.display='block';el.innerHTML='<div class="rbox info">⚡ Triggering…</div>';
+  const{ok,data}=await api('POST',`/agent-jobs/${id}/run`);
+  el.innerHTML=`<div class="rbox ${ok?'ok':'error'}">${ok?'⚡ Triggered! Check logs in a few seconds.':JSON.stringify(data)}</div>`;
+  if(ok)setTimeout(loadJobs,3000);
+}
+
+async function toggleJob(id){
+  const{ok}=await api('POST',`/agent-jobs/${id}/toggle`);
+  if(ok)loadJobs();
+}
+
+async function deleteJob(id,name){
+  if(!confirm(`Delete job "${name}"?`))return;
+  await api('DELETE',`/agent-jobs/${id}`);loadJobs();
+}
+
+async function viewLogs(id,name){
+  nav('jobs-logs');
   await refreshJobLogs();
-  const sel = document.getElementById('log-job-select');
-  sel.value = jobId;
+  document.getElementById('log-job-sel').value=id;
   loadJobLogs();
 }
 
-function goDebug(jobId) {
-  showPanel('jobs-debug');
-  refreshDebugJobs().then(() => {
-    document.getElementById('debug-job-select').value = jobId;
+function goDebug(id){
+  nav('jobs-debug');
+  refreshDebugJobs().then(()=>{document.getElementById('debug-job-sel').value=id});
+}
+
+async function createJob(){
+  const name=document.getElementById('jc-name').value.trim();
+  const credEmail=document.getElementById('jc-email').value.trim();
+  const credPass=document.getElementById('jc-pass').value;
+  const rolesRaw=document.getElementById('jc-roles').value.trim();
+  if(!name||!credEmail||!credPass||!rolesRaw){showR('job-create-out',{error:'Name, credentials, and roles are required'},false);return}
+  const roles=rolesRaw.split(',').map(r=>r.trim()).filter(Boolean);
+  const exclude=document.getElementById('jc-exclude').value.trim().split(',').map(r=>r.trim()).filter(Boolean);
+  const{ok,data}=await api('POST','/agent-jobs',{
+    name,description:document.getElementById('jc-desc').value,
+    job_type:document.getElementById('jc-type').value,
+    cron_schedule:document.getElementById('jc-cron').value,
+    time_window_start:document.getElementById('jc-win-start').value,
+    time_window_end:document.getElementById('jc-win-end').value,
+    credentials:{email:credEmail,password:credPass},
+    parameters:{
+      roles,location:document.getElementById('jc-loc').value,
+      experience_min:parseInt(document.getElementById('jc-exp-min').value)||0,
+      experience_max:parseInt(document.getElementById('jc-exp-max').value)||10,
+      max_apply:parseInt(document.getElementById('jc-max').value)||15,
+      easy_apply_only:document.getElementById('jc-easy').checked,
+      keywords_exclude:exclude
+    }
   });
+  showR('job-create-out',ok?{success:true,job_id:data.job?.id,message:`Job "${name}" created & scheduled!`}:data,ok);
+  if(ok)setTimeout(()=>nav('jobs'),1200);
 }
 
-// ── Create Job ────────────────────────────────────────────────────────────────
-async function createJob() {
-  const name      = document.getElementById('jc-name').value.trim();
-  const job_type  = document.getElementById('jc-type').value;
-  const cron      = document.getElementById('jc-cron').value.trim();
-  const winStart  = document.getElementById('jc-win-start').value.trim();
-  const winEnd    = document.getElementById('jc-win-end').value.trim();
-  const credEmail = document.getElementById('jc-cred-email').value.trim();
-  const credPass  = document.getElementById('jc-cred-pass').value;
-  const rolesRaw  = document.getElementById('jc-roles').value.trim();
-  const location  = document.getElementById('jc-location').value.trim();
-  const expMin    = parseInt(document.getElementById('jc-exp-min').value) || 0;
-  const expMax    = parseInt(document.getElementById('jc-exp-max').value) || 10;
-  const maxApply  = parseInt(document.getElementById('jc-max-apply').value) || 10;
-  const easyOnly  = document.getElementById('jc-easy-only').checked;
-  const excludeRaw = document.getElementById('jc-exclude').value.trim();
-
-  if (!name)            { showR('job-create-out', {error:'Job name is required'}, false); return; }
-  if (!credEmail || !credPass) { showR('job-create-out', {error:'Credentials (email + password) are required'}, false); return; }
-  if (!rolesRaw)        { showR('job-create-out', {error:'At least one role is required'}, false); return; }
-
-  const roles   = rolesRaw.split(',').map(r => r.trim()).filter(Boolean);
-  const exclude = excludeRaw ? excludeRaw.split(',').map(r => r.trim()).filter(Boolean) : [];
-
-  const payload = {
-    name, description: document.getElementById('jc-desc').value.trim(),
-    job_type, cron_schedule: cron,
-    time_window_start: winStart || '11:00',
-    time_window_end:   winEnd   || '12:00',
-    credentials: { email: credEmail, password: credPass },
-    parameters: { roles, location, experience_min: expMin, experience_max: expMax, max_apply: maxApply, easy_apply_only: easyOnly, keywords_exclude: exclude }
-  };
-
-  const {ok, data} = await api('POST', '/agent-jobs', payload);
-  showR('job-create-out', ok ? {success: true, job_id: data.job?.id, message: `Job "${name}" created and scheduled!`} : data, ok);
-  if (ok) setTimeout(() => showPanel('jobs'), 1200);
+async function refreshJobLogs(){
+  if(!TOKEN)return;
+  const{ok,data}=await api('GET','/agent-jobs');
+  const jobs=data.jobs||[];_jobsCache=jobs;
+  const sel=document.getElementById('log-job-sel');
+  const cur=sel.value;
+  sel.innerHTML='<option value="">— select a job —</option>'+jobs.map(j=>`<option value="${j.id}">${esc(j.name)} (${j.job_type})</option>`).join('');
+  if(cur)sel.value=cur;
 }
 
-// ── Job Logs ──────────────────────────────────────────────────────────────────
-async function refreshJobLogs() {
-  if (!TOKEN) return;
-  const {ok, data} = await api('GET', '/agent-jobs');
-  const jobs = data.jobs || [];
-  _jobsCache = jobs;
-  const sel = document.getElementById('log-job-select');
-  const cur = sel.value;
-  sel.innerHTML = '<option value="">— select a job —</option>' +
-    jobs.map(j => `<option value="${j.id}">${escHtml(j.name)} (${j.job_type})</option>`).join('');
-  if (cur) sel.value = cur;
-}
-
-async function loadJobLogs() {
-  const jobId = document.getElementById('log-job-select').value;
-  if (!jobId) { document.getElementById('job-logs-out').innerHTML = ''; return; }
-  const {ok, data} = await api('GET', `/agent-jobs/${jobId}/logs?limit=10`);
-  if (!ok) { document.getElementById('job-logs-out').innerHTML = `<div class="rbox error">${JSON.stringify(data)}</div>`; return; }
-  const logs = data.logs || [];
-  if (!logs.length) {
-    document.getElementById('job-logs-out').innerHTML = '<p style="color:var(--muted2);font-size:11px;margin-top:10px">No runs yet. Use "Run Now" to trigger immediately.</p>';
-    return;
-  }
-  document.getElementById('job-logs-out').innerHTML = logs.map(log => renderLogEntry(log)).join('');
-}
-
-function renderLogEntry(log) {
-  const sP = {completed:'pill-green',failed:'pill-red',running:'pill-yellow'}[log.status] || 'pill-muted';
-  const applied = Array.isArray(log.applied_jobs) ? log.applied_jobs : [];
-  const dur = log.duration_sec ? `${log.duration_sec}s` : '—';
-  const outputLines = (log.output || '').split('\n').map(line => {
-    if (line.includes('✅') || line.includes('Applied') || line.includes('Logged in')) return `<span class="l-ok">${escHtml(line)}</span>`;
-    if (line.includes('❌') || line.includes('Error') || line.includes('failed') || line.includes('CRITICAL')) return `<span class="l-err">${escHtml(line)}</span>`;
-    if (line.includes('⚠') || line.includes('Skipped')) return `<span class="l-warn">${escHtml(line)}</span>`;
-    return escHtml(line);
-  }).join('\n');
-
-  return `
-    <div style="background:var(--surface2);border:1px solid var(--border2);border-radius:4px;padding:12px;margin-bottom:10px" class="fade-in">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+async function loadJobLogs(){
+  const id=document.getElementById('log-job-sel').value;
+  if(!id){document.getElementById('job-logs-out').innerHTML='';return}
+  const{ok,data}=await api('GET',`/agent-jobs/${id}/logs?limit=10`);
+  if(!ok){document.getElementById('job-logs-out').innerHTML=`<div class="rbox error">${JSON.stringify(data)}</div>`;return}
+  const logs=data.logs||[];
+  if(!logs.length){document.getElementById('job-logs-out').innerHTML='<p style="color:var(--text3);font-size:11px;margin-top:10px">No runs yet.</p>';return}
+  document.getElementById('job-logs-out').innerHTML=logs.map(log=>{
+    const sP={completed:'pill-green',failed:'pill-red',running:'pill-yellow'}[log.status]||'pill-muted';
+    const applied=Array.isArray(log.applied_jobs)?log.applied_jobs:[];
+    const lines=(log.output||'').split('\n').map(line=>{
+      if(line.includes('✅')||line.includes('Applied')||line.includes('Logged'))return`<span class="l-ok">${esc(line)}</span>`;
+      if(line.includes('❌')||line.includes('Error')||line.includes('failed'))return`<span class="l-err">${esc(line)}</span>`;
+      if(line.includes('⚠')||line.includes('Skipped'))return`<span class="l-warn">${esc(line)}</span>`;
+      return esc(line);
+    }).join('\n');
+    return`<div style="background:var(--surface2);border:1px solid var(--border2);border-radius:4px;padding:12px;margin-bottom:10px" class="fade-in">
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap">
         <span class="pill ${sP}">${log.status}</span>
-        <span style="font-size:10px;color:var(--muted2)">${(log.started_at||'').slice(0,19)}</span>
-        <span style="font-size:10px;color:var(--muted2)">· ${dur}</span>
+        <span style="font-size:10px;color:var(--text3)">${fmt(log.started_at)}</span>
+        <span style="font-size:10px;color:var(--text3)">· ${log.duration_sec||0}s</span>
         <span style="font-size:10px;color:var(--green);margin-left:auto">✅ ${applied.length} applied</span>
       </div>
-      ${applied.length ? `
-        <div style="margin-bottom:8px">
-          <div style="font-size:9px;color:var(--cyan);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">Applied Positions</div>
-          <table>
-            <tr><th>Title</th><th>Company</th><th>Time</th></tr>
-            ${applied.map(a => `<tr>
-              <td>${escHtml(a.title||'—')}</td>
-              <td>${escHtml(a.company||'—')}</td>
-              <td style="color:var(--muted2)">${(a.applied_at||'').slice(11,16)}</td>
-            </tr>`).join('')}
-          </table>
-        </div>` : ''}
-      ${log.error ? `<div style="color:var(--red);font-size:10px;margin-bottom:6px;background:var(--red-dim);border:1px solid rgba(255,68,85,.2);border-radius:3px;padding:6px 8px;white-space:pre-wrap;word-break:break-all">❌ ${escHtml(log.error)}</div>` : ''}
-      <details>
-        <summary style="cursor:pointer;font-size:10px;color:var(--muted2);user-select:none;list-style:none">▸ Full Log Output</summary>
-        <div class="log-out">${outputLines || '(empty)'}</div>
+      ${applied.length?`<div class="table-wrap" style="margin-bottom:8px"><table><thead><tr><th>Title</th><th>Company</th><th>Time</th></tr></thead><tbody>${applied.map(a=>`<tr><td>${esc(a.title||'—')}</td><td>${esc(a.company||'—')}</td><td style="color:var(--text3)">${(a.applied_at||'').slice(11,16)}</td></tr>`).join('')}</tbody></table></div>`:''}
+      ${log.error?`<div style="color:var(--red);font-size:10px;padding:6px 8px;background:var(--red-dim);border-radius:3px;margin-bottom:6px">❌ ${esc(log.error)}</div>`:''}
+      <details><summary style="cursor:pointer;font-size:10px;color:var(--text3);user-select:none">▸ Full Output</summary>
+        <div class="log-out">${lines||'(empty)'}</div>
       </details>
+    </div>`;
+  }).join('');
+}
+
+async function refreshDebugJobs(){
+  if(!TOKEN)return;
+  const{ok,data}=await api('GET','/agent-jobs');
+  const jobs=data.jobs||[];_jobsCache=jobs;
+  const sel=document.getElementById('debug-job-sel');
+  const cur=sel.value;
+  sel.innerHTML='<option value="">— select a job —</option>'+jobs.map(j=>`<option value="${j.id}">${esc(j.name)} (${j.job_type})</option>`).join('');
+  if(cur)sel.value=cur;
+}
+
+async function doDebugRun(){
+  const id=document.getElementById('debug-job-sel').value;
+  if(!id){document.getElementById('debug-status').textContent='⚠ Select a job first';return}
+  const st=document.getElementById('debug-status');
+  const out=document.getElementById('debug-out');
+  st.textContent='⏳ Running synchronously… do not close tab.';st.style.color='var(--yellow)';
+  out.style.display='none';
+  const{ok,data}=await api('POST',`/agent-jobs/${id}/run-debug`);
+  st.textContent=ok?'✅ Complete':'❌ Failed';st.style.color=ok?'var(--green)':'var(--red)';
+  out.style.display='block';
+  const log=data.latest_log;
+  let html=`<div class="debug-box">`;
+  html+=`<b style="color:var(--cyan)">Playwright:</b> ${data.playwright_available?'✅ Available':'❌ Not installed'}\n\n`;
+  if(data.error)html+=`<b style="color:var(--red)">ERROR:</b>\n${esc(data.error)}\n\n`;
+  if(data.traceback)html+=`<b style="color:var(--red)">TRACEBACK:</b>\n${esc(data.traceback)}\n\n`;
+  if(log){
+    html+=`<b style="color:var(--cyan)">Status:</b> ${esc(log.status)}\n`;
+    html+=`<b style="color:var(--cyan)">Duration:</b> ${log.duration_sec||0}s\n`;
+    html+=`<b style="color:var(--cyan)">Applied:</b> ${(log.applied_jobs||[]).length} positions\n\n`;
+    if(log.error)html+=`<b style="color:var(--red)">JOB ERROR:</b>\n${esc(log.error)}\n\n`;
+    if(log.output)html+=`<b style="color:var(--cyan)">OUTPUT:</b>\n${esc(log.output)}`;
+  }
+  html+='</div>';
+  out.innerHTML=html;
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  ADMIN
+// ═══════════════════════════════════════════════════════════════
+function adminGuard(panelId){
+  if(!CURRENT_USER||CURRENT_USER.role!=='admin'){
+    const panel=document.getElementById('panel-'+panelId);
+    if(panel)panel.innerHTML=`<div class="admin-locked">
+      <div class="lock-icon">🔒</div>
+      <h3>ACCESS DENIED</h3>
+      <p>This section requires administrator privileges. Contact your system administrator if you believe this is an error.</p>
+    </div>`;
+    return false;
+  }
+  return true;
+}
+
+async function adminStats(){
+  if(!adminGuard('admin-dash'))return;
+  const{ok,data}=await api('GET','/admin/stats');
+  if(!ok){showR('admin-stats-out',data,false);return}
+  const cards=[
+    {l:'Total Users',v:data.total_users,cls:'ok'},
+    {l:'New Today',v:data.new_users_today,cls:'info'},
+    {l:'Chats Today',v:data.chats_today,cls:'info'},
+    {l:'Documents',v:data.total_documents,cls:'muted'},
+    {l:'Websites',v:data.total_websites,cls:'muted'},
+    {l:'Agent Jobs',v:data.total_agent_jobs,cls:'muted'},
+    {l:'Runs Today',v:data.agent_runs_today,cls:'info'},
+    {l:'Code Runs',v:data.code_runs_today,cls:'muted'},
+    {l:'Memories',v:data.total_memories,cls:'muted'},
+    {l:'Prompts',v:data.prompt_templates,cls:'muted'},
+    {l:'Coupons',v:data.active_coupons,cls:'info'},
+    {l:'Status',v:data.system_status,cls:'ok'},
+  ];
+  document.getElementById('admin-stats-grid').innerHTML=cards.map(c=>`
+    <div class="stat-card fade-in">
+      <div class="sc-label">${c.l}</div>
+      <div class="sc-val ${c.cls}">${c.v??'—'}</div>
+    </div>`).join('');
+  document.getElementById('admin-stats-out').style.display='none';
+}
+
+async function adminLoadUsers(){
+  if(!adminGuard('admin-users'))return;
+  const{ok,data}=await api('GET','/admin/users');
+  if(!ok)return;
+  const users=data.users||[];
+  document.getElementById('admin-users-table').innerHTML=`<div class="table-wrap"><table>
+    <thead><tr><th>Email</th><th>Name</th><th>Role</th><th>Plan</th><th>Memory</th><th>Joined</th><th>Actions</th></tr></thead>
+    <tbody>${users.map(u=>`<tr>
+      <td>${esc(u.email)}</td>
+      <td>${esc(u.full_name||'—')}</td>
+      <td><span class="pill ${u.role==='admin'?'pill-red':'pill-cyan'}">${u.role}</span></td>
+      <td><span class="pill ${u.subscription==='enterprise'?'pill-yellow':u.subscription==='pro'?'pill-green':'pill-muted'}">${u.subscription}</span></td>
+      <td>${u.memory_enabled?'✅':'❌'}</td>
+      <td style="color:var(--text3)">${fmt(u.created_at)}</td>
+      <td style="display:flex;gap:4px;flex-wrap:wrap">
+        <button class="btn btn-xs btn-secondary" onclick="adminViewUser('${u.id}','${esc(u.email)}')">View</button>
+        <button class="btn btn-xs btn-cyan" onclick="adminUpgradePlan('${u.id}')">Plan</button>
+        <button class="btn btn-xs btn-orange" onclick="adminImpersonate('${u.id}')">👤</button>
+        <button class="btn btn-xs btn-danger" onclick="adminDeleteUser('${u.id}','${esc(u.email)}')">Del</button>
+      </td>
+    </tr>`).join('')}</tbody>
+  </table></div>`;
+}
+
+async function adminViewUser(uid,email){
+  const{ok,data}=await api('GET',`/admin/users/${uid}/overview`);
+  if(!ok)return;
+  document.getElementById('admin-user-detail').style.display='block';
+  document.getElementById('user-detail-title').textContent=`User Detail — ${email}`;
+  document.getElementById('user-detail-content').innerHTML=`
+    <div class="card-grid" style="margin-bottom:10px">
+      ${[['Chats',data.chats,'info'],['Docs',data.documents,'muted'],['Memories',data.memories,'muted'],
+         ['Jobs',data.agent_jobs,'muted'],['Sites',data.websites,'muted'],['API Keys',data.api_keys,'muted']]
+        .map(([l,v,c])=>`<div class="stat-card"><div class="sc-label">${l}</div><div class="sc-val ${c}">${v}</div></div>`).join('')}
+    </div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap">
+      <button class="btn btn-sm btn-secondary" onclick="adminViewUserChats('${uid}')">View Chats</button>
+      <button class="btn btn-sm btn-secondary" onclick="adminViewUserMemories('${uid}')">View Memories</button>
     </div>`;
 }
 
-// ── Debug Run ─────────────────────────────────────────────────────────────────
-async function refreshDebugJobs() {
-  if (!TOKEN) return;
-  const {ok, data} = await api('GET', '/agent-jobs');
-  const jobs = data.jobs || [];
-  _jobsCache = jobs;
-  const sel = document.getElementById('debug-job-select');
-  const cur = sel.value;
-  sel.innerHTML = '<option value="">— select a job —</option>' +
-    jobs.map(j => `<option value="${j.id}">${escHtml(j.name)} (${j.job_type})</option>`).join('');
-  if (cur) sel.value = cur;
+async function adminViewUserChats(uid){
+  const{ok,data}=await api('GET',`/admin/users/${uid}/chats?limit=20`);
+  if(!ok)return;
+  const chats=data.chats||[];
+  const el=document.createElement('div');
+  el.style.marginTop='10px';
+  el.innerHTML=`<div class="section-title" style="margin-bottom:6px">Recent Chats (${chats.length})</div>`+
+    (chats.length?`<div class="table-wrap"><table>
+      <thead><tr><th>Message</th><th>Agent</th><th>Model</th><th>Date</th></tr></thead>
+      <tbody>${chats.map(c=>`<tr>
+        <td style="max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(c.message)}</td>
+        <td><span class="pill pill-cyan">${c.agent_used}</span></td>
+        <td>${c.model_used}</td>
+        <td style="color:var(--text3)">${fmt(c.created_at)}</td>
+      </tr>`).join('')}</tbody>
+    </table></div>`:'<p style="color:var(--text3);font-size:11px">No chats found.</p>');
+  document.getElementById('user-detail-content').appendChild(el);
 }
 
-async function doDebugRun() {
-  const jobId = document.getElementById('debug-job-select').value;
-  if (!jobId) { document.getElementById('debug-status').textContent = '⚠ Select a job first'; return; }
-  const statusEl = document.getElementById('debug-status');
-  const outEl = document.getElementById('debug-out');
-  statusEl.textContent = '⏳ Running synchronously… this may take 1–3 minutes. Do not close tab.';
-  statusEl.style.color = 'var(--yellow)';
-  outEl.style.display = 'none';
-
-  const {ok, data} = await api('POST', `/agent-jobs/${jobId}/run-debug`);
-
-  statusEl.textContent = ok ? '✅ Debug run complete' : '❌ Debug run failed';
-  statusEl.style.color = ok ? 'var(--green)' : 'var(--red)';
-  outEl.style.display = 'block';
-
-  const log = data.latest_log;
-  let html = `<div class="debug-box">`;
-  html += `<b style="color:var(--cyan)">Playwright Available:</b> ${data.playwright_available ? '✅ Yes' : '❌ No — run: pip install playwright && playwright install chromium'}\n\n`;
-
-  if (data.error) {
-    html += `<b style="color:var(--red)">TOP-LEVEL ERROR:</b>\n${escHtml(data.error)}\n\n`;
-    if (data.traceback) html += `<b style="color:var(--red)">TRACEBACK:</b>\n${escHtml(data.traceback)}\n\n`;
-  }
-
-  if (log) {
-    html += `<b style="color:var(--cyan)">Status:</b> ${escHtml(log.status)}\n`;
-    html += `<b style="color:var(--cyan)">Duration:</b> ${log.duration_sec || 0}s\n`;
-    html += `<b style="color:var(--cyan)">Applied:</b> ${(log.applied_jobs||[]).length} positions\n\n`;
-    if (log.error) html += `<b style="color:var(--red)">JOB ERROR:</b>\n${escHtml(log.error)}\n\n`;
-    if (log.output) html += `<b style="color:var(--cyan)">OUTPUT:</b>\n${escHtml(log.output)}`;
-  } else if (!data.error) {
-    html += `<span style="color:var(--yellow)">No log entry found. The job may have failed before writing to DB.\nCheck the server terminal / jazz.log for errors.</span>`;
-  }
-
-  html += `</div>`;
-  outEl.innerHTML = html;
+async function adminViewUserMemories(uid){
+  const{ok,data}=await api('GET',`/admin/users/${uid}/memories`);
+  if(!ok)return;
+  const mems=data.memories||[];
+  const el=document.createElement('div');
+  el.style.marginTop='10px';
+  el.innerHTML=`<div class="section-title" style="margin-bottom:6px">Memories (${mems.length})</div>`+
+    (mems.length?`<div class="table-wrap"><table>
+      <thead><tr><th>Content</th><th>Category</th><th>Source</th></tr></thead>
+      <tbody>${mems.map(m=>`<tr>
+        <td>${esc(m.content)}</td>
+        <td><span class="pill pill-cyan">${m.category}</span></td>
+        <td><span class="pill ${m.source==='auto'?'pill-yellow':'pill-green'}">${m.source}</span></td>
+      </tr>`).join('')}</tbody>
+    </table></div>`:'<p style="color:var(--text3);font-size:11px">No memories found.</p>');
+  document.getElementById('user-detail-content').appendChild(el);
 }
 
-// ── Admin ─────────────────────────────────────────────────────────────────────
-async function adminStats() {
-  const {ok, data} = await api('GET', '/admin/stats');
-  document.getElementById('admin-table').innerHTML = '';
-  showR('admin-out', data, ok);
+async function adminUpgradePlan(uid){
+  const tier=prompt('New plan (free/pro/enterprise):','pro');
+  if(!tier||!['free','pro','enterprise'].includes(tier))return;
+  const{ok,data}=await api('PUT','/admin/subscription',{user_id:uid,tier});
+  alert(ok?`✅ Plan updated to ${tier}`:'❌ '+JSON.stringify(data));
+  adminLoadUsers();
 }
 
-async function adminUsers() {
-  const {ok, data} = await api('GET', '/admin/users');
-  if (!ok) { showR('admin-out', data, false); return; }
-  document.getElementById('admin-out').style.display = 'none';
-  const users = data.users || [];
-  document.getElementById('admin-table').innerHTML = `
-    <table>
-      <tr><th>Email</th><th>Role</th><th>Plan</th><th>Memory</th><th>Created</th></tr>
-      ${users.map(u => `<tr>
-        <td>${escHtml(u.email||'—')}</td>
-        <td><span class="pill ${u.role==='admin'?'pill-red':'pill-cyan'}">${u.role}</span></td>
-        <td><span class="pill ${u.subscription==='enterprise'?'pill-yellow':u.subscription==='pro'?'pill-green':'pill-muted'}">${u.subscription}</span></td>
-        <td>${u.memory_enabled ? '✅' : '❌'}</td>
-        <td style="color:var(--muted2)">${(u.created_at||'').slice(0,10)}</td>
-      </tr>`).join('')}
-    </table>`;
+async function adminImpersonate(uid){
+  const{ok,data}=await api('POST',`/admin/users/${uid}/impersonate`);
+  if(ok){
+    const result=confirm(`Impersonation token generated for ${data.user?.email}.\nCopy to clipboard?`);
+    if(result)navigator.clipboard.writeText(data.access_token).catch(()=>{});
+  }else alert('❌ '+JSON.stringify(data));
 }
 
-async function adminAllJobs() {
-  const {ok, data} = await api('GET', '/admin/agent-jobs');
-  if (!ok) { showR('admin-out', data, false); return; }
-  document.getElementById('admin-out').style.display = 'none';
-  const jobs = data.jobs || [];
-  document.getElementById('admin-table').innerHTML = jobs.length ? `
-    <table>
-      <tr><th>Name</th><th>Type</th><th>User</th><th>Schedule</th><th>Runs</th><th>Applied</th><th>Last Status</th><th>On</th></tr>
-      ${jobs.map(j => `<tr>
-        <td>${escHtml(j.name)}</td>
-        <td><span class="pill pill-cyan">${j.job_type}</span></td>
-        <td style="color:var(--muted2)">${escHtml(j.email||'—')}</td>
-        <td style="color:var(--yellow)">${escHtml(j.cron_schedule)}</td>
-        <td>${j.total_runs||0}</td>
-        <td style="color:var(--green)">${j.total_applied||0}</td>
-        <td><span class="pill ${j.last_run_status==='completed'?'pill-green':j.last_run_status==='failed'?'pill-red':'pill-muted'}">${j.last_run_status||'—'}</span></td>
-        <td>${j.enabled?'✅':'❌'}</td>
-      </tr>`).join('')}
-    </table>` : '<p style="color:var(--muted2);font-size:11px">No agent jobs found.</p>';
+async function adminDeleteUser(uid,email){
+  if(!confirm(`⚠ Permanently delete user "${email}" and ALL their data?`))return;
+  const{ok,data}=await api('DELETE',`/admin/user/${uid}`);
+  alert(ok?'✅ User deleted':'❌ '+JSON.stringify(data));
+  adminLoadUsers();
 }
 
-async function adminLogs() {
-  const {ok, data} = await api('GET', '/logs');
-  document.getElementById('admin-table').innerHTML = '';
-  const el = document.getElementById('admin-out');
-  el.style.display = 'block'; el.className = 'rbox stream';
-  el.textContent = (data.logs || []).slice(-150).join('\n');
-  el.scrollTop = el.scrollHeight;
+async function adminLoadJobs(){
+  if(!adminGuard('admin-jobs'))return;
+  const{ok,data}=await api('GET','/admin/agent-jobs');
+  if(!ok)return;
+  const jobs=data.jobs||[];
+  document.getElementById('admin-jobs-table').innerHTML=jobs.length?`<div class="table-wrap"><table>
+    <thead><tr><th>Name</th><th>Type</th><th>User</th><th>Schedule</th><th>Runs</th><th>Applied</th><th>Last Status</th><th>Active</th></tr></thead>
+    <tbody>${jobs.map(j=>`<tr>
+      <td>${esc(j.name)}</td>
+      <td><span class="pill pill-cyan">${j.job_type}</span></td>
+      <td style="color:var(--text3)">${esc(j.email||'—')}</td>
+      <td style="color:var(--yellow)">${esc(j.cron_schedule)}</td>
+      <td>${j.total_runs||0}</td>
+      <td style="color:var(--green)">${j.total_applied||0}</td>
+      <td><span class="pill ${j.last_run_status==='completed'?'pill-green':j.last_run_status==='failed'?'pill-red':'pill-muted'}">${j.last_run_status||'—'}</span></td>
+      <td>${j.enabled?'✅':'❌'}</td>
+    </tr>`).join('')}</tbody>
+  </table></div>`:'<p style="color:var(--text3);font-size:11px">No agent jobs.</p>';
 }
 
-// ── Raw ───────────────────────────────────────────────────────────────────────
-async function doRaw() {
-  const method   = document.getElementById('raw-method').value;
-  const path     = document.getElementById('raw-path').value;
-  const bodyStr  = document.getElementById('raw-body').value.trim();
-  const withAuth = document.getElementById('raw-auth').checked;
-  const headers  = {'Content-Type': 'application/json', ...(withAuth ? authH() : {})};
+async function adminLoadChats(){
+  if(!adminGuard('admin-chats'))return;
+  const limit=document.getElementById('admin-chats-limit').value||50;
+  const{ok,data}=await api('GET',`/admin/all-chats?limit=${limit}`);
+  if(!ok)return;
+  const chats=data.chats||[];
+  document.getElementById('admin-chats-table').innerHTML=chats.length?`<div class="table-wrap"><table>
+    <thead><tr><th>User</th><th>Message</th><th>Agent</th><th>Model</th><th>Date</th></tr></thead>
+    <tbody>${chats.map(c=>`<tr>
+      <td style="color:var(--cyan)">${esc(c.email||'—')}</td>
+      <td style="max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(c.message)}</td>
+      <td><span class="pill pill-cyan">${c.agent_used}</span></td>
+      <td>${c.model_used}</td>
+      <td style="color:var(--text3)">${fmt(c.created_at)}</td>
+    </tr>`).join('')}</tbody>
+  </table></div>`:'<p style="color:var(--text3);font-size:11px">No chats found.</p>';
+}
+
+async function createAnnouncement(){
+  if(!adminGuard('admin-announce'))return;
+  const{ok,data}=await api('POST','/admin/announcements',{
+    title:document.getElementById('ann-title').value,
+    message:document.getElementById('ann-msg').value,
+    type:document.getElementById('ann-type').value,
+    expires_at:document.getElementById('ann-expires').value||undefined
+  });
+  showR('ann-out',ok?{success:true}:data,ok);
+  if(ok)adminLoadAnnouncements();
+}
+
+async function adminLoadAnnouncements(){
+  if(!adminGuard('admin-announce'))return;
+  const{ok,data}=await api('GET','/admin/announcements');
+  const anns=data.announcements||[];
+  const el=document.getElementById('ann-list');
+  if(!anns.length){el.innerHTML='<p style="color:var(--text3);font-size:11px">No announcements.</p>';return}
+  el.innerHTML=anns.map(a=>`
+    <div style="background:var(--surface2);border:1px solid var(--border2);border-radius:4px;padding:12px;margin-bottom:8px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+        <b style="color:var(--cyan)">${esc(a.title)}</b>
+        <span class="pill ${a.is_active?'pill-green':'pill-muted'}">${a.is_active?'active':'inactive'}</span>
+        <span class="pill pill-muted">${a.type}</span>
+        <button class="btn btn-xs btn-danger" style="margin-left:auto" onclick="deleteAnnouncement('${a.id}')">Del</button>
+      </div>
+      <div style="font-size:11px;color:var(--text3)">${esc(a.message)}</div>
+    </div>`).join('');
+}
+
+async function deleteAnnouncement(id){
+  await api('DELETE',`/admin/announcements/${id}`);adminLoadAnnouncements();
+}
+
+async function adminCreateCoupon(){
+  const code=document.getElementById('cp-code').value.trim().toUpperCase();
+  if(!code){showR('cp-out',{error:'Code required'},false);return}
+  const{ok,data}=await api('POST','/admin/coupons',{
+    code,description:document.getElementById('cp-desc').value,
+    subscription_tier:document.getElementById('cp-tier').value,
+    max_uses:parseInt(document.getElementById('cp-uses').value)||1,
+    expires_at:document.getElementById('cp-expires').value||undefined
+  });
+  showR('cp-out',ok?{success:true,code:data.coupon?.code}:data,ok);
+  if(ok)adminLoadCoupons();
+}
+
+async function adminLoadCoupons(){
+  if(!adminGuard('admin-coupons'))return;
+  const{ok,data}=await api('GET','/admin/coupons');
+  const coupons=data.coupons||[];
+  document.getElementById('coupons-table').innerHTML=coupons.length?`<div class="table-wrap"><table>
+    <thead><tr><th>Code</th><th>Tier</th><th>Uses</th><th>Max</th><th>Active</th><th>Expires</th><th>Action</th></tr></thead>
+    <tbody>${coupons.map(c=>`<tr>
+      <td style="font-family:var(--font-code);color:var(--green)">${esc(c.code)}</td>
+      <td><span class="pill ${c.subscription_tier==='enterprise'?'pill-yellow':c.subscription_tier==='pro'?'pill-green':'pill-muted'}">${c.subscription_tier}</span></td>
+      <td>${c.uses}</td>
+      <td>${c.max_uses}</td>
+      <td>${c.is_active?'✅':'❌'}</td>
+      <td style="color:var(--text3)">${c.expires_at?fmt(c.expires_at):'—'}</td>
+      <td><button class="btn btn-xs btn-danger" onclick="adminDeleteCoupon('${c.id}')">Del</button></td>
+    </tr>`).join('')}</tbody>
+  </table></div>`:'<p style="color:var(--text3);font-size:11px">No coupons yet.</p>';
+}
+
+async function adminDeleteCoupon(id){
+  if(!confirm('Delete coupon?'))return;
+  await api('DELETE',`/admin/coupons/${id}`);adminLoadCoupons();
+}
+
+async function doBroadcast(){
+  if(!adminGuard('admin-broadcast'))return;
+  if(!confirm('Send notification to ALL users?'))return;
+  const{ok,data}=await api('POST','/admin/broadcast',{
+    title:document.getElementById('bc-title').value,
+    message:document.getElementById('bc-msg').value,
+    type:document.getElementById('bc-type').value
+  });
+  showR('bc-out',ok?{success:true,sent_to:data.sent_to}:data,ok);
+}
+
+async function loadServerLogs(){
+  if(!adminGuard('server-logs'))return;
+  const{ok,data}=await api('GET','/logs');
+  const el=document.getElementById('server-log-out');
+  el.textContent=(data.logs||[]).join('\n');
+  el.scrollTop=el.scrollHeight;
+}
+
+async function doSqliteNL(){
+  if(!adminGuard('sqlite'))return;
+  const{ok,data}=await api('POST','/sqlite/query',{question:document.getElementById('sq-nl').value});
+  showR('sq-nl-out',data,ok);
+}
+
+async function doSqliteRaw(){
+  if(!adminGuard('sqlite'))return;
+  const{ok,data}=await api('POST','/sqlite/raw',{sql:document.getElementById('sq-raw').value,readonly:true});
+  showR('sq-raw-out',data,ok);
+}
+
+async function loadSqliteTables(){
+  if(!adminGuard('sqlite'))return;
+  const{ok,data}=await api('GET','/sqlite/tables');
+  showR('sq-raw-out',data,ok);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  RAW
+// ═══════════════════════════════════════════════════════════════
+async function doRaw(){
+  const method=document.getElementById('raw-method').value;
+  const path=document.getElementById('raw-path').value;
+  const bodyStr=document.getElementById('raw-body').value.trim();
+  const withAuth=document.getElementById('raw-auth').checked;
+  const headers={'Content-Type':'application/json',...(withAuth?authH():{})};
   let body;
-  if (bodyStr) { try { body = JSON.parse(bodyStr); } catch(e) { showR('raw-out', {error:'Invalid JSON body'}, false); return; } }
-  try {
-    const opts = {method, headers};
-    if (body && method !== 'GET') opts.body = JSON.stringify(body);
-    const r = await fetch(base() + path, opts);
-    const data = await r.json().catch(() => ({raw: `HTTP ${r.status}`}));
-    showR('raw-out', data, r.ok);
-  } catch(e) { showR('raw-out', {error: e.message}, false); }
+  if(bodyStr){try{body=JSON.parse(bodyStr)}catch(e){showR('raw-out',{error:'Invalid JSON'},false);return}}
+  try{
+    const opts={method,headers};
+    if(body&&method!=='GET')opts.body=JSON.stringify(body);
+    const r=await fetch(base()+path,opts);
+    const data=await r.json().catch(()=>({raw:`HTTP ${r.status}`}));
+    showR('raw-out',data,r.ok);
+  }catch(e){showR('raw-out',{error:e.message},false)}
 }
 
-// ── Mobile / Outside Click / Resize ───────────────────────────────────────────
-document.addEventListener('click', function(e){
-  const sb = document.querySelector('.sidebar');
-  const btn = document.getElementById('menu-toggle');
-
-  if (!sb || !btn) return;
-
-  if (window.innerWidth <= 768 &&
-      sb.classList.contains('open') &&
-      !sb.contains(e.target) &&
-      !btn.contains(e.target)) {
+// ═══════════════════════════════════════════════════════════════
+//  MOBILE / GLOBAL EVENTS
+// ═══════════════════════════════════════════════════════════════
+document.addEventListener('click',e=>{
+  const sb=document.getElementById('sidebar');
+  const btn=document.getElementById('menu-toggle');
+  if(window.innerWidth<=768&&sb&&btn&&sb.classList.contains('open')&&!sb.contains(e.target)&&!btn.contains(e.target)){
     closeSidebar();
   }
 });
 
-window.addEventListener('resize', () => {
-  if (window.innerWidth > 768) {
-    closeSidebar();
-  }
+window.addEventListener('resize',()=>{
+  if(window.innerWidth>768)closeSidebar();
 });
 
-// ── Init ──────────────────────────────────────────────────────────────────────
-updateTokenUI();
-updateJobTypeHint();
-setTimeout(doHealth, 300);
+// ═══════════════════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════════════════
+(function init(){
+  applyAuthState();
+  updateJobHint();
+  setTimeout(doHealth,400);
+
+  // Periodically poll status
+  setInterval(async()=>{
+    try{
+      const r=await fetch(base()+'/health',{signal:AbortSignal.timeout(4000)});
+      const dot=document.getElementById('status-dot');
+      const txt=document.getElementById('status-text');
+      if(r.ok){dot.className='status-dot ok';txt.textContent='online';txt.className='ok'}
+      else{dot.className='status-dot err';txt.textContent='error';txt.className=''}
+    }catch(e){
+      document.getElementById('status-dot').className='status-dot err';
+      document.getElementById('status-text').textContent='offline';
+      document.getElementById('status-text').className='';
+    }
+  },15000);
+})();
 </script>
 </body>
 </html>
+
